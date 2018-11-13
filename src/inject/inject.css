@@ -18,3 +18,82 @@
 	pointer-events: none;
 	z-index: 99999999;
 }
+
+/* Floating CSS */
+.mydiv {
+	margin:0 !important;
+	padding: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	border: 0 !important;
+	outline: 0 !important;
+	
+    position: fixed !important;
+    z-index: 9 !important;
+    background-color: #f1f1f1 !important;
+    text-align: center !important;
+    border: 1px solid #d3d3d3 !important;
+    width: 60px !important;
+    height: 30px !important;
+    top: calc(100% - 400px);
+    left: calc(100% - 65px);
+    transition: all 0.01s linear;
+}
+
+.mydiv div{
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+.mydivheader {
+    cursor: move !important;
+    z-index: 10 !important;
+    background-color: #2196F3 !important;
+    color: #fff !important;
+}
+
+#chat{
+	background: salmon;
+    width:30px !important;
+    height:30px !important;
+	padding: 0 !important;
+	border-radius: 0 !important;
+	margin: 0 !important;
+	font-size: 20px !important;
+}
+
+#note{
+	background: green;
+    width:30px !important;
+    height:30px !important;
+	padding: 0 !important;
+	border-radius: 0 !important;
+	margin: 0 !important;
+	font-size: 20px !important;
+}
+
+.message,.note{
+	position: absolute;
+    top:30px;
+    transform-origin: top left;
+    transform: scale(0);
+    opacity: 0;
+    transition: all 0.5s ease;
+	
+	width:250px !important;
+    height:400px !important;
+	padding: 0 !important;
+	border-radius: 0 !important;
+	margin: 0 !important;
+}
+
+.messagePop{
+	transform: scale(1);
+    opacity: 1;
+}
+
+.message iframe, .note iframe{
+	width: 250px;
+    height: 400px;
+}

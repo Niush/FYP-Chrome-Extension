@@ -80,14 +80,15 @@ window.onload=function(){
 
 	if(chatoff_here == false){
 		injectTheChat(); //Inject The Chat//
-		chatFloatingScript();
+		//chatFloatingScript();
+		floatingBallsScript();
 	}else{
 		console.log("Live Chats and Similar Features are turned off for this page.");
 	}
 
 	function injectTheChat(){
 		var chat_ball = document.createElement("span");
-		chat_ball.innerHTML = `<div class="mydiv mydivheader" id="mydiv">
+		/* chat_ball.innerHTML = `<div class="mydiv mydivheader" id="mydiv">
 								  <div style="display:flex;justify-content:space-evenly;align-items:center;height:30px;width:60px;">
 									<div id="note">N</div><div id="chat">C</div>
 								  </div>
@@ -99,10 +100,350 @@ window.onload=function(){
 								  <div class="note" id="notes">
 									<iframe src="https://www.example.com"></iframe>
 								  </div>
+								</div>`; */
+		const shadowRoot = chat_ball.attachShadow({mode: 'open'});
+
+		shadowRoot.innerHTML = `<div class="NS_app_overlay"></div>
+								<div class="NS_ball_container">
+									<div id="NS_chat_ball" class="NS_balls no_appeal" title="Open Chat">
+										<span>C</span>	
+									</div>
+									
+									<div class="NS_chat_container" id="NS_chat_container">
+											<div class="NS_chat_content" id="NS_chat_frame">
+												<!-- Chat Content Goes Here -->
+												<div class="NS_chat_log preloadNoAnimation" id="NS_chat_log">
+															<!-- preloadNoAnimation for making the first load animation of message not occur -->
+															<div class="NS_msg">
+																<div class="NS_chat_message">
+																	<div class="NS_message">
+																			<p>Hello</p>
+																			<small>Bob</small>
+																		</div>
+																</div>
+																
+																<div class="NS_chat_composer" id="NS_message_box">
+																	<input type="text" placeholder="Message...." id="NS_message_text">
+																	<button>Send</button>
+																</div>
+																<div class="NS_chat_empty">
+																	No Messages Yet !!!
+																</div>
+															</div>
+
+															<div class="NS_msg_loading">Loading...</div>
+												</div>
+											</div>
+											<span class="NS_chat_loading">Loading.</span>
+										</div>
+									
+									<div id="NS_note_ball" class="NS_balls no_appeal" title="Note Keeper">
+										<span>N</span>
+									</div>
+									
+									<div class="NS_note_container" id="NS_note_container">
+											<div class="NS_note_content" id="NS_note_frame">
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<input type="text" class="NS_note_title_edit" value="HA HA HA"></input>
+														<div class="NS_note_save" title="Save">💾</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<textarea class="NS_note_body_edit">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</textarea>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+												<div class="NS_note">
+													<div class="NS_note_header">
+														<div class="NS_note_title">HA HA HA</div>
+														<div class="NS_note_edit" title="Edit">🖉</div>
+														<div class="NS_note_delete" title="Delete">🗑</div>
+													</div>
+													<div class="NS_note_body" title="2018/12/01">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aliquid.</div>
+												</div>
+												
+											</div>
+											<span class="NS_note_loading">Loading.</span>
+											<div class="NS_note_composer">
+												<input id="NS_note_title" type="text" placeholder="New Note" max="50"><br/>
+												<textarea id="NS_note_note" type="text" placeholder="Your Note..." max="10000"></textarea><br/>
+												<button id="NS_note_button">Add</button>
+												<button id="NS_note_close">Never Mind</button>
+											</div>
+									</div>
+									
 								</div>`;
-		document.getElementsByTagName("body")[0].appendChild(chat_ball);
+								
+		document.getElementsByTagName("body")[0].appendChild(shadowRoot);
 	}
 	
+	
+	function floatingBallsScript(){
+		var isDown = false; //Mouse Down
+		var whichDown = ""; //Which Ball Down C or N
+		var isDragging = false; //Is dragging or not
+		var DocWidth =
+			window.innerWidth ||
+			document.documentElement.clientWidth ||
+			document.body.clientWidth; //Document Width
+		var DocHeight =
+			window.innerHeight ||
+			document.documentElement.clientHeight ||
+			document.body.clientHeight; //Document Height
+
+		//Variables for Chat Ball
+		var offsetChatBall = [0, 0]; //Chat Ball Offset
+		var chatBall = document.getElementById("NS_chat_ball");
+		var chatCacheTop;
+
+		//Variables for Note Ball
+		var offsetNoteBall = [0, 0]; //Note Ball Offset
+		var noteBall = document.getElementById("NS_note_ball");
+		var noteCacheTop;
+
+		//Chat Ball Down Event//
+		chatBall.addEventListener(
+			"mousedown",
+			function(e) {
+				event.preventDefault();
+				isDown = true;
+				isDragging = false;
+				whichDown = "c";
+				if(!chatOpen){
+					offsetChatBall = [
+						chatBall.offsetLeft - e.clientX,
+						chatBall.offsetTop - e.clientY
+					];
+					chatBall.style.cursor = "move";
+				}
+			},
+			true
+		);
+
+		//Note Ball Down Event//
+		noteBall.addEventListener(
+			"mousedown",
+			function(e) {
+				event.preventDefault();
+				isDown = true;
+				isDragging = false;
+				whichDown = "n";
+				offsetNoteBall = [
+					noteBall.offsetLeft - e.clientX,
+					noteBall.offsetTop - e.clientY
+				];
+				noteBall.style.cursor = "move";
+			},
+			true
+		);
+
+		//Mouse Up Event Stop//
+		document.addEventListener(
+			"mouseup",
+			function() {
+				isDown = false;
+				whichDown = "";
+				chatBall.style.cursor = "pointer";
+				noteBall.style.cursor = "pointer";
+			},
+			true
+		);
+
+		//Document Leave Event Stop Ball Move//
+		// TODO + NOTE: User can have option in settings to keep moving or not //
+		document.addEventListener("mouseleave", function(event) {
+				isDown = false;
+				whichDown = "";
+				chatBall.style.cursor = "pointer";
+				noteBall.style.cursor = "pointer";
+		});
+
+		//Mouse move Ball Move event - See whichBall and Move as needed//
+		//Only Up and Down and Fixed//
+		document.addEventListener(
+			"mousemove",
+			function(e) {
+				event.preventDefault();
+				if (isDown) {
+					isDragging = true;
+					if (whichDown == "c") { //If Chat Ball
+						if (
+							!chatOpen &&
+							e.clientY + offsetChatBall[1] >= 5 &&
+							e.clientY + offsetChatBall[1] <= DocHeight - 45
+						) {
+							//divOverlay.style.left = (e.clientX + offset[0]) + 'px';
+							chatBall.style.top = e.clientY + offsetChatBall[1] + "px";
+							chatCacheTop = e.clientY + offsetChatBall[1] + "px";
+							//Save to store.js here for cache position of y;
+						}
+					} else { //If Note Ball
+						if (
+							e.clientY + offsetNoteBall[1] >= 5 &&
+							e.clientY + offsetNoteBall[1] <= DocHeight - 45
+						) {
+							//divOverlay.style.left = (e.clientX + offset[0]) + 'px';
+							noteBall.style.top = e.clientY + offsetNoteBall[1] + "px";
+							noteCacheTop = e.clientY + offsetNoteBall[1] + "px";
+							//Save to store.js here for cache position of y;
+						}
+					}
+				}
+			},
+			true
+		);
+
+		/* Note Click to Open Pop Here */
+		let noteContainer = document.getElementById('NS_note_container');
+		let noteOpen = false; //Chat Open Or Not
+		let noteFrameOpenedFirst = false;
+
+		noteBall.onclick = function(){
+			if (!isDragging) { //If Not Dragging
+				if(noteOpen === false){ //If Chat is not opened = Open
+					if(!noteFrameOpenedFirst){
+						loadNoteFrame();
+						noteFrameOpenedFirst = true;
+					}
+					noteBall.style.transition = "all 0.5s ease";
+					noteBall.style.bottom = "30px";
+					noteBall.style.top = "90%";
+					
+					noteContainer.className += " NS_open";
+					noteOpen = true;
+					
+					//document.getElementsByClassName('NS_app_overlay')[0].className += " NS_overlay_active";
+				}else{ //Else = Close
+					noteBall.style.transition = "all 0.5s 0.3s ease";
+					noteBall.style.top = noteCacheTop;
+					setTimeout(function(){
+						noteBall.style.transition = "all 0.1s ease-out";
+					},505);
+					
+					noteContainer.className = "NS_note_container";
+					noteOpen = false;
+					//document.getElementsByClassName('NS_app_overlay')[0].className = "NS_app_overlay";
+				} // Weirdies like animations and classname handled too, cause Vanilla JS :) //
+			}
+		}
+
+		/* Note Task Goes Here */
+		let noteFrame = document.getElementById("NS_note_frame");
+		noteFrame.style.opacity = 0;
+		let noteFrameInnerHTML = ``;
+
+		function loadNoteFrame(){	
+			//Note : todo : try check internet then check cross error//
+			//chatFrame.innerHTML = chatFrameInnerHTML; //Add the content
+			
+			document.getElementsByClassName('NS_note_loading')[0].style.display = 'none'; //Hide Loader
+			noteFrame.style.opacity = 1; //Show Chat Content
+		}
+
+
+
+
+		/* Chat Click to Open Pop Here */
+		let chatContainer = document.getElementById('NS_chat_container');
+		let chatOpen = false; //Chat Open Or Not
+		let chatFrameOpenedFirst = false;
+
+		chatBall.onclick = function(){
+			if (!isDragging) { //If Not Dragging
+				if(chatOpen === false){ //If Chat is not opened = Open
+					if(!chatFrameOpenedFirst){
+						loadChatFrame();
+						chatFrameOpenedFirst = true;
+					}
+					chatBall.style.transition = "all 0.5s ease";
+					chatBall.style.bottom = "30px";
+					chatBall.style.top = "90%";
+					
+					chatContainer.className += " NS_open";
+					chatOpen = true;
+					
+					document.getElementsByClassName('NS_app_overlay')[0].className += " NS_overlay_active";
+				}else{ //Else = Close
+					chatBall.style.transition = "all 0.5s 0.3s ease";
+					chatBall.style.top = chatCacheTop;
+					setTimeout(function(){
+						chatBall.style.transition = "all 0.1s ease-out";
+					},505);
+					
+					chatContainer.className = "NS_chat_container";
+					chatOpen = false;
+					
+					document.getElementsByClassName('NS_app_overlay')[0].className = "NS_app_overlay";
+				} // Weirdies like animations and classname handled too, cause Vanilla JS :) //
+			}
+		}
+
+		/* Chat Task Goes Here */
+		let chatFrame = document.getElementById("NS_chat_frame");
+		chatFrame.style.opacity = 0;
+		let chatFrameInnerHTML = ``;
+
+		function loadChatFrame(){	
+			//Note : todo : try check internet then check cross error//
+			//chatFrame.innerHTML = chatFrameInnerHTML; //Add the content
+			
+			document.getElementsByClassName('NS_chat_loading')[0].style.display = 'none'; //Hide Loader
+			chatFrame.style.opacity = 1; //Show Chat Content
+			
+			document.getElementsByClassName('NS_msg_loading')[0].className += " NS_hide_loader";
+			setTimeout(() => {
+				document.getElementsByClassName('preloadNoAnimation')[0].className="NS_chat_log";
+				document.getElementsByClassName('NS_msg')[0].className += " NS_show_msg";
+			},1000);
+		}
+	}
+	
+	// OLD //
 	function chatFloatingScript(){
 		document.getElementById('message').style.opacity = "0";
 		document.getElementById('notes').style.opacity = "0";
@@ -255,6 +596,28 @@ window.onload=function(){
 	}
 
 
+	document.getElementById('NS_note_title').onclick = function(){
+		document.getElementsByClassName('NS_note_composer')[0].className += " NS_note_active";
+	};
+	
+	let c = 0;
+	document.getElementById('NS_note_title').onkeyup = function(e){
+		if(c === 0){
+			document.getElementsByClassName('NS_note_composer')[0].className += " NS_note_active";
+			c = 1;
+		}
+		
+		if(e.keyCode == 8 && this.value.length === 0){
+			document.getElementsByClassName('NS_note_composer')[0].className = "NS_note_composer";
+			c = 0;
+		}
+	};
+	
+	document.getElementById('NS_note_close').onclick = function(){
+		document.getElementsByClassName('NS_note_composer')[0].className = "NS_note_composer";
+		let c = 0;
+	};
+	
 }//ON WINDOW LOAD END *|*|*|*|* //
 
 

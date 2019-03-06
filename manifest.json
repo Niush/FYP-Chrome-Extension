@@ -1,9 +1,10 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "Minimal Productivity App",
+  "short_name": "MiniPro",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension was created with the awesome extensionizr.com",
-  "homepage_url": "http://extensionizr.com",
+  "description": "Minimal Productivity Application is developed to make your work life productive, efficient, fast and easier. This simple Extension for your browser can help you with Notes, To-dos, Live Q&As, Focus modes, Minimal Detox of Social Medias and more fun configurations and features.",
+  "homepage_url": "http://niush.tk/minimal-productivity",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -15,19 +16,24 @@
     "persistent": true
   },
   "options_page": "src/options_custom/index.html",
-  "page_action": {
-    "default_icon": "icons/icon19.png",
-    "default_title": "page action demo",
-    "default_popup": "src/page_action/page_action.html"
+  "browser_action": {
+	  "default_icon": {
+		 "19": "icons/icon19.png",
+		 "48": "icons/icon48.png"
+	  },
+	  "default_popup": "src/page_action/page_action.html",
+	  "default_title": "Productivity App - Action Menu Controller"
   },
   "permissions": [
 	"storage",
+	"unlimitedStorage",
     "bookmarks",
     "contextMenus",
     "history",
     "idle",
     "notifications",
     "tabs",
+	"activeTab",
     "geolocation",
     "<all_urls>"
   ],
@@ -50,5 +56,6 @@
       ],
 	  "run_at": "document_start"
     }
-  ]
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; font-src 'self';"
 }

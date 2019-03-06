@@ -1,17 +1,67 @@
 <!doctype html>
-<style type="text/css">
-	#mainPopup {
-		padding: 10px;
-		height: 200px;
-		width: 400px;
-		font-family: Helvetica, Ubuntu, Arial, sans-serif;
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Minimal Productivity App - Action Menu Controller</title>
+	<link rel="stylesheet" href="../../css/materialize.min.css">
+	<script src="../../js/materialize/materialize.min.js"></script>
+	<script type="text/javascript" src="../../js/functions/userdata.js"></script>
+	<script src="page_action.js"></script>
+</head>
+
+<style>
+	button{
+		margin: 5px 0;
 	}
-	h1 {
-		font-size: 2em;
+	
+	.hidden{
+		display: none !important;
+		visibility: hidden;
 	}
 </style>
 
-<div id="mainPopup">
-<h1>Hello extensionizr!</h1>
-<p>To shut this popup down, edit the manifest file and remove the "default popup" key. To edit it, just edit ext/page_action/page_action.html. The CSS is there, too.</p>
-</div>
+<body class="blue-grey darken-1" style="width: 300px; margin: 0; padding: 0;">
+	<div class="row">
+		<div class="col s12">
+			  <h5 class="white-text">Minimal Productivity App</h5>
+			  
+			  <!-- If not logged in -->
+			  <a href="#"><button id="no-login" class="btn green col s12 hidden">Login/Register</button></a>
+			  <br/>
+			  
+			  <!-- If Logged In -->
+			  <!-- Dropdown Trigger -->
+			  <a id="yes-login" class='dropdown-trigger btn col s12 hidden' href='#' data-target='dropdown1'>John Doe</a>
+			  <!-- Dropdown Structure -->
+			  <ul id='dropdown1' class='dropdown-content'>
+				<li><a href="#!">Account</a></li>
+				<li><a href="#!">Logout</a></li>
+			  </ul>
+			  
+			  <!-- Inner Links Access buttons -->
+			  <a href="#"><button class="btn green col s12">Settings</button></a>
+			  <br/>
+			  <a href="#"><a href="#"><button class="btn blue col s6">Notes</button></a>
+			  <br/>
+			  <a href="#"><button class="btn orange accent-3 col s5 offset-s1">Sync Now</button></a>
+			  <br/>
+			  <a href="#"><button class="btn red col s6">Limit this site</button></a>
+			  <br/>
+			  <a href="#"><button class="btn purple col s5 offset-s1">Screenshot</button></a>
+		</div>
+	</div>
+	
+	<hr style="margin: 0 !important;"/>
+	
+	<div class="row" style="margin-bottom: 0 !important;">
+		<p class="col s12 amber-text accent-5">
+			<span><a class="amber-text accent-1" href="#">About</a>
+			</span> | <span>
+			<a class="amber-text accent-1" href="#">Policy</a></span>
+			</span> | <span>
+			<a class="amber-text accent-1" href="#">Account</a></span>
+		</p>
+	</div>
+	
+</body>
+</html>

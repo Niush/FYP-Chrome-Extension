@@ -1,7 +1,6 @@
 /**********INTERNET STATUS**********/
 function internetStatus(){
 	if(navigator.onLine){
-		console.log('Network Found.');
 		return true;
 	}else{
 		setTimeout(function(){

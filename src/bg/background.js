@@ -1,35 +1,36 @@
 /** START EXTENSION AFTER FEW SECONDS DELAY **/
-let START_DELAY = 5000;
+let START_DELAY = 2000;
 
-setTimeout(function(){
-	/*Used to Store in Browser*/
-	//store.set('user', { name:'Marcus' });
-	//alert(store.get('user').name);
+document.addEventListener('DOMContentLoaded', function() {	
+	let u;
+	
+	/* Use Callbacks if needed / Promise might not work */
+	/* First run that checks Install Event is auto trigerred */
+	
+	setTimeout(function(){
+		
+		checkFirstRun();
 
-	/***************/
-	/* ON INSTALL  */
-	/***************/
-	checkFirstRun();
-	//NOTE: uncomment later//
-	/******************/
+		u = new User(); // Define User - Although no parameters LOL//
+		
+		/*Used to Store in Browser*/
+		//store.set('user', { name:'Marcus' });
+		//alert(store.get('user').name);
+		
+		if(internetStatus()){
+			//Check if in queue//
+			//AJAX TO DATABASE old + new//
+		}else{
+			//Store for later upload//
+		}
+		/******************/
 
-	/******************/
-	/*	  SAVE IP 	  */
-	/******************/
-	if(internetStatus()){
-		//Check if in queue//
-		//AJAX TO DATABASE old + new//
-	}else{
-		//Store for later upload//
-	}
-	/******************/
-
-
-	//example of using a message handler from the inject scripts
-	chrome.extension.onMessage.addListener(
-	  function(request, sender, sendResponse) {
-		chrome.pageAction.show(sender.tab.id);
-		sendResponse();
-	  }
-	 );
-}, START_DELAY);
+		//example of using a message handler from the inject scripts
+		chrome.extension.onMessage.addListener(
+		  function(request, sender, sendResponse) {
+			console.log("MESSAGE: " + request);
+		  }
+		);
+		
+	}, START_DELAY);
+});

@@ -1,3 +1,9 @@
+function send_message(msg){
+	chrome.runtime.sendMessage(
+		msg
+	);
+}
+
 /*Scripts can also be ran here*/
 //document.getElementsByTagName('body')[0].style.opacity = "0.5";
 chrome.storage.local.get(function(result){console.log(result)});

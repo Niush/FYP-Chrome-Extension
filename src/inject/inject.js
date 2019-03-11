@@ -4,6 +4,13 @@ function send_message(msg){
 	);
 }
 
+chrome.extension.onMessage.addListener(
+  function(request, sender, sendResponse) {		
+	console.log("MESSAGE BACK: " + request);
+  }
+);
+
+
 /*Scripts can also be ran here*/
 //document.getElementsByTagName('body')[0].style.opacity = "0.5";
 chrome.storage.local.get(function(result){console.log(result)});
@@ -43,6 +50,17 @@ chrome.storage.local.get('NS_dim', function(items) {
 // ALMOST ALL OTHER ARE AFTER WINDOW LOAD//
 /***********************************/
 window.onload=function(){
+	
+	/* SEND AND RECEIVE MESSAGE FROM BACKGROUND.JS */
+	function getScreenshotId(){
+		// Send "screenshot" request and get response back //
+		chrome.runtime.sendMessage({action: "screenshot"}, function(response) {
+			console.log(response.response);
+		});
+	}
+	
+	/*--------------*/
+	
 	/*******************
 	 IMPORTING Store.js
 	*******************/
@@ -112,7 +130,7 @@ window.onload=function(){
 		shadowRoot.innerHTML = `<div class="NS_app_overlay"></div>
 								<div class="NS_ball_container">
 									<div id="NS_chat_ball" class="NS_balls no_appeal" title="Open Chat">
-										<span>C</span>	
+										<span id="getScreenshot">C</span>	
 									</div>
 									
 									<div class="NS_chat_container" id="NS_chat_container">
@@ -623,6 +641,9 @@ window.onload=function(){
 		document.getElementsByClassName('NS_note_composer')[0].className = "NS_note_composer";
 		let c = 0;
 	};
+	
+	/* Adding CLick event to the Button to send Screenshot Message to Background js */
+	document.getElementById('getScreenshot').onclick = function(){getScreenshotId();}
 	
 }//ON WINDOW LOAD END *|*|*|*|* //
 

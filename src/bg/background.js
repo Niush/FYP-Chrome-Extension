@@ -1,5 +1,16 @@
 /** START EXTENSION AFTER FEW SECONDS DELAY **/
 let START_DELAY = 2000;
+let datauri = ""; //Stores current data uri the latest one
+
+// Take Screen shot of that active page -quality changed //
+function takeScreenShot(){
+	chrome.tabs.captureVisibleTab({quality: 50},function(screenshotUrl) {
+		datauri = screenshotUrl;
+		/* chrome.tabs.create({url: screenshotUrl}, function(){
+			console.log(screenshotUrl);
+		}); */
+	});
+}
 
 document.addEventListener('DOMContentLoaded', function() {	
 	let u;
@@ -25,12 +36,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		/******************/
 
-		//example of using a message handler from the inject scripts
-		chrome.extension.onMessage.addListener(
+		//SEND AND RECEVIE MESSAGES FROM OTHER JS//
+		chrome.runtime.onMessage.addListener(
 		  function(request, sender, sendResponse) {
-			console.log("MESSAGE: " + request);
+			console.log("MESSAGE: " + request.action);
+			
+			// If request to screenshot //
+			if(request.action.toLowerCase() == "screenshot"){
+				takeScreenShot(); 
+				// Take Screenshot &
+				// Send Back Response of DataURI woth delay
+				setTimeout(function(){
+					sendResponse({
+						response: datauri,
+					});
+				}, 1200);
+				
+				return true;
+			}
 		  }
 		);
-		
+			
 	}, START_DELAY);
+	
 });

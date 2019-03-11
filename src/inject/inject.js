@@ -54,9 +54,12 @@ window.onload=function(){
 	/* SEND AND RECEIVE MESSAGE FROM BACKGROUND.JS */
 	function getScreenshotId(){
 		// Send "screenshot" request and get response back //
-		chrome.runtime.sendMessage({action: "screenshot"}, function(response) {
-			console.log(response.response);
-		});
+		chrome.runtime.sendMessage(
+			{action: "screenshot"},
+			function(response) {
+				console.log(response.response);
+			}
+		);
 	}
 	
 	/*--------------*/

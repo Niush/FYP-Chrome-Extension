@@ -5,11 +5,66 @@ let datauri = ""; //Stores current data uri the latest one
 // Take Screen shot of that active page -quality changed //
 function takeScreenShot(){
 	chrome.tabs.captureVisibleTab({quality: 50},function(screenshotUrl) {
-		datauri = screenshotUrl;
+		//datauri = screenshotUrl;
+		cropData(screenshotUrl);
 		/* chrome.tabs.create({url: screenshotUrl}, function(){
 			console.log(screenshotUrl);
 		}); */
 	});
+}
+
+var DEFAULT_COORDS = {
+	saveURL: 'http://random/birthday/saveimage.php',
+	w: 500,
+	h: 500,
+	x: 200,
+	y: 200
+};
+
+function cropData(str, coords, callback) {
+	var img = new Image();
+	var canvas;
+	
+	img.onload = function() {
+		canvas = document.createElement('canvas');
+		canvas.width = DEFAULT_COORDS.w;
+		canvas.height = DEFAULT_COORDS.h;
+	
+		var ctx = canvas.getContext('2d');
+	
+		ctx.drawImage(img, DEFAULT_COORDS.x, DEFAULT_COORDS.y, DEFAULT_COORDS.w, DEFAULT_COORDS.h, 0, 0, DEFAULT_COORDS.w, DEFAULT_COORDS.h);
+		datauri = canvas.toDataURL('image/jpeg', 0.5);
+		
+		/* chrome.tabs.create({url: datauri}, function(){
+			console.log(dataURItoBlob(datauri));
+		}); */
+	};
+	
+	img.src = str;
+}
+
+function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+
+  // create a view into the buffer
+  var ia = new Uint8Array(ab);
+
+  // set the bytes of the buffer to the correct values
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a blob, and you're done
+  var blob = new Blob([ab], {type: mimeString});
+  return blob;
 }
 
 document.addEventListener('DOMContentLoaded', function() {	

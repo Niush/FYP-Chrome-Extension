@@ -11,22 +11,39 @@ chrome.runtime.onInstalled.addListener(function (object) {
 				localStorage.setItem("initial_ip", ip);
 			});
 			
-			localStorage.setItem("user_data", JSON.stringify(INIT_USER_DATA));
-			localStorage.setItem("app_id", chrome.runtime.id);
+			//localStorage.setItem("user_data", JSON.stringify(INIT_USER_DATA));
+			chrome.storage.local.set(
+				{
+					user_data: JSON.stringify(INIT_USER_DATA),
+					app_id: chrome.runtime.id,
+				}
+			);
 		});
 	}else if(object.reason == "update"){
 		console.log("Minimal Productivity Update Success to version "+ chrome.runtime.getManifest().version);
-		localStorage.setItem("app_id", chrome.runtime.id);
+		//localStorage.setItem("app_id", chrome.runtime.id);
+		chrome.storage.local.set(
+			{
+				app_id: chrome.runtime.id,
+			}
+		);
 	}
 });
 
 /**************************/
 /* ON FIRST RUN TRIGGER  */
 /************************/
-function checkFirstRun(){		
-	if(!localStorage.hasOwnProperty('user_data')){
+function checkFirstRun(){
+	chrome.storage.local.get(['user_data'], function(result) {
+	  if(result.user_data == undefined || result.user_data == ''){
 		console.log("Extension Data Reset. Ooof.");
-		localStorage.setItem("user_data", JSON.stringify(INIT_USER_DATA));
-	}
+		chrome.storage.local.set(
+			{
+				user_data: JSON.stringify(INIT_USER_DATA),
+				app_id: chrome.runtime.id,
+			}
+		);
+	  }
+	});
 }
 /******************/

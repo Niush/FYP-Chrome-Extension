@@ -14,25 +14,24 @@ function takeScreenShot(){
 }
 
 var DEFAULT_COORDS = {
-	saveURL: 'http://random/birthday/saveimage.php',
-	w: 500,
-	h: 500,
-	x: 200,
-	y: 200
+	w: 1000,
+	h: 1000,
+	x: 0,
+	y: 0
 };
 
-function cropData(str, coords, callback) {
+function cropData(str, coords=DEFAULT_COORDS, callback) {
 	var img = new Image();
 	var canvas;
 	
 	img.onload = function() {
 		canvas = document.createElement('canvas');
-		canvas.width = DEFAULT_COORDS.w;
-		canvas.height = DEFAULT_COORDS.h;
+		canvas.width = coords.w;
+		canvas.height = coords.h;
 	
 		var ctx = canvas.getContext('2d');
 	
-		ctx.drawImage(img, DEFAULT_COORDS.x, DEFAULT_COORDS.y, DEFAULT_COORDS.w, DEFAULT_COORDS.h, 0, 0, DEFAULT_COORDS.w, DEFAULT_COORDS.h);
+		ctx.drawImage(img, coords.x, coords.y, coords.w, coords.h, 0, 0, coords.w, coords.h);
 		datauri = canvas.toDataURL('image/jpeg', 0.5);
 		
 		/* chrome.tabs.create({url: datauri}, function(){

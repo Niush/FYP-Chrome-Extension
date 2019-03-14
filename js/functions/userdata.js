@@ -35,18 +35,27 @@ class User{
 			for(let i = 0 ; i < data.notes.length ; i++){
 				if(data.notes[i].synced == 0){
 					// AJAX SYNC THIS data.notes[i] object
-					
 					//data.notes[i].synced = 1;
+				}
+				
+				//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
+				if(data.notes[i].status == 0 && data.notes[i].synced == 1){
+					// Deleted this record or object//
+					data.splice(i, 1);
 				}
 			}
 			data.last_sync = this.getUTC();
 			console.log(data.last_sync);
 			
 			// AJAX SYNC FOCUS
-			// JSON.stringify(data.focus)
+			// if(data.focus_synced == 0){
+			//	//Sync as// JSON.stringify(data.focus)
+			//}
 			
 			// AJAX SYNC Disable App
-			// JSON.stringify(data.focus)
+			// if(data.disable_synced == 0){
+			//	//Sync as// JSON.stringify(data.disable_app)
+			//}
 			
 			this.updateLocal();
 			
@@ -153,6 +162,29 @@ class User{
 	}
 	
 	/* NOTES */
+	get all_note(){
+		return data['notes'];
+	}
+	add_note(data){
+		data['notes'].push(data);
+		this.updateLocal();
+	}
+	edit_note(new_data){
+		for(let j = 0 ; j < data['notes'].length; j++){
+			if(data['notes'][j]['id'] == new_data['id']){
+				data['notes'][j] = new_data;
+				break;
+			}
+		}
+	}
+	delete_note(id){
+		for(let j = 0 ; j < data['notes'].length; j++){
+			if(data['notes'][j]['id'] == id){
+				data['notes'][j]['status'] = 0;
+				break;
+			}
+		}
+	}
 	
 	/* FOCUS */
 	

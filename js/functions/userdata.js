@@ -219,7 +219,7 @@ class User{
 	delete_note(id){
 		let index = data.notes.findIndex(e => e.id == id);
 		if(index >= 0){ //If found//
-			data.notes.[index].status = 0;
+			data.notes[index].status = 0;
 			this.updateLocal();
 			return true;
 		}
@@ -311,8 +311,72 @@ class User{
 	}
 	
 	/* DISABLE APP - Also, a method to check if url is in disabled app list */
+	get all_disable_app(){
+		return data.disable_app;
+	}
+	get_disable_app(url){
+		let index = data.disable_app.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			return data.disable_app[index];
+		}
+		return false;
+	}
+	add_disable_app(new_data){
+		data.disable_app.push(new_data);
+		this.disable_synced = 0;
+		this.updateLocal();
+	}
+	edit_disable_app(new_data){
+		try{
+			let index = data.disable_app.findIndex(e => e.url == new_data.url);
+			if(index >= 0){ //If found//
+				data.disable_app[index] = new_data;
+				this.disable_synced = 0;
+				this.updateLocal();
+				return true;
+			}
+		}catch(e){
+			alert('Not Already Disabled...Adding to Disabled App Now.');
+			this.add_disable_app(new_data);
+			return false;
+		}
+		
+		return false;
+	}
+	delete_disable_app(url){
+		let index = data.disable_app.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			data.disable_app.splice(index,1);
+			this.disable_synced = 0;
+			this.updateLocal();
+			return true;
+		}
+		return false;
+	}
+	check_disable_app(url){
+		let index = data.disable_app.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			return true;
+		}
+		return false;
+	}
 	
 	/* TO-DO */
+	get all_todo(){
+		return data.todo;
+	}
+	add_todo(new_data){
+		data.todo.push(new_data);
+		this.updateLocal();
+	}
+	edit_todo(index, replace_data){
+		data.todo[index] = replace_data;
+		this.updateLocal();
+	}
+	delete_todo(index){
+		data.todo.splice(index, 1);
+		this.updateLocal();
+	}
 }
 
 

@@ -70,7 +70,7 @@ window.onload=function(){
 	var js = document.createElement("script");
 	js.type = "text/javascript";
 	js.src = "/js/store/store.legacy.min.js";
-	document.body.appendChild(js);
+	//document.body.appendChild(js);
 
 	/**********************************************
 	ON Load HTML display changer ketp just in case
@@ -106,9 +106,9 @@ window.onload=function(){
 	}
 
 	if(chatoff_here == false){
-		injectTheChat(); //Inject The Chat//
-		//chatFloatingScript();
-		floatingBallsScript();
+		//injectTheChat(); //Inject The Chat//
+		//chatFloatingScript(); //OLD
+		//floatingBallsScript();
 	}else{
 		console.log("Live Chats and Similar Features are turned off for this page.");
 	}

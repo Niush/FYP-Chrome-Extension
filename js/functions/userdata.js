@@ -1,12 +1,15 @@
 var data;
 
 class User{
-	constructor(){
+	constructor(callback=function(){}){
+		var _self = this;
 		chrome.storage.local.get(['user_data'], function(result) {
 		  if(result.user_data == undefined || result.user_data == ''){
 			new User().resetLocal();
 		  }else{
 			data = JSON.parse(result.user_data);
+			//console.log(_self.data);
+			callback();
 		  }
 		});
 	}
@@ -92,7 +95,7 @@ class User{
 	
 	/* USER ID */
 	get user_id(){
-		return data['user_id'];
+		return data.user_id;
 	}
 	set user_id(id){
 		data['user_id'] = id;
@@ -101,7 +104,7 @@ class User{
 	
 	/* USER NAME */
 	get user_name(){
-		return data['user_name'];
+		return data.user_name;
 	}
 	set user_name(name){
 		data['user_name'] = name;
@@ -110,7 +113,7 @@ class User{
 	
 	/* Passphrase */
 	get passphrase(){
-		return data['user_id'];
+		return data['passphrase'];
 	}
 	set passphrase(passphrase){
 		data['passphrase'] = passphrase;

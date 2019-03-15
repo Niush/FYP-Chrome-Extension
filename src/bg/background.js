@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		checkFirstRun();
 
-		u = new User(); // Define User - Although no parameters LOL//
+		u = new User(); // Define User - Although no parameters LOL// //Also could callback
 		
 		/*Used to Store in Browser*/
 		//store.set('user', { name:'Marcus' });

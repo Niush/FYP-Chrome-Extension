@@ -15,6 +15,10 @@ class User{
 		return new Date().getTime();
 	}
 	
+	getDate(){
+		return new Date().toJSON().slice(0,10).replace(/-/g,'/');
+	}
+	
 	// TODO: Verifiy User Id and Passphrase from server 
 	checkUserAuth(){
 		if(internetStatus()){
@@ -41,7 +45,7 @@ class User{
 				//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
 				if(data.notes[i].status == 0 && data.notes[i].synced == 1){
 					// Deleted this record or object//
-					data.splice(i, 1);
+					data.notes.splice(i, 1);
 				}
 			}
 			data.last_sync = this.getUTC();
@@ -49,13 +53,13 @@ class User{
 			
 			// AJAX SYNC FOCUS
 			// if(data.focus_synced == 0){
-			//	//Sync as// JSON.stringify(data.focus)
+			//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
 			//}
 			
 			// AJAX SYNC Disable App
 			// if(data.disable_synced == 0){
 			//	//Sync as// JSON.stringify(data.disable_app)
-			//}
+			//}h
 			
 			this.updateLocal();
 			
@@ -152,43 +156,186 @@ class User{
 		this.updateLocal();
 	}
 
+	/* FOCUS SYNCED */
+	get focus_synced(){
+		return data['focus_synced'];
+	}
+	set focus_synced(i){
+		data['focus_synced'] = i;
+		this.updateLocal();
+	}
+	
+	/* DISABLE SYNCED */
+	get disable_synced(){
+		return data['disable_synced'];
+	}
+	set disable_synced(i){
+		data['disable_synced'] = i;
+		this.updateLocal();
+	}
+
+	
 	/* DIM TIME */
 	get dim_time(){
 		return data['dim_time'];
 	}
-	set dim_time(from,to){
-		data['dim_time'] = [from,to];
+	set dim_time(dim_time_arr){
+		data['dim_time'] = dim_time_arr;
 		this.updateLocal();
 	}
 	
 	/* NOTES */
 	get all_note(){
-		return data['notes'];
+		return data.notes;
 	}
-	add_note(data){
-		data['notes'].push(data);
+	get_note(id){
+		let index = data.notes.findIndex(e => e.id == id);
+		if(index >= 0){ //If found//
+			return data.notes[index];
+		}
+		alert('Note Not Found');
+		return false;
+	}
+	add_note(new_data){
+		data.notes.push(new_data);
 		this.updateLocal();
 	}
 	edit_note(new_data){
-		for(let j = 0 ; j < data['notes'].length; j++){
-			if(data['notes'][j]['id'] == new_data['id']){
-				data['notes'][j] = new_data;
-				break;
+		try{
+			let index = data.notes.findIndex(e => e.id == new_data.id);
+			if(index >= 0){ //If found//
+				data.notes[index] = new_data;
+				this.updateLocal();
+				return true;
 			}
+		}catch(e){
+			alert('Note was not found. Opps..');
+			return false;
 		}
+		
+		alert('Failed to Edit The Changed Note.');
+		return false;
 	}
 	delete_note(id){
-		for(let j = 0 ; j < data['notes'].length; j++){
-			if(data['notes'][j]['id'] == id){
-				data['notes'][j]['status'] = 0;
-				break;
-			}
+		let index = data.notes.findIndex(e => e.id == id);
+		if(index >= 0){ //If found//
+			data.notes.[index].status = 0;
+			this.updateLocal();
+			return true;
 		}
+		alert('Failed to Execute Delete. Probably Note does not exist.');
+		return false;
 	}
 	
 	/* FOCUS */
+	get all_focus(){
+		return data['focus'];
+	}
+	add_focus(new_data){
+		data.focus.push(new_data);
+		this.focus_synced = 0;
+		this.updateLocal();
+	}
+	edit_focus(new_data){
+		try{
+			let index = data.focus.findIndex(e => e.url == new_data.url);
+			if(index >= 0){ //If Found//
+				data.focus[index] = new_data;
+				this.focus_synced = 0;
+				this.updateLocal();
+				return true;
+			}			
+		}catch(e){
+			alert('Error during Operation');
+			return false;
+		}
+		
+		alert('Failed to Update the changes.');
+		return false;
+	}
+	delete_focus(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index < 0){ //If not found//
+			alert('Failed to Execute Delete.');
+			return false;
+		}
+		data.focus.splice(index,1);
+		this.focus_synced = 0;
+		this.updateLocal();
+	}
+	check_focus(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			if(data.focus[index].today_date != this.getDate()){ //If today is new day - change today_date & add today_total to all_total and change today_total to 0 to reset//
+				data.focus[index].today_date = this.getDate();
+				data.focus[index].all_total += data.focus[index].today_total;
+				data.focus[index].today_total = 0;
+				this.focus_synced = 0;
+				this.updateLocal();
+			}
+			return true;
+		}
+		return false;
+	}
+	increment_focus(url){
+		// Increment every 5 seconds //
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index < 0){ //If not found//
+			return false;
+		}
+		data.focus[index].today_total+=5;
+		this.focus_synced = 0;
+		this.updateLocal();
+		return true;
+	}
+	total_tries(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If not found//
+			return data.focus[index].total_tries;
+		}else{
+			alert('Web Site is not on Focus Mode');
+			return false;
+		}
+	}
+	increment_total_tries(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If not found//
+			data.focus[index].total_tries++;
+			this.focus_synced = 0;
+			this.updateLocal();
+			return true;
+		}else{
+			alert('Web Site is not on Focus Mode');
+			return false;
+		}
+	}
 	
 	/* DISABLE APP - Also, a method to check if url is in disabled app list */
 	
 	/* TO-DO */
 }
+
+
+/* ADDING NOTE TEST JSON */
+/*
+
+let u = new User();
+let unique_id = (u.getUTC()).toString()+(Math.floor(Math.random() * 500) + 1).toString();
+u.add_note(
+    {
+    id: unique_id,
+    note: 'DB note: This is one two three note bla bla bla',
+    images: [
+	{
+	     id:'unique_id+(Math.floor(Math.random() * 500) + 1).toString()',
+	     uri: 'asdkjasndkjasndkasndaasdiasidj'
+	}, {},{}
+	],
+    synced: 0,
+    public: 0,
+    status: 1,
+    modified_at: u.getUTC()
+	}
+)
+
+*/

@@ -1,3 +1,31 @@
+var currentPage;
+var currentHost;
+var currentPageId;
+
+chrome.tabs.getSelected(null, function(tab) {
+	currentPageId = tab.id;
+	currentPage = tab.url;
+	currentHost = getHostName(tab.url); //Get Host name method in userdata.js
+});
+
+function getHostName(url){
+	let parser = document.createElement('a');
+	parser.href = url;
+	return parser.hostname;
+}
+
+function isSecured(url){
+	let parser = document.createElement('a');
+	parser.href = url;
+	if(parser.protocol == 'https:'){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+
 var data;
 
 class User{
@@ -356,10 +384,17 @@ class User{
 		}
 		return false;
 	}
-	check_disable_app(url){
+	check_disable_note(url){
 		let index = data.disable_app.findIndex(e => e.url == url);
 		if(index >= 0){ //If found//
-			return true;
+			return data.disable_app[index].disable_note;
+		}
+		return false;
+	}
+	check_disable_chat(url){
+		let index = data.disable_app.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			return data.disable_app[index].disable_chat;
 		}
 		return false;
 	}

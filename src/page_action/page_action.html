@@ -11,8 +11,42 @@
 </head>
 
 <style>
+	/* fallback */
+	@font-face {
+	  font-family: 'Material Icons';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url(../../icons/material-icon.woff2) format('woff2');
+	}
+
+	.material-icons {
+	  font-family: 'Material Icons';
+	  font-weight: normal;
+	  font-style: normal;
+	  font-size: 24px;
+	  line-height: 1;
+	  letter-spacing: normal;
+	  text-transform: none;
+	  display: inline-block;
+	  white-space: nowrap;
+	  word-wrap: normal;
+	  direction: ltr;
+	  -webkit-font-feature-settings: 'liga';
+	  -webkit-font-smoothing: antialiased;
+	}
+	
+	i.material-icons:before{display:none;}
+	
+	body{
+		width: 300px;
+		margin: 0;
+		padding: 0;
+		margin: 0 auto;
+	}
+
 	button{
 		margin: 5px 0;
+		text-align: center;
 	}
 	
 	.hidden{
@@ -21,18 +55,18 @@
 	}
 </style>
 
-<body class="blue-grey darken-1" style="width: 300px; margin: 0; padding: 0;">
+<body class="blue-grey darken-1">
 	<div class="row">
 		<div class="col s12">
 			  <h5 class="white-text">Minimal Productivity App</h5>
 			  
 			  <!-- If not logged in -->
-			  <a href="#"><button id="no-login" class="btn green col s12 hidden">Login/Register</button></a>
+			  <a href="#"><button id="no-login" class="btn btn-small green col s12 hidden">Login/Register</button></a>
 			  <br/>
 			  
 			  <!-- If Logged In -->
 			  <!-- Dropdown Trigger -->
-			  <a id="yes-login" class='dropdown-trigger btn col s12 hidden' href='#' data-target='dropdown1'>John Doe</a>
+			  <a id="yes-login" class='dropdown-trigger btn btn-small col s12 hidden' href='#' data-target='dropdown1'>John Doe</a>
 			  <!-- Dropdown Structure -->
 			  <ul id='dropdown1' class='dropdown-content'>
 				<li><a href="#!">Account</a></li>
@@ -40,15 +74,38 @@
 			  </ul>
 			  
 			  <!-- Inner Links Access buttons -->
-			  <a href="#"><button class="btn green col s12">Settings</button></a>
+			  <a href="#"><button class="btn btn-small green col s12">Settings</button></a>
 			  <br/>
-			  <a href="#"><a href="#"><button class="btn blue col s6">Notes</button></a>
+			  <a href="#"><a href="#"><button class="btn btn-small blue col s9">Notes</button></a>
+			  <a href="#"><button class="btn btn-small blue accent-4 col s2 offset-s1" title="Sync Now">
+				<i id="syncing" class="material-icons">sync</i>
+			  </button></a>
 			  <br/>
-			  <a href="#"><button class="btn orange accent-3 col s5 offset-s1">Sync Now</button></a>
-			  <br/>
-			  <a href="#"><button class="btn red col s6">Limit this site</button></a>
-			  <br/>
-			  <a href="#"><button class="btn purple col s5 offset-s1">Screenshot</button></a>
+			  <!-- NO NOTE BLOCK -->
+			  <a href="#" id="no-note-block" class="hidden">
+				<button class="btn btn-small red col s4" title="Disable Note">
+					<i class="material-icons left">block</i>Note
+				</button>
+			  </a>
+			  <!-- YES NOTE BLOCK -->
+			  <a href="#" id="yes-note-block" class="hidden">
+				<button class="btn btn-small green col s4" title="Enable Note">
+					<i class="material-icons left">check_circle</i>Note
+				</button>
+			  </a>
+			  
+			  <!-- NO CHAT BLOCK -->
+			  <a href="#" id="no-chat-block" class="hidden">
+				<button class="btn btn-small red accent-4 col s4 offset-s1" title="Disable Chat">
+					<i class="material-icons left">not_interested</i>Chat
+				</button>
+			  </a>
+			  <!-- YES NOTE BLOCK -->
+			  <a href="#" id="yes-chat-block" class="hidden">
+				<button class="btn btn-small green accent-4 col s4 offset-s1" title="Enable Chat">
+					<i class="material-icons left">check_circle</i>Chat
+				</button>
+			  </a>
 		</div>
 	</div>
 	

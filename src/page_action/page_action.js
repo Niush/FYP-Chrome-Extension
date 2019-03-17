@@ -34,22 +34,24 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 		
-		// If Note Disabled or Not
-		if(u.check_disable_note(currentHost) == 1){
-			yesNoteBlock.style.setProperty("display", "block", "important");
-			yesNoteBlock.style.visibility = 'visible';
-		}else{
-			noNoteBlock.style.setProperty("display", "block", "important");
-			noNoteBlock.style.visibility = 'visible';
-		}
-		
-		// If Chat Disabled ot Not
-		if(u.check_disable_chat(currentHost) == 1){
-			yesChatBlock.style.setProperty("display", "block", "important");
-			yesChatBlock.style.visibility = 'visible';
-		}else{
-			noChatBlock.style.setProperty("display", "block", "important");
-			noChatBlock.style.visibility = 'visible';
+		if(currentHost != INTERNAL){ //IF NOT INTERNAL PAGE
+			// If Note Disabled or Not
+			if(u.check_disable_note(currentHost) == 1){
+				yesNoteBlock.style.setProperty("display", "block", "important");
+				yesNoteBlock.style.visibility = 'visible';
+			}else{
+				noNoteBlock.style.setProperty("display", "block", "important");
+				noNoteBlock.style.visibility = 'visible';
+			}
+			
+			// If Chat Disabled ot Not
+			if(u.check_disable_chat(currentHost) == 1){
+				yesChatBlock.style.setProperty("display", "block", "important");
+				yesChatBlock.style.visibility = 'visible';
+			}else{
+				noChatBlock.style.setProperty("display", "block", "important");
+				noChatBlock.style.visibility = 'visible';
+			}
 		}
 	}
 });

@@ -5,7 +5,11 @@ var currentPageId;
 chrome.tabs.getSelected(null, function(tab) {
 	currentPageId = tab.id;
 	currentPage = tab.url;
-	currentHost = getHostName(tab.url); //Get Host name method in userdata.js
+	if(tab.url.search('chrome://') < 0 && tab.url.search('file://') < 0){
+		currentHost = getHostName(tab.url); //Get Host name method in userdata.js
+	}else{
+		currentHost = INTERNAL;
+	}
 });
 
 function getHostName(url){

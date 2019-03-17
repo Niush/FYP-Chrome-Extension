@@ -3,8 +3,8 @@ let START_DELAY = 2000;
 let datauri = ""; //Stores current data uri the latest one
 
 // Take Screen shot of that active page -quality changed //
-function takeScreenShot(tabInfo){
-	chrome.tabs.captureVisibleTab(tabInfo.windowId,{quality: 50},function(screenshotUrl) {
+function takeScreenShot(tabInfo, quality=50){
+	chrome.tabs.captureVisibleTab(tabInfo.windowId,{'quality': quality},function(screenshotUrl) {
 		//datauri = screenshotUrl;
 		cropData(screenshotUrl, tabInfo.width, tabInfo.height); //No x and y
 		/* chrome.tabs.create({url: screenshotUrl}, function(){
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			// If request to screenshot //
 			if(request.action.toLowerCase() == "screenshot"){
 				//console.log(request.tabInfo);
-				takeScreenShot(request.tabInfo);
+				takeScreenShot(request.tabInfo, request.quality);
 				// Take Screenshot &
 				// Send Back Response of DataURI woth delay
 				setTimeout(function(){

@@ -15,7 +15,7 @@ function showMessage(msg='', type='info'){
 function getScreenshot(callback){
 	// Send "screenshot" request and get response back //
 	chrome.runtime.sendMessage(
-		{action: "screenshot", "tabInfo": tabInfo},
+		{action: "screenshot", "tabInfo": tabInfo, quality: 100},
 		function(response) {
 			callback(response.response);
 		}

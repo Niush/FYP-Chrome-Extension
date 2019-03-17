@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(u.user_id == '' || u.user_id == 'undefined'){
 			noLogin.style.setProperty("display", "block", "important");
 			noLogin.style.visibility = 'visible';
+			
+			document.getElementById('notes-button').className += ' s12';
 		}else{
 			// If passphrase exist or not
 			if(u.passphrase == '' || u.passphrase == null){
@@ -70,10 +72,30 @@ document.addEventListener('DOMContentLoaded', function() {
 			var screenshotButton = document.getElementById('screenshot-button');
 			screenshotButton.style.setProperty("display", "block", "important");
 			screenshotButton.style.visibility = 'visible';
+			var sessionScreenshot = 0;
 			screenshotButton.addEventListener('click', function(){
-				getScreenshot(function(data){
-					chrome.tabs.create({url: data});
-				});
+				if(sessionScreenshot <= 5){
+					sessionScreenshot++;
+					screenshotButton.style.cursor = 'wait';
+					getScreenshot(function(data){
+						screenshotButton.innerHTML = '<i class="material-icons">file_download</i>';
+						screenshotButton.style.cursor = 'inherit';
+						/* chrome.tabs.create({url: data});*/					
+						var a = document.createElement('a');
+						a.download = "Screenshot-"+u.getUTC()+"-mpe";
+						a.href = data;
+						a.click();
+						
+						setTimeout(function(){
+							screenshotButton.innerHTML = '<i class="material-icons">add_a_photo</i>';
+						}, 2000);
+					});
+				}else{
+					showMessage('Please Wait....');
+					setTimeout(function(){
+						sessionScreenshot = 0;
+					}, 5000);
+				}
 			});
 		}
 	}

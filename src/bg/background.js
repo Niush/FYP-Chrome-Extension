@@ -3,10 +3,10 @@ let START_DELAY = 2000;
 let datauri = ""; //Stores current data uri the latest one
 
 // Take Screen shot of that active page -quality changed //
-function takeScreenShot(){
-	chrome.tabs.captureVisibleTab({quality: 50},function(screenshotUrl) {
+function takeScreenShot(tabInfo){
+	chrome.tabs.captureVisibleTab(tabInfo.windowId,{quality: 50},function(screenshotUrl) {
 		//datauri = screenshotUrl;
-		cropData(screenshotUrl);
+		cropData(screenshotUrl, tabInfo.width, tabInfo.height); //No x and y
 		/* chrome.tabs.create({url: screenshotUrl}, function(){
 			console.log(screenshotUrl);
 		}); */
@@ -20,18 +20,18 @@ var DEFAULT_COORDS = {
 	y: 0
 };
 
-function cropData(str, coords=DEFAULT_COORDS, callback) {
+function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.x, y=DEFAULT_COORDS.y) {
 	var img = new Image();
 	var canvas;
 	
 	img.onload = function() {
 		canvas = document.createElement('canvas');
-		canvas.width = coords.w;
-		canvas.height = coords.h;
+		canvas.width = w;
+		canvas.height = h;
 	
 		var ctx = canvas.getContext('2d');
 	
-		ctx.drawImage(img, coords.x, coords.y, coords.w, coords.h, 0, 0, coords.w, coords.h);
+		ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
 		datauri = canvas.toDataURL('image/jpeg', 0.5);
 		
 		/* chrome.tabs.create({url: datauri}, function(){
@@ -94,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		chrome.runtime.onMessage.addListener(
 		  function(request, sender, sendResponse) {
 			console.log("MESSAGE: " + request.action);
-			
 			// If request to screenshot //
 			if(request.action.toLowerCase() == "screenshot"){
-				takeScreenShot(); 
+				//console.log(request.tabInfo);
+				takeScreenShot(request.tabInfo);
 				// Take Screenshot &
 				// Send Back Response of DataURI woth delay
 				setTimeout(function(){

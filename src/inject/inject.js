@@ -52,7 +52,7 @@ chrome.storage.local.get('NS_dim', function(items) {
 window.onload=function(){
 	
 	/* SEND AND RECEIVE MESSAGE FROM BACKGROUND.JS */
-	function getScreenshotId(){
+	/* function getScreenshotId(){
 		// Send "screenshot" request and get response back //
 		chrome.runtime.sendMessage(
 			{action: "screenshot"},
@@ -60,18 +60,33 @@ window.onload=function(){
 				console.log(response.response);
 			}
 		);
-	}
+	} */
 	
 	/*--------------*/
 	
 	/*******************
 	 IMPORTING Store.js
 	*******************/
-	var js = document.createElement("script");
-	js.type = "text/javascript";
-	js.src = "/js/store/store.legacy.min.js";
+	//var js = document.createElement("script");
+	//js.type = "text/javascript";
+	//js.src = "/js/store/store.legacy.min.js";
 	//document.body.appendChild(js);
-
+	
+	/*******************
+	 IMPORTING Materialize.js
+	*******************/
+	/* var mat = document.createElement("script");
+	mat.type = "text/javascript";
+	mat.src = "chrome-extension://"+chrome.runtime.id+"/js/materialize/materialize.min.js";
+	document.body.appendChild(mat); */
+	/*******************
+	 IMPORTING Materialize.css
+	*******************/
+	/* var matc = document.createElement("link");
+	matc.rel = "stylesheet";
+	matc.href = "chrome-extension://"+chrome.runtime.id+"/css/materialize.min.css";
+	document.body.appendChild(matc); */
+	
 	/**********************************************
 	ON Load HTML display changer ketp just in case
 	**********************************************/

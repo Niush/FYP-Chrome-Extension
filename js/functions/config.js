@@ -1,3 +1,27 @@
+function showMessage(msg='', type='info'){
+	if(msg != ''){
+		M.Toast.dismissAll(); //Close if any is shown - Only one msg at once - looks nicer may be//
+		
+		if(type == 'info'){
+			M.toast({html: msg});
+		}else if(type == 'warning'){
+			M.toast({html: msg, classes: 'orange'});
+		}else if(type == 'error'){
+			M.toast({html: msg, classes: 'red'});
+		}
+	}
+}
+
+function getScreenshot(callback){
+	// Send "screenshot" request and get response back //
+	chrome.runtime.sendMessage(
+		{action: "screenshot", "tabInfo": tabInfo},
+		function(response) {
+			callback(response.response);
+		}
+	);
+}
+
 const INIT_USER_DATA = {
     user_id: '',
 	user_name: '',

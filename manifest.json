@@ -57,5 +57,6 @@
 	  "run_at": "document_start"
     }
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; font-src 'self';"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; font-src 'self';",
+  "web_accessible_resources": ["js/materialize/materialize.min.js", "css/materialize.min.css"]
 }

@@ -1,8 +1,12 @@
 var currentPage;
 var currentHost;
 var currentPageId;
+var windowId;
+var tabInfo;
 
 chrome.tabs.getSelected(null, function(tab) {
+	tabInfo = tab;
+	windowId = tab.windowId;
 	currentPageId = tab.id;
 	currentPage = tab.url;
 	if(tab.url.search('chrome://') < 0 && tab.url.search('file://') < 0){
@@ -27,8 +31,6 @@ function isSecured(url){
 		return false;
 	}
 }
-
-
 
 var data;
 
@@ -59,51 +61,69 @@ class User{
 		if(internetStatus()){
 			// Check if user id good
 			return true;
+			//return 'You are not Valid User Dude.';
 			//else{return 'User is Invalid. Please Logout and Login again.\nWeird stuff.';}
 		}else{
 			return 'Internet Connection Not Found';
 		}
 	}
 	
-	syncNow(sender='app'){
+	syncNow(sender='app', callback=function(){}){
 		let x;
 		if((x = this.checkUserAuth()) == true){
 			//TODO: ALL SYNCING TO SERVER
         	//Start Syncing Data Here...
-			// 1. SYNC NOTE
-			for(let i = 0 ; i < data.notes.length ; i++){
-				if(data.notes[i].synced == 0){
-					// AJAX SYNC THIS data.notes[i] object
-					//data.notes[i].synced = 1;
+			let delay = (ms) => new Promise(
+			  (resolve) => setTimeout(resolve, ms)
+			);
+
+			delay(200)
+			  .then(() => {
+				// 1. SYNC NOTE
+				for(let i = 0 ; i < data.notes.length ; i++){
+					if(data.notes[i].synced == 0){
+						// AJAX SYNC THIS data.notes[i] object
+						//data.notes[i].synced = 1;
+					}
+					
+					//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
+					if(data.notes[i].status == 0 && data.notes[i].synced == 1){
+						// Deleted this record or object//
+						data.notes.splice(i, 1);
+					}
 				}
-				
-				//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
-				if(data.notes[i].status == 0 && data.notes[i].synced == 1){
-					// Deleted this record or object//
-					data.notes.splice(i, 1);
-				}
-			}
-			data.last_sync = this.getUTC();
-			console.log(data.last_sync);
-			
-			// AJAX SYNC FOCUS
-			// if(data.focus_synced == 0){
-			//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
-			//}
-			
-			// AJAX SYNC Disable App
-			// if(data.disable_synced == 0){
-			//	//Sync as// JSON.stringify(data.disable_app)
-			//}h
-			
-			this.updateLocal();
-			
+				return delay(1000);
+			  }).catch(() => {
+				showMessage('Note Not Synced Properly','warning');
+			  }).then(() => {
+				// 2. SYNC FOCUS
+				// AJAX SYNC FOCUS
+				// if(data.focus_synced == 0){
+				//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
+				//}
+				return delay(1000);
+			  }).catch(() => {
+				showMessage('Focus Sync went wrong','warning');
+			  }).then(() => {
+				// 3. SYNC DISABLE APP
+				// AJAX SYNC Disable App
+				// if(data.disable_synced == 0){
+				//	//Sync as// JSON.stringify(data.disable_app)
+				//}
+			  }).catch(() => {
+				showMessage('Disable Features Sync Failed','warning');
+			  }).then(() => {
+				data.last_sync = this.getUTC();
+				this.updateLocal();
+				callback();
+				showMessage('Synced Successful');
+			  });
         }else{
 			//Show the CheckUserAuth Error Message//
 			if(sender == 'user'){
-				alert("Minimal Productivity Extension: " +x);
+				showMessage(x, 'error');
 			}else{
-				console.log(x);
+				console.warn(x);
 			}
         }
 	}

@@ -54,6 +54,15 @@
 		display: none !important;
 		visibility: hidden;
 	}
+	
+	.syncing{
+		animation: rotate 1s linear infinite;
+	}
+	
+	@keyframes rotate{
+		0%{transform: rotate(0);}
+		100%{transform: rotate(360deg);}
+	}
 </style>
 
 <body class="blue-grey darken-1">
@@ -62,7 +71,7 @@
 			  <h5 class="white-text">Minimal Productivity App</h5>
 			  
 			  <!-- If not logged in -->
-			  <a href="#"><button id="no-login" class="btn btn-small green col s12 hidden">Login/Register</button></a>
+			  <a href="#"><button id="no-login" class="waves-effect waves-light btn btn-small green col s12 hidden">Login/Register</button></a>
 			  <br/>
 			  
 			  <!-- If Logged In -->
@@ -75,44 +84,49 @@
 			  </ul>
 			  
 			  <!-- Inner Links Access buttons -->
-			  <a href="#"><button class="btn btn-small green col s12">Settings</button></a>
+			  <a href="#"><button class="waves-effect waves-light btn btn-small green col s12">Settings</button></a>
 			  <br/>
-			  <a href="#"><a href="#"><button class="btn btn-small blue col s9">Notes</button></a>
-			  <a href="#"><button class="btn btn-small blue accent-4 col s2 offset-s1" title="Sync Now">
+			  <a href="#"><a href="#"><button class="waves-effect waves-light btn btn-small blue col s9">Notes</button></a>
+			  <a href="#"><button id="sync-button" class="waves-effect waves-light btn btn-small blue accent-2 col s2 offset-s1 hidden" title="Sync Now">
 				<i id="syncing" class="material-icons">sync</i>
 			  </button></a>
 			  <br/>
 			  <!-- NO NOTE BLOCK -->
 			  <a href="#" id="no-note-block" class="hidden">
-				<button class="btn btn-small red col s4" title="Disable Note">
-					<i class="material-icons left">block</i>Note
+				<button class="btn btn-small green col s4" title="Disable Note">
+					<i class="material-icons left">check_circle</i>Note
 				</button>
 			  </a>
 			  <!-- YES NOTE BLOCK -->
 			  <a href="#" id="yes-note-block" class="hidden">
-				<button class="btn btn-small green col s4" title="Enable Note">
-					<i class="material-icons left">check_circle</i>Note
+				<button class="btn btn-small red col s4" title="Enable Note">
+					<i class="material-icons left">block</i>Note
 				</button>
 			  </a>
 			  
 			  <!-- NO CHAT BLOCK -->
 			  <a href="#" id="no-chat-block" class="hidden">
-				<button class="btn btn-small red accent-4 col s4 offset-s1" title="Disable Chat">
-					<i class="material-icons left">not_interested</i>Chat
+				<button class="btn btn-small green accent-4 col s4 offset-s1" title="Disable Chat">
+					<i class="material-icons left">check_circle</i>Chat
 				</button>
 			  </a>
 			  <!-- YES NOTE BLOCK -->
 			  <a href="#" id="yes-chat-block" class="hidden">
-				<button class="btn btn-small green accent-4 col s4 offset-s1" title="Enable Chat">
-					<i class="material-icons left">check_circle</i>Chat
+				<button class="btn btn-small red accent-4 col s4 offset-s1" title="Enable Chat">
+					<i class="material-icons left">not_interested</i>Chat
 				</button>
 			  </a>
+			  
+			  <a href="#">
+				<button id="screenshot-button" class="waves-effect waves-light btn btn-small blue accent-4 col s2 offset-s1 hidden" title="Take Screenshot">
+				<i class="material-icons">add_a_photo</i>
+			  </button></a>
 		</div>
 	</div>
 	
-	<hr style="margin: 0 !important;"/>
+	<hr style="margin: 0 !important; border: 1px solid white;"/>
 	
-	<div class="row" style="margin-bottom: 0 !important;">
+	<div class="row" style="padding: 7px 0; margin-bottom: 0 !important;">
 		<p class="col s12 amber-text accent-5">
 			<span><a class="amber-text" href="#">About</a>
 			</span> | <span>

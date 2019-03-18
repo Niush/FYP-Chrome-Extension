@@ -97,6 +97,41 @@ document.addEventListener('DOMContentLoaded', function() {
 					}, 5000);
 				}
 			});
+			
+			// If Website URL is in Focus Page or not
+			var noFocus = document.getElementById('no-focus');
+			var yesFocus = document.getElementById('yes-focus');
+			
+			if(u.check_focus(currentHost)){
+				yesFocus.style.setProperty("display", "block", "important");
+				yesFocus.style.visibility = 'visible';
+			}else{
+				noFocus.style.setProperty("display", "block", "important");
+				noFocus.style.visibility = 'visible';
+			}
+			
+			
+			// A Block or Lock Web Page click listener //
+			// Message is Caught in Inject.js of that tab id //	
+			var ablock = document.getElementById('ablock-button');
+			ablock.style.setProperty("display", "block", "important");
+			ablock.style.visibility = 'visible';
+			ablock.addEventListener('click', function(){		
+				//Kinda Works - this also =//chrome.tabs.executeScript(null,{code: blockLinksWorker()});
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+					chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {
+						try{
+							showMessage(response.response);
+						}catch{
+							chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
+						}
+					});
+					
+					chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
+					
+					//if(confirm('Extension was Restarted.\nDo You want to Reload this Page to refresh extension ?')){location.reload()};
+				});
+			});
 		}
 	}
 });

@@ -22,6 +22,15 @@ function getScreenshot(callback){
 	);
 }
 
+function blockLinks(callback){
+	chrome.runtime.sendMessage(
+		{action: "lockpage",},
+		function(response) {
+			//callback(response.response);
+		}
+	);
+}
+
 const INIT_USER_DATA = {
     user_id: '',
 	user_name: '',

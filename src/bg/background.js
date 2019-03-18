@@ -108,6 +108,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 				return true;
 			}
+			
+			// If request to A block or Lock Webpage (lockpage) //
+			if(request.action.toLowerCase() == "lockpage"){
+				var evt = document.createEvent("CustomEvent");
+				evt.initCustomEvent(request.action, true, true);
+				document.dispatchEvent(evt);
+				return true;
+			}
 		  }
 		);
 			

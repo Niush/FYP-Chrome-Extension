@@ -4,16 +4,54 @@ function send_message(msg){
 	);
 }
 
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {		
-	console.log("MESSAGE BACK: " + request);
-  }
-);
+let pagelock = 0;
+let ablocker;
+let windowCoverContainer;
+function blockLinksWorker(){
+	if(pagelock == 0){
+		// Disable Pointer Events and Click to all a href links //
+		ablocker = document.createElement('style');
+		ablocker.type = 'text/css';
+		ablocker.innerHTML = `
+			a{
+				pointer-events: none !important;
+				opacity: 0.5;
+			}
+		`;
+		document.getElementsByTagName('head')[0].appendChild(ablocker);
+		
+		// Create a Layer to prevent any clicks //
+		windowCoverContainer = document.createElement('NS-shadow-container-'+new Date().getTime());
+		const shadowRoot = windowCoverContainer.attachShadow({mode: 'open'});
+		shadowRoot.innerHTML = `
+			<style>div{animation: showchange 1s ease forwards;} @keyframes showchange{0%{background: #323232dd;} 100%{background: transparent}}</style>
+			<div style="position: absolute !important; width: 100%; height: 100%; top: 0; left: 0; background: transparent; z-index: 999999 !important;"></div>
+		`;
+		document.getElementsByTagName('body')[0].appendChild(windowCoverContainer);
+		
+		// Confirm Before Closing this Tab //
+		window.onbeforeunload = function(){
+		  return confirm('Are you sure you want to leave?');
+		};
+		
+		// Disable Auto Discard - Chrome//
+		// Ran in page_action message sender
+		
+		pagelock = 1;
+		return 'Page Lock Mechanism Applied';
+	}else{
+		document.getElementsByTagName('head')[0].removeChild(ablocker);
+		document.getElementsByTagName('body')[0].removeChild(windowCoverContainer);
+		window.onbeforeunload = undefined;
+		pagelock = 0;
+		return 'Page Lock Reverted';
+	}
+}
 
 
 /*Scripts can also be ran here*/
 //document.getElementsByTagName('body')[0].style.opacity = "0.5";
-chrome.storage.local.get(function(result){console.log(result)});
+//chrome.storage.local.get(function(result){console.log(result)});
 
 /*****CLEAR CHROME.STORAGE*****/
 /* chrome.storage.local.clear(function() {
@@ -37,19 +75,31 @@ chrome.storage.local.get(function(result){console.log(result)});
 CODES TO RUN BEFORE ON LOAD
 1)Checking DIM
 *******************/
-chrome.storage.local.get('NS_dim', function(items) {
+/* chrome.storage.local.get('NS_dim', function(items) {
    if(items.NS_dim == true){
 		var overlay = document.createElement("div");
 		overlay.className = "ns_overlay";
 		document.getElementsByTagName("html")[0].appendChild(overlay);
    }
-});
+}); */
 
 /************************************/
 /*---- WINDOW ON LOAD RUNS HERE ----*/
 // ALMOST ALL OTHER ARE AFTER WINDOW LOAD//
 /***********************************/
-window.onload=function(){
+window.onload=function(){	
+	//On Message Received//
+	chrome.runtime.onMessage.addListener(
+	  function(request, sender, sendResponse) {
+		console.log(sender.tab ?
+					"from a content script:" + sender.tab.url :
+					"from the extension");
+		if(request.action == "lockpage"){
+			sendResponse({response: blockLinksWorker()});
+		}
+	  }
+	 );
+	
 	
 	/* SEND AND RECEIVE MESSAGE FROM BACKGROUND.JS */
 	/* function getScreenshotId(){
@@ -638,11 +688,11 @@ window.onload=function(){
 	}
 
 
-	document.getElementById('NS_note_title').onclick = function(){
+	/* document.getElementById('NS_note_title').onclick = function(){
 		document.getElementsByClassName('NS_note_composer')[0].className += " NS_note_active";
-	};
+	}; */
 	
-	let c = 0;
+	/* let c = 0;
 	document.getElementById('NS_note_title').onkeyup = function(e){
 		if(c === 0){
 			document.getElementsByClassName('NS_note_composer')[0].className += " NS_note_active";
@@ -658,10 +708,10 @@ window.onload=function(){
 	document.getElementById('NS_note_close').onclick = function(){
 		document.getElementsByClassName('NS_note_composer')[0].className = "NS_note_composer";
 		let c = 0;
-	};
+	}; */
 	
 	/* Adding CLick event to the Button to send Screenshot Message to Background js */
-	document.getElementById('getScreenshot').onclick = function(){getScreenshotId();}
+	/* document.getElementById('getScreenshot').onclick = function(){getScreenshotId();} */
 	
 }//ON WINDOW LOAD END *|*|*|*|* //
 

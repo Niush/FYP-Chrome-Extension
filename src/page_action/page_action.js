@@ -43,98 +43,122 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 		
-		//IF NOT INTERNAL PAGE - CHECK and show the disable or enable Note - Chat Button
-		if(currentHost != INTERNAL){
-			// If Note Disabled or Not
-			var noNoteBlock = document.getElementById('no-note-block');
-			var yesNoteBlock = document.getElementById('yes-note-block');
-			
-			if(u.check_disable_note(currentHost) == 1){
-				yesNoteBlock.style.setProperty("display", "block", "important");
-				yesNoteBlock.style.visibility = 'visible';
-			}else{
-				noNoteBlock.style.setProperty("display", "block", "important");
-				noNoteBlock.style.visibility = 'visible';
-			}
-			
-			// If Chat Disabled ot Not
-			var noChatBlock = document.getElementById('no-chat-block');
-			var yesChatBlock = document.getElementById('yes-chat-block');
-			if(u.check_disable_chat(currentHost) == 1){
-				yesChatBlock.style.setProperty("display", "block", "important");
-				yesChatBlock.style.visibility = 'visible';
-			}else{
-				noChatBlock.style.setProperty("display", "block", "important");
-				noChatBlock.style.visibility = 'visible';
-			}
-			
-			// Enable and Show Screenshot Button (NOTE THAT THIS IS INSIDE checkHost != INTERNAL)
-			var screenshotButton = document.getElementById('screenshot-button');
-			screenshotButton.style.setProperty("display", "block", "important");
-			screenshotButton.style.visibility = 'visible';
-			var sessionScreenshot = 0;
-			screenshotButton.addEventListener('click', function(){
-				if(sessionScreenshot <= 5){ // If less then five screenshot taken, else wait 5 seconds
-					sessionScreenshot++;
-					screenshotButton.style.cursor = 'wait';
-					getScreenshot(function(data){
-						screenshotButton.innerHTML = '<i class="material-icons">file_download</i>';
-						screenshotButton.style.cursor = 'inherit';
-						/* chrome.tabs.create({url: data});*/					
-						var a = document.createElement('a');
-						a.download = "Screenshot-"+u.getUTC()+"-mpe";
-						a.href = data;
-						a.click();
-						
+		// FIRST CHECK IF Last ERROR occurs + Check if URL is not chrome, or filrefox internal urls //
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			chrome.tabs.executeScript(tabs[0].id, {
+			  code: '',
+			}, _=>{
+			  let e = chrome.runtime.lastError;
+			  if(e !== undefined){
+				//console.log(tabs[0].id, _, e);
+				currentHost = INTERNAL;
+			  }
+			  loadContent();
+			});
+		});
+		
+		function loadContent(){
+			//IF NOT INTERNAL PAGE - CHECK and show the disable or enable Note - Chat Button
+			if(currentHost != INTERNAL){
+				// If Note Disabled or Not
+				var noNoteBlock = document.getElementById('no-note-block');
+				var yesNoteBlock = document.getElementById('yes-note-block');
+				
+				if(u.check_disable_note(currentHost) == 1){
+					yesNoteBlock.style.setProperty("display", "block", "important");
+					yesNoteBlock.style.visibility = 'visible';
+				}else{
+					noNoteBlock.style.setProperty("display", "block", "important");
+					noNoteBlock.style.visibility = 'visible';
+				}
+				
+				// If Chat Disabled ot Not
+				var noChatBlock = document.getElementById('no-chat-block');
+				var yesChatBlock = document.getElementById('yes-chat-block');
+				if(u.check_disable_chat(currentHost) == 1){
+					yesChatBlock.style.setProperty("display", "block", "important");
+					yesChatBlock.style.visibility = 'visible';
+				}else{
+					noChatBlock.style.setProperty("display", "block", "important");
+					noChatBlock.style.visibility = 'visible';
+				}
+				
+				// Enable and Show Screenshot Button (NOTE THAT THIS IS INSIDE checkHost != INTERNAL)
+				var screenshotButton = document.getElementById('screenshot-button');
+				screenshotButton.style.setProperty("display", "block", "important");
+				screenshotButton.style.visibility = 'visible';
+				var sessionScreenshot = 0;
+				screenshotButton.addEventListener('click', function(){
+					if(sessionScreenshot <= 5){ // If less then five screenshot taken, else wait 5 seconds
+						sessionScreenshot++;
+						screenshotButton.style.cursor = 'wait';
+						getScreenshot(function(data){
+							screenshotButton.innerHTML = '<i class="material-icons">file_download</i>';
+							screenshotButton.style.cursor = 'inherit';
+							/* chrome.tabs.create({url: data});*/					
+							var a = document.createElement('a');
+							a.download = "Screenshot-"+u.getUTC()+"-mpe";
+							a.href = data;
+							a.click();
+							
+							setTimeout(function(){
+								screenshotButton.innerHTML = '<i class="material-icons">add_a_photo</i>';
+							}, 2000);
+						});
+					}else{
+						showMessage('Please Wait....');
 						setTimeout(function(){
-							screenshotButton.innerHTML = '<i class="material-icons">add_a_photo</i>';
-						}, 2000);
+							sessionScreenshot = 0;
+						}, 5000);
+					}
+				});
+				
+				// If Website URL is in Focus Page or not
+				var noFocus = document.getElementById('no-focus');
+				var yesFocus = document.getElementById('yes-focus');
+				
+				if(u.check_focus(currentHost)){
+					yesFocus.style.setProperty("display", "block", "important");
+					yesFocus.style.visibility = 'visible';
+					
+					yesFocus.addEventListener('click', function(){
+						
 					});
 				}else{
-					showMessage('Please Wait....');
-					setTimeout(function(){
-						sessionScreenshot = 0;
-					}, 5000);
-				}
-			});
-			
-			// If Website URL is in Focus Page or not
-			var noFocus = document.getElementById('no-focus');
-			var yesFocus = document.getElementById('yes-focus');
-			
-			if(u.check_focus(currentHost)){
-				yesFocus.style.setProperty("display", "block", "important");
-				yesFocus.style.visibility = 'visible';
-			}else{
-				noFocus.style.setProperty("display", "block", "important");
-				noFocus.style.visibility = 'visible';
-			}
-			
-			
-			// A Block or Lock Web Page click listener //
-			// Message is Caught in Inject.js of that tab id //	
-			var ablock = document.getElementById('ablock-button');
-			ablock.style.setProperty("display", "block", "important");
-			ablock.style.visibility = 'visible';
-			ablock.addEventListener('click', function(){		
-				//Kinda Works - this also =//chrome.tabs.executeScript(null,{code: blockLinksWorker()});
-				chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-					chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {
-						try{
-							showMessage(response.response);
-							if(response.response.toLowerCase().search('reverted') == -1){
-								chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
-							}else{
-								chrome.tabs.update(tabs[0].id, { autoDiscardable: true });
-							}
-						}catch{
-							chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
-						}
-					});
+					noFocus.style.setProperty("display", "block", "important");
+					noFocus.style.visibility = 'visible';
 					
-					//chrome.tabs.update(tabs[0].id, { autoDiscardable: false });					
+					noFocus.addEventListener('click', function(){
+						
+					});
+				}
+				
+				
+				// A Block or Lock Web Page click listener //
+				// Message is Caught in Inject.js of that tab id //	
+				var ablock = document.getElementById('ablock-button');
+				ablock.style.setProperty("display", "block", "important");
+				ablock.style.visibility = 'visible';
+				ablock.addEventListener('click', function(){		
+					//Kinda Works - this also =//chrome.tabs.executeScript(null,{code: blockLinksWorker()});
+					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+						chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {
+							try{
+								showMessage(response.response);
+								if(response.response.toLowerCase().search('reverted') == -1){
+									chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
+								}else{
+									chrome.tabs.update(tabs[0].id, { autoDiscardable: true });
+								}
+							}catch{
+								chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
+							}
+						});
+						
+						//chrome.tabs.update(tabs[0].id, { autoDiscardable: false });					
+					});
 				});
-			});
+			}
 		}
 	}
 });

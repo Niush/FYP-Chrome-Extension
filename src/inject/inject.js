@@ -30,7 +30,8 @@ function upgradeOrReconnectChanges(){
 }
 
 setTimeout(function(){
-	upgradeOrReconnectChanges(); //Call on Upgrade and Reconnect - Change Port etc.
+	// NOTE: TODO: IMPORTANT: THIS IS DISABLED ALTHOUGH MIGHT BE NEEDED TO SEE MESSAGE CHANGES - SEEMS TO WORK WITHOUT THIS FOR NOW //
+	//upgradeOrReconnectChanges(); //Call on Upgrade and Reconnect - Change Port etc.
 	
 	function send_message(msg){
 		chrome.runtime.sendMessage(

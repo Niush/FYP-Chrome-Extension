@@ -9,7 +9,7 @@ chrome.tabs.getSelected(null, function(tab) {
 	windowId = tab.windowId;
 	currentPageId = tab.id;
 	currentPage = tab.url;
-	if(tab.url.search('chrome://') < 0 && tab.url.search('file://') < 0){
+	if( ! tab.url.match(/(chrome|file|chrome-extension|opera):\/\//gi) ) {
 		currentHost = getHostName(tab.url); //Get Host name method in userdata.js
 	}else{
 		currentHost = INTERNAL;

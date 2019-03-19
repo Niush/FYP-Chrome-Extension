@@ -71,20 +71,34 @@ function injectToAll(){
 	chrome.manifest = chrome.app.getDetails();
 
 	var injectIntoTab = function (tab) {
-		// You could iterate through the content scripts here
-		var scripts = chrome.manifest.content_scripts[1].js;
-		var css = chrome.manifest.content_scripts[0].css;
-		var i = 0, s = scripts.length;
-		for( ; i < s; i++ ) {
-			chrome.tabs.executeScript(tab.id, {
-				file: scripts[i]
-			});
-		}
-		var j = 0, c = css.length;
-		for( ; j < c; j++ ) {
-			chrome.tabs.insertCSS(tab.id, {
-				file: css[j]
-			});
+		// FIRST CHECK IF INJECT CAN BE DONE IN THIS URL or PAGE (NOTE: CANNOT INJECT TO internal urls)
+		chrome.tabs.executeScript(tab.id, {
+		  code: '',
+		}, _=>{
+		  let e = chrome.runtime.lastError;
+		  // IF Error does not occur and Inject can load in this page //
+		  if(e == undefined){
+			//console.log(tab.id, _, e);
+			injectConfirm(); // Inject them js and css
+		  }
+		});
+		
+		function injectConfirm(){
+			// You could iterate through the content scripts here
+			var scripts = chrome.manifest.content_scripts[1].js;
+			var css = chrome.manifest.content_scripts[0].css;
+			var i = 0, s = scripts.length;
+			for( ; i < s; i++ ) {
+				chrome.tabs.executeScript(tab.id, {
+					file: scripts[i]
+				});
+			}
+			var j = 0, c = css.length;
+			for( ; j < c; j++ ) {
+				chrome.tabs.insertCSS(tab.id, {
+					file: css[j]
+				});
+			}
 		}
 	}
 
@@ -99,7 +113,7 @@ function injectToAll(){
 			for( ; j < t; j++ ) {
 				currentTab = currentWindow.tabs[j];
 				// Skip chrome:// and https:// pages
-				if( ! currentTab.url.match(/(chrome|file|chrome-extension):\/\//gi) ) {
+				if( ! currentTab.url.match(/(chrome|file|chrome-extension|opera):\/\//gi) ) {
 					injectIntoTab(currentTab);
 				}
 			}
@@ -107,6 +121,9 @@ function injectToAll(){
 	});
 }
 
+  /****************************/
+ /*** M A I N ---- ON LOAD ***/
+/****************************/
 document.addEventListener('DOMContentLoaded', function() {	
 	injectToAll(); // Called to Inject to all opened pages //
 

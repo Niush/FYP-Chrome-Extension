@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			screenshotButton.style.visibility = 'visible';
 			var sessionScreenshot = 0;
 			screenshotButton.addEventListener('click', function(){
-				if(sessionScreenshot <= 5){
+				if(sessionScreenshot <= 5){ // If less then five screenshot taken, else wait 5 seconds
 					sessionScreenshot++;
 					screenshotButton.style.cursor = 'wait';
 					getScreenshot(function(data){
@@ -122,14 +122,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {
 						try{
 							showMessage(response.response);
+							if(response.response.toLowerCase().search('reverted') == -1){
+								chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
+							}else{
+								chrome.tabs.update(tabs[0].id, { autoDiscardable: true });
+							}
 						}catch{
 							chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
 						}
 					});
 					
-					chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
-					
-					//if(confirm('Extension was Restarted.\nDo You want to Reload this Page to refresh extension ?')){location.reload()};
+					//chrome.tabs.update(tabs[0].id, { autoDiscardable: false });					
 				});
 			});
 		}

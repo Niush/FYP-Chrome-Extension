@@ -1,5 +1,5 @@
 /** START EXTENSION AFTER FEW SECONDS DELAY **/
-let START_DELAY = 2000;
+let START_DELAY = 500;
 let datauri = ""; //Stores current data uri the latest one
 
 // Take Screen shot of that active page -quality changed //
@@ -66,8 +66,51 @@ function dataURItoBlob(dataURI) {
   return blob;
 }
 
+function injectToAll(){
+	// Add a `manifest` property to the `chrome` object.
+	chrome.manifest = chrome.app.getDetails();
+
+	var injectIntoTab = function (tab) {
+		// You could iterate through the content scripts here
+		var scripts = chrome.manifest.content_scripts[1].js;
+		var css = chrome.manifest.content_scripts[0].css;
+		var i = 0, s = scripts.length;
+		for( ; i < s; i++ ) {
+			chrome.tabs.executeScript(tab.id, {
+				file: scripts[i]
+			});
+		}
+		var j = 0, c = css.length;
+		for( ; j < c; j++ ) {
+			chrome.tabs.insertCSS(tab.id, {
+				file: css[j]
+			});
+		}
+	}
+
+	// Get all windows
+	chrome.windows.getAll({
+		populate: true
+	}, function (windows) {
+		var i = 0, w = windows.length, currentWindow;
+		for( ; i < w; i++ ) {
+			currentWindow = windows[i];
+			var j = 0, t = currentWindow.tabs.length, currentTab;
+			for( ; j < t; j++ ) {
+				currentTab = currentWindow.tabs[j];
+				// Skip chrome:// and https:// pages
+				if( ! currentTab.url.match(/(chrome|file|chrome-extension):\/\//gi) ) {
+					injectIntoTab(currentTab);
+				}
+			}
+		}
+	});
+}
+
 document.addEventListener('DOMContentLoaded', function() {	
-	let u;
+	injectToAll(); // Called to Inject to all opened pages //
+
+	let u; // USER
 	
 	/* Use Callbacks if needed / Promise might not work */
 	/* First run that checks Install Event is auto trigerred */

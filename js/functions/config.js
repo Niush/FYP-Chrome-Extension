@@ -46,6 +46,7 @@ const INIT_USER_DATA = {
     disable_app: [],
     dim_time: [],
     todo: [],
+	copy_datauri: false,
 }
 
 const HOST = "localhost";

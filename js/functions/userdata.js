@@ -286,9 +286,15 @@ class User{
 	get all_focus(){
 		return data['focus'];
 	}
-	add_focus(new_data, callback){
-		if(!this.check_focus(new_data.url)){
-			data.focus.push(new_data);
+	add_focus(host,limit=1800, callback){
+		if(!this.check_focus(host)){
+			data.focus.push({url: host, 
+							limit_sec: limit,
+							total_tries: 0,
+							today_total: 0,
+							all_total: 0,
+							today_date: this.getDate()
+							});
 			this.focus_synced = 0;
 			this.updateLocal();
 		}else{
@@ -397,10 +403,13 @@ class User{
 				this.disable_synced = 0;
 				this.updateLocal();
 				return true;
+			}else{ //If Not Found then just add //
+				this.add_disable_app(new_data);
+				this.disable_synced = 0;
+				this.updateLocal();
+				return true;
 			}
 		}catch(e){
-			alert('Not Already Disabled...Adding to Disabled App Now.');
-			this.add_disable_app(new_data);
 			return false;
 		}
 		
@@ -417,18 +426,72 @@ class User{
 		return false;
 	}
 	check_disable_note(url){
-		let index = data.disable_app.findIndex(e => e.url == url);
-		if(index >= 0){ //If found//
-			return data.disable_app[index].disable_note;
+		try{
+			let index = data.disable_app.findIndex(e => e.url == url);
+			if(index >= 0){ //If found//
+				return data.disable_app[index].disable_note;
+			}else{
+				return 0;
+			}
+		}catch{
+			return 0;
 		}
-		return false;
 	}
 	check_disable_chat(url){
-		let index = data.disable_app.findIndex(e => e.url == url);
-		if(index >= 0){ //If found//
-			return data.disable_app[index].disable_chat;
+		try{
+			let index = data.disable_app.findIndex(e => e.url == url);
+			if(index >= 0){ //If found//
+				return data.disable_app[index].disable_chat;
+			}else{
+				return 0;
+			}
+		}catch{
+			return 0;
 		}
-		return false;
+	}
+	add_disable_note(url, callback){
+		this.edit_disable_app({
+				url: url,
+				disable_note: 1,
+				disable_chat: this.check_disable_chat(url)
+			});
+			
+		callback();
+	}
+	remove_disable_note(url, callback){
+		this.edit_disable_app({
+				url: url,
+				disable_note: 0,
+				disable_chat: this.check_disable_chat(url)
+			});
+			
+		if(this.check_disable_chat(url) == 0){
+			this.delete_disable_app(url);
+		}
+		
+		callback();
+	}
+	add_disable_chat(url, callback){
+		this.edit_disable_app({
+				url: url,
+				disable_note: this.check_disable_note(url),
+				disable_chat: 1
+			});
+			
+		callback();
+	}
+	remove_disable_chat(url, callback){
+		this.edit_disable_app({
+				url: url,
+				disable_note: this.check_disable_note(url),
+				disable_chat: 0
+			});
+			
+		if(this.check_disable_note(url) == 0){
+			this.delete_disable_app(url);
+		}
+		
+		callback();
 	}
 	
 	/* TO-DO */
@@ -445,6 +508,19 @@ class User{
 	}
 	delete_todo(index){
 		data.todo.splice(index, 1);
+		this.updateLocal();
+	}
+	
+	
+	
+	/***** Miscellaneous *****/
+	/* copy data URI on screenshot */
+	get copy_datauri(){
+		return data.copy_datauri;
+	}
+	
+	set copy_datauri(data){
+		data.copy_datauri = data;
 		this.updateLocal();
 	}
 }

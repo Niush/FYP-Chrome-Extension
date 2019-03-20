@@ -34,36 +34,25 @@ function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.
 		ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
 		datauri = canvas.toDataURL('image/jpeg', 1); // set 0.5 for low
 		
-		/* chrome.tabs.create({url: datauri}, function(){
-			console.log(dataURItoBlob(datauri));
-		}); */
+		//dataURItoBlob(canvas);
 	};
 	
 	img.src = str;
 }
 
-function dataURItoBlob(dataURI) {
-  // convert base64 to raw binary data held in a string
-  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  var byteString = atob(dataURI.split(',')[1]);
+function dataURItoBlob(canvas) {
+	canvas.toBlob(function(blob) {
+		var newImg = document.createElement('img'),
+			url = URL.createObjectURL(blob);
 
-  // separate out the mime component
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+		newImg.onload = function() {
+			URL.revokeObjectURL(url);
+		};
 
-  // write the bytes of the string to an ArrayBuffer
-  var ab = new ArrayBuffer(byteString.length);
-
-  // create a view into the buffer
-  var ia = new Uint8Array(ab);
-
-  // set the bytes of the buffer to the correct values
-  for (var i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-  }
-
-  // write the ArrayBuffer to a blob, and you're done
-  var blob = new Blob([ab], {type: mimeString});
-  return blob;
+		newImg.src = url;
+		document.body.appendChild(newImg);
+		return url;
+	});
 }
 
 function injectToAll(){

@@ -60,30 +60,102 @@ document.addEventListener('DOMContentLoaded', function() {
 		function loadContent(){
 			//IF NOT INTERNAL PAGE - CHECK and show the disable or enable Note - Chat Button
 			if(currentHost != INTERNAL){
-				// If Note Disabled or Not
+				/****************************/
+				/* If Note Disabled or Not */
+				/**************************/
 				var noNoteBlock = document.getElementById('no-note-block');
 				var yesNoteBlock = document.getElementById('yes-note-block');
+				let noNoteBlockApplied = false;
+				let yesNoteBlockApplied = false;
 				
-				if(u.check_disable_note(currentHost) == 1){
+				function yesNoteApply(){
 					yesNoteBlock.style.setProperty("display", "block", "important");
 					yesNoteBlock.style.visibility = 'visible';
-				}else{
+					
+					if(!yesNoteBlockApplied){
+						yesNoteBlock.addEventListener('click', function(){
+							u.remove_disable_note(currentHost, function(){
+								yesNoteBlock.style.setProperty("display", "none", "important");
+								yesNoteBlock.style.visibility = 'hidden';
+								noNoteApply();
+							});
+						});
+						yesNoteBlockApplied = true;
+					}
+				}
+				
+				function noNoteApply(){
 					noNoteBlock.style.setProperty("display", "block", "important");
 					noNoteBlock.style.visibility = 'visible';
+					
+					if(!noNoteBlockApplied){
+						noNoteBlock.addEventListener('click', function(){
+							u.add_disable_note(currentHost, function(){
+								noNoteBlock.style.setProperty("display", "none", "important");
+								noNoteBlock.style.visibility = 'hidden';
+								yesNoteApply();
+							});
+						});
+						noNoteBlockApplied = true;
+					}
 				}
 				
-				// If Chat Disabled ot Not
+				if(u.check_disable_note(currentHost) == 1){
+					yesNoteApply();
+				}else{
+					noNoteApply();
+				}
+				
+				/****************************/
+				/* If Chat Disabled or Not */
+				/**************************/
 				var noChatBlock = document.getElementById('no-chat-block');
 				var yesChatBlock = document.getElementById('yes-chat-block');
-				if(u.check_disable_chat(currentHost) == 1){
+				let noChatBlockApplied = false;
+				let yesChatBlockApplied = false;
+				
+				function yesChatApply(){
 					yesChatBlock.style.setProperty("display", "block", "important");
 					yesChatBlock.style.visibility = 'visible';
-				}else{
-					noChatBlock.style.setProperty("display", "block", "important");
-					noChatBlock.style.visibility = 'visible';
+					
+					if(!yesChatBlockApplied){
+						yesChatBlock.addEventListener('click', function(){
+							u.remove_disable_chat(currentHost, function(){
+								yesChatBlock.style.setProperty("display", "none", "important");
+								yesChatBlock.style.visibility = 'hidden';
+								noChatApply();
+							});
+						});
+						yesChatBlockApplied = true;
+					}
 				}
 				
-				// Enable and Show Screenshot Button (NOTE THAT THIS IS INSIDE checkHost != INTERNAL)
+				function noChatApply(){
+					noChatBlock.style.setProperty("display", "block", "important");
+					noChatBlock.style.visibility = 'visible';
+					
+					if(!noChatBlockApplied){
+						noChatBlock.addEventListener('click', function(){
+							u.add_disable_chat(currentHost, function(){
+								noChatBlock.style.setProperty("display", "none", "important");
+								noChatBlock.style.visibility = 'hidden';
+								yesChatApply();
+							});
+						});
+						noChatBlockApplied = true;
+					}
+				}
+				
+				if(u.check_disable_chat(currentHost) == 1){
+					yesChatApply(); //if chat is disabled = yes chat disabled apply
+				}else{
+					noChatApply();
+				}
+				
+				/**************************************/
+				/* Enable and Show Screenshot Button */
+				/************************************/
+				//(NOTE THAT THIS IS INSIDE checkHost != INTERNAL)
 				var screenshotButton = document.getElementById('screenshot-button');
 				screenshotButton.style.setProperty("display", "block", "important");
 				screenshotButton.style.visibility = 'visible';
@@ -95,7 +167,19 @@ document.addEventListener('DOMContentLoaded', function() {
 						getScreenshot(function(data){
 							screenshotButton.innerHTML = '<i class="material-icons">file_download</i>';
 							screenshotButton.style.cursor = 'inherit';
-							/* chrome.tabs.create({url: data});*/					
+							/* chrome.tabs.create({url: data});*/		
+							
+							// IF Copy is set to true - copt data uri on screenshot //
+							if(u.copy_datauri){
+								let dummy = document.createElement("input");
+								document.body.appendChild(dummy);
+								dummy.setAttribute('value', data);
+								dummy.select();
+								document.execCommand("copy");
+								document.body.removeChild(dummy);
+								showMessage('DataURI Copied to Clipboard also.','warning');
+							}
+							
 							var a = document.createElement('a');
 							a.download = "Screenshot-"+u.getUTC()+"-mpe";
 							a.href = data;
@@ -103,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							
 							setTimeout(function(){
 								screenshotButton.innerHTML = '<i class="material-icons">add_a_photo</i>';
-							}, 2000);
+							}, 3000);
 						});
 					}else{
 						showMessage('Please Wait....');
@@ -113,7 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				});
 				
-				// If Website URL is in Focus Page or not
+				/*******************************************/
+				/* If Website URL is in Focus Page or not */
+				/*****************************************/
 				var noFocus = document.getElementById('no-focus');
 				var yesFocus = document.getElementById('yes-focus');
 				let noFocusApplied = false;
@@ -141,14 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					
 					if(!noFocusApplied){
 						noFocus.addEventListener('click', function(){
-							u.add_focus({
-							   url: currentHost, 
-							   limit_sec: 1800,
-							   total_tries: 0,
-							   today_total: 0,
-							   all_total: 0,
-							   today_date: u.getDate()
-							}, function(){
+							/*{url: currentHost, limit_sec: 1800, total_tries: 0, today_total: 0, all_total: 0, today_date: u.getDate()}*/
+							u.add_focus(currentHost,1800, function(){
 								noFocus.style.setProperty("display", "none", "important");
 								noFocus.style.visibility = 'hidden';
 								yesFocusApply();
@@ -165,8 +245,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				
 				
-				// A Block or Lock Web Page click listener //
-				// Message is Caught in Inject.js of that tab id //	
+				/*********************************************/
+				/* A Block or Lock Web Page click listener  */
+				/*******************************************/
+				// Message is Caught in Inject.js of that tab id - Background Re-Injects on Update or Install //	
 				var ablock = document.getElementById('ablock-button');
 				ablock.style.setProperty("display", "block", "important");
 				ablock.style.visibility = 'visible';
@@ -184,9 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							}catch{
 								chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
 							}
-						});
-						
-						//chrome.tabs.update(tabs[0].id, { autoDiscardable: false });					
+						});						
 					});
 				});
 			}

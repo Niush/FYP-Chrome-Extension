@@ -9,7 +9,7 @@ chrome.tabs.getSelected(null, function(tab) {
 	windowId = tab.windowId;
 	currentPageId = tab.id;
 	currentPage = tab.url;
-	if( ! tab.url.match(/(chrome|file|chrome-extension|opera):\/\//gi) ) {
+	if( ! tab.url.match(/(chrome|file|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
 		currentHost = getHostName(tab.url); //Get Host name method in userdata.js
 	}else{
 		currentHost = INTERNAL;
@@ -286,10 +286,16 @@ class User{
 	get all_focus(){
 		return data['focus'];
 	}
-	add_focus(new_data){
-		data.focus.push(new_data);
-		this.focus_synced = 0;
-		this.updateLocal();
+	add_focus(new_data, callback){
+		if(!this.check_focus(new_data.url)){
+			data.focus.push(new_data);
+			this.focus_synced = 0;
+			this.updateLocal();
+		}else{
+			showMessage('Website Already Added to Focus', 'warning');
+		}
+		
+		callback();
 	}
 	edit_focus(new_data){
 		try{
@@ -308,7 +314,7 @@ class User{
 		alert('Failed to Update the changes.');
 		return false;
 	}
-	delete_focus(url){
+	delete_focus(url, callback){
 		let index = data.focus.findIndex(e => e.url == url);
 		if(index < 0){ //If not found//
 			alert('Failed to Execute Delete.');
@@ -317,6 +323,8 @@ class User{
 		data.focus.splice(index,1);
 		this.focus_synced = 0;
 		this.updateLocal();
+		
+		callback();
 	}
 	check_focus(url){
 		let index = data.focus.findIndex(e => e.url == url);

@@ -116,21 +116,52 @@ document.addEventListener('DOMContentLoaded', function() {
 				// If Website URL is in Focus Page or not
 				var noFocus = document.getElementById('no-focus');
 				var yesFocus = document.getElementById('yes-focus');
+				let noFocusApplied = false;
+				let yesFocusApplied = false;
 				
-				if(u.check_focus(currentHost)){
+				function yesFocusApply(){
 					yesFocus.style.setProperty("display", "block", "important");
 					yesFocus.style.visibility = 'visible';
 					
-					yesFocus.addEventListener('click', function(){
-						
-					});
-				}else{
+					if(!yesFocusApplied){
+						yesFocus.addEventListener('click', function(){
+							u.delete_focus(currentHost, function(){
+								yesFocus.style.setProperty("display", "none", "important");
+								yesFocus.style.visibility = 'hidden';
+								noFocusApply();
+							});
+						});
+						yesFocusApplied = true;
+					}
+				}
+				
+				function noFocusApply(){
 					noFocus.style.setProperty("display", "block", "important");
 					noFocus.style.visibility = 'visible';
 					
-					noFocus.addEventListener('click', function(){
-						
-					});
+					if(!noFocusApplied){
+						noFocus.addEventListener('click', function(){
+							u.add_focus({
+							   url: currentHost, 
+							   limit_sec: 1800,
+							   total_tries: 0,
+							   today_total: 0,
+							   all_total: 0,
+							   today_date: u.getDate()
+							}, function(){
+								noFocus.style.setProperty("display", "none", "important");
+								noFocus.style.visibility = 'hidden';
+								yesFocusApply();
+							});
+						});
+						noFocusApplied = true;
+					}
+				}
+				
+				if(u.check_focus(currentHost)){
+					yesFocusApply();
+				}else{
+					noFocusApply();
 				}
 				
 				

@@ -3,7 +3,7 @@ let START_DELAY = 500;
 let datauri = ""; //Stores current data uri the latest one
 
 // Take Screen shot of that active page -quality changed //
-function takeScreenShot(tabInfo, quality=50){
+function takeScreenShot(tabInfo, quality=100){
 	chrome.tabs.captureVisibleTab(tabInfo.windowId,{'quality': quality},function(screenshotUrl) {
 		//datauri = screenshotUrl;
 		cropData(screenshotUrl, tabInfo.width, tabInfo.height); //No x and y
@@ -32,7 +32,7 @@ function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.
 		var ctx = canvas.getContext('2d');
 	
 		ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
-		datauri = canvas.toDataURL('image/jpeg', 0.5);
+		datauri = canvas.toDataURL('image/jpeg', 1); // set 0.5 for low
 		
 		/* chrome.tabs.create({url: datauri}, function(){
 			console.log(dataURItoBlob(datauri));
@@ -113,7 +113,7 @@ function injectToAll(){
 			for( ; j < t; j++ ) {
 				currentTab = currentWindow.tabs[j];
 				// Skip chrome:// and https:// pages
-				if( ! currentTab.url.match(/(chrome|file|chrome-extension|opera):\/\//gi) ) {
+				if( ! currentTab.url.match(/(chrome|file|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
 					injectIntoTab(currentTab);
 				}
 			}

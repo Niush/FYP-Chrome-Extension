@@ -1,21 +1,43 @@
+::-webkit-scrollbar
+{
+  width: 8px;  /* for vertical scrollbars */
+  height: 8px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .hidden{
 	/* display: none; */
 	visibility: hidden;
 	opacity: 0;
-	transform: scale(0.8) rotateY(90deg);
+	transform: rotateY(90deg);
 	transition: all 0.2s 0s ease;
 	max-height: 0;
 	overflow: hidden;
+}
+
+@media screen and (max-width: 700px){
+	.hidden{
+		transform: none;
+	}
 }
 
 .shown{
 	/* display: inherit; */
 	opacity: 1;
 	visibility: visible;
-	transform: scale(1) rotateY(0);
+	transform: rotateY(0);
 	transition: all 0.5s 0.2s ease;
-	max-height: 10000px;
-	overflow: auto;
+	max-height: 100vh;
+	/* overflow: initial; */
 }
 
 body {
@@ -23,7 +45,6 @@ body {
   min-height: 100vh;
   flex-direction: column;
   background: #EDEDED;
-  overflow: hidden;
 }
 
 main {

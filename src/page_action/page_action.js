@@ -16,10 +16,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			noLogin.style.setProperty("display", "block", "important");
 			noLogin.style.visibility = 'visible';
 			
-			document.getElementById('notes-button').className += ' s12';
+			var syncButton = document.getElementById('sync-button');
+			syncButton.style.setProperty("display", "block", "important");
+			syncButton.style.visibility = 'visible';
+			syncButton.style.cursor = 'not-allowed';
+			syncButton.className = 'btn btn-small grey col s2 offset-s1';
+			syncButton.addEventListener('click', function(){
+				showMessage('Login to Sync Data','error');
+			});
 			
 			noLogin.addEventListener('click', function(){
-				chrome.tabs.create({url: 'src/login/login.html'});
+				openLogin();
 			});
 		}else{
 			// If passphrase exist or not
@@ -40,9 +47,19 @@ document.addEventListener('DOMContentLoaded', function() {
 				syncButton.addEventListener('click', function(){
 					let syncIcon = document.getElementById('syncing');
 					syncIcon.className += ' syncing';
-					u.syncNow('user', function(){
+					
+					chrome.extension.sendMessage({action: 'sync'}, function(response){
+						if(response.response != true){
+							showMessage('Sync Failed');
+						}else{
+							showMessage('Sync Successful.');
+						}
 						syncIcon.className = 'material-icons';
 					});
+					
+					/* u.syncNow('user', function(){
+						syncIcon.className = 'material-icons';
+					}); */
 				});
 			}
 		}
@@ -282,5 +299,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		dev_website.addEventListener('click', function(){
 			chrome.tabs.create({url: DEV_WEBSITE});
 		});
+		
+		// Settings Buttin Click //
+		let settingsBtn = document.getElementById('settings-btn');
+		settingsBtn.addEventListener('click', function(){
+			openSettings();
+		});
+		
 	}
 });

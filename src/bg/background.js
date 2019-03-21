@@ -159,10 +159,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			
 			// If request to A block or Lock Webpage (lockpage) //
-			if(request.action.toLowerCase() == "lockpage"){
-				var evt = document.createEvent("CustomEvent");
-				evt.initCustomEvent(request.action, true, true);
-				document.dispatchEvent(evt);
+			if(request.action.toLowerCase() == "sync"){
+				u = new User();
+				u.syncNow('app', function(){
+					sendResponse({
+						response: true,
+					});
+				});
+				
 				return true;
 			}
 		  }

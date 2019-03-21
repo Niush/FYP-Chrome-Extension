@@ -3,7 +3,7 @@
 /*****************************/
 chrome.runtime.onInstalled.addListener(function (object) {
 	if(object.reason == "install"){
-		chrome.tabs.create({url: "src/options_custom/index.html"}, function (tab) {
+		chrome.tabs.create({url: "src/welcome/welcome.html"}, function (tab) {
 			console.log("Thank You For Installing Minimal Productivity Extension.");
 			
 			getLocalIPs(function(ips) { // <!-- ips is an array of local IP addresses.

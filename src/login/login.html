@@ -60,26 +60,32 @@
 				<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
 					<form class="col s12" method="post" action="#">
 						<div class='row'>
-							<div class='input-field col s12'>
-								<input class='validate' type='email' name='email' id='email' required />
-								<label for='email'>Enter your email</label>
+							<div class='input-field col s6'>
+								<input class='validate' type='text' name='name' id='name' required />
+								<label for='name'>Full Name</label>
+							</div>
+							
+							<div class='input-field col s6'>
+								<input class='validate' value="1999-01-01" type='date' name='dob' id='dob' required />
+								<label for='dob'>DOB</label>
 							</div>
 						</div>
-
+					
 						<div class='row'>
-							<div class='input-field col s12'>
-								<input class='validate' type='password' name='password' id='password' required />
-								<label for='password'>Enter your password</label>
+							<div class='input-field col s6'>
+								<input class='validate' type='email' name='email' id='email-reg' required />
+								<label for='email-reg'>Email</label>
 							</div>
-							<label style='float: right;'>
-								<a class='pink-text' href='#!'><b>Forgot Password?</b></a>
-							</label>
+							<div class='input-field col s6'>
+								<input class='validate' type='password' name='password' id='password-reg' required />
+								<label for='password-reg'>Password</label>
+							</div>
 						</div>
 
 						<br />
 						<center>
 							<div class='row'>
-								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light indigo'>Register</button>
+								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light orange accent-4'>Register</button>
 							</div>
 						</center>
 					</form>
@@ -89,5 +95,14 @@
 			
 		</center>
 		</main>
+		
+		<center style="padding: 5px 0; position: fixed; bottom: 5px; right: 10px; font-size: 1.1em; font-weight: 500; letter-spacing: 2px;">
+			<small>Developer - Niush Sitaula</small>
+		</center>
+		
+		<center style="position: fixed; bottom: 5px; left: 10px; font-size: 1.1em; letter-spacing: 2px;">
+			<img src="../../icons/icon128.png" alt="MPA" style="height: 80px;"/>
+		</center>
+		
     </body>
 </html>

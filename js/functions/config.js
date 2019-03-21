@@ -1,6 +1,6 @@
 function showMessage(msg='', type='info'){
 	if(msg != ''){
-		M.Toast.dismissAll(); //Close if any is shown - Only one msg at once - looks nicer may be//
+		//M.Toast.dismissAll(); //Close if any is shown - Only one msg at once - looks nicer may be//
 		
 		if(type == 'info'){
 			M.toast({html: msg});
@@ -29,6 +29,30 @@ function blockLinks(callback){
 			//callback(response.response);
 		}
 	);
+}
+
+function openLogin(){
+	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
+		for(let i = 0 ; i < tabs.length ; i++){
+			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+"/src/login/login.html")){
+				chrome.tabs.update(tabs[i].id, {highlighted: true});
+				return;
+			}
+		}
+		chrome.tabs.create({url: 'src/login/login.html'});
+	});
+}
+
+function openSettings(){
+	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
+		for(let i = 0 ; i < tabs.length ; i++){
+			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+"/src/options_custom/index.html")){
+				chrome.tabs.update(tabs[i].id, {highlighted: true});
+				return;
+			}
+		}
+		chrome.tabs.create({url: 'src/options_custom/index.html'});
+	});
 }
 
 const INIT_USER_DATA = {

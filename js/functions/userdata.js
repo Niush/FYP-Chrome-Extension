@@ -80,6 +80,7 @@ class User{
 			delay(200)
 			  .then(() => {
 				// 1. SYNC NOTE
+				// NOTE - TODO: ALSO NEED TO SYNC NOTES OR DATA FROM SERVER TO DEVICE - SO YAA - COMPLEXITY
 				for(let i = 0 ; i < data.notes.length ; i++){
 					if(data.notes[i].synced == 0){
 						// AJAX SYNC THIS data.notes[i] object
@@ -296,6 +297,7 @@ class User{
 							today_date: this.getDate()
 							});
 			this.focus_synced = 0;
+			this.focus_modified_at = this.getUTC();
 			this.updateLocal();
 		}else{
 			showMessage('Website Already Added to Focus', 'warning');
@@ -309,6 +311,7 @@ class User{
 			if(index >= 0){ //If Found//
 				data.focus[index] = new_data;
 				this.focus_synced = 0;
+				this.focus_modified_at = this.getUTC();
 				this.updateLocal();
 				return true;
 			}			
@@ -328,6 +331,7 @@ class User{
 		}
 		data.focus.splice(index,1);
 		this.focus_synced = 0;
+		this.focus_modified_at = this.getUTC();
 		this.updateLocal();
 		
 		callback();
@@ -340,6 +344,7 @@ class User{
 				data.focus[index].all_total += data.focus[index].today_total;
 				data.focus[index].today_total = 0;
 				this.focus_synced = 0;
+				this.focus_modified_at = this.getUTC();
 				this.updateLocal();
 			}
 			return true;
@@ -354,6 +359,7 @@ class User{
 		}
 		data.focus[index].today_total+=5;
 		this.focus_synced = 0;
+		this.focus_modified_at = this.getUTC();
 		this.updateLocal();
 		return true;
 	}
@@ -371,6 +377,7 @@ class User{
 		if(index >= 0){ //If not found//
 			data.focus[index].total_tries++;
 			this.focus_synced = 0;
+			this.focus_modified_at = this.getUTC();
 			this.updateLocal();
 			return true;
 		}else{
@@ -393,6 +400,7 @@ class User{
 	add_disable_app(new_data){
 		data.disable_app.push(new_data);
 		this.disable_synced = 0;
+		this.disable_modified_at = this.getUTC();
 		this.updateLocal();
 	}
 	edit_disable_app(new_data){
@@ -401,11 +409,13 @@ class User{
 			if(index >= 0){ //If found//
 				data.disable_app[index] = new_data;
 				this.disable_synced = 0;
+				this.disable_modified_at = this.getUTC();
 				this.updateLocal();
 				return true;
 			}else{ //If Not Found then just add //
 				this.add_disable_app(new_data);
 				this.disable_synced = 0;
+				this.disable_modified_at = this.getUTC();
 				this.updateLocal();
 				return true;
 			}
@@ -420,6 +430,7 @@ class User{
 		if(index >= 0){ //If found//
 			data.disable_app.splice(index,1);
 			this.disable_synced = 0;
+			this.disable_modified_at = this.getUTC();
 			this.updateLocal();
 			return true;
 		}
@@ -510,8 +521,6 @@ class User{
 		data.todo.splice(index, 1);
 		this.updateLocal();
 	}
-	
-	
 	
 	/***** Miscellaneous *****/
 	/* copy data URI on screenshot */

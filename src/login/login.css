@@ -1,0 +1,46 @@
+.hidden{
+	/* display: none; */
+	visibility: hidden;
+	opacity: 0;
+	transform: scale(0.8) rotateY(90deg);
+	transition: all 0.3s 0s ease;
+	max-height: 0;
+	overflow: hidden;
+}
+
+.shown{
+	/* display: inherit; */
+	opacity: 1;
+	visibility: visible;
+	transform: scale(1) rotateY(0);
+	transition: all 0.8s 0.3s ease;
+	max-height: 10000px;
+	overflow: auto;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: #EDEDED;
+  overflow: hidden;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.input-field input[type=date]:focus + label,
+.input-field input[type=text]:focus + label,
+.input-field input[type=email]:focus + label,
+.input-field input[type=password]:focus + label {
+  color: darkblue !important;
+}
+
+.input-field input[type=date]:focus,
+.input-field input[type=text]:focus,
+.input-field input[type=email]:focus,
+.input-field input[type=password]:focus {
+  border-bottom: 2px solid darkblue !important;
+  box-shadow: none !important;
+}

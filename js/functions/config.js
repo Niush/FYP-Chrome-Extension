@@ -53,7 +53,7 @@ const HOST = "localhost";
 const VERSION_KEYS = ['!AbAS3oG8pxBgfZ@@Z^WwYJ&$?OzL9','1gACBTGrmxdb_R73E8|DTgfI8OTAov','2$VqjYims+2D_^T8Y?QcNSof^UG@0L']
 const INTERNAL = 'Internal Chrome Page';
 
-const DEV = "Niush Sitaula";
+const DEV = "Niush";
 const DEV_WEBSITE = "https://www.niush.tk";
 
 const BITCOIN_ADDR = "";

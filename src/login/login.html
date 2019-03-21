@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Login / Register</title>
+		<script src="../../js/functions/config.js"></script>
+        <script src="../../js/functions/userdata.js"></script>
+		
+        <!-- Stylesheets -->
+        <link id="favicon" rel="icon" href="../../icons/icon16.png">
+		<link rel="stylesheet" href="../../css/materialize.min.css" media="screen">
+        <link rel="stylesheet" href="login.css" media="screen">
+        
+        <!-- JavaScripts -->
+		<script src="../../js/materialize/materialize.min.js"></script>
+        <script src="login.js"></script>
+    </head>
+    <body>
+		<main id="main" class="hidden">
+		<center>
+			<h4 style="font-weight: 700;">Minimal Productivity App</h4>
+			<br/>
+			
+			<div id="login-form" class="container">
+				<h5 class="indigo-text">Login into your account</h5>
+				<div class="section"></div>
+				<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+					<form class="col s12" method="post" action="#">
+						<div class='row'>
+							<div class='input-field col s12'>
+								<input class='validate' type='email' name='email' id='email' required />
+								<label for='email'>Enter your email</label>
+							</div>
+						</div>
+
+						<div class='row'>
+							<div class='input-field col s12'>
+								<input class='validate' type='password' name='password' id='password' required />
+								<label for='password'>Enter your password</label>
+							</div>
+							<label style='float: right;'>
+								<a class='pink-text' href='#!'><b>Forgot Password?</b></a>
+							</label>
+						</div>
+
+						<br />
+						<center>
+							<div class='row'>
+								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light indigo'>Login</button>
+							</div>
+						</center>
+					</form>
+				</div>
+				<a id="register-btn" href="#!"><h6>Create account</h6></a>
+			</div>
+			
+			<div id="register-form" class="container hidden">
+				<h5 class="indigo-text">Register Account</h5>
+				<div class="section"></div>
+				<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+					<form class="col s12" method="post" action="#">
+						<div class='row'>
+							<div class='input-field col s12'>
+								<input class='validate' type='email' name='email' id='email' required />
+								<label for='email'>Enter your email</label>
+							</div>
+						</div>
+
+						<div class='row'>
+							<div class='input-field col s12'>
+								<input class='validate' type='password' name='password' id='password' required />
+								<label for='password'>Enter your password</label>
+							</div>
+							<label style='float: right;'>
+								<a class='pink-text' href='#!'><b>Forgot Password?</b></a>
+							</label>
+						</div>
+
+						<br />
+						<center>
+							<div class='row'>
+								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light indigo'>Register</button>
+							</div>
+						</center>
+					</form>
+				</div>
+				<a id="login-btn" href="#!"><h6>Login</h6></a>
+			</div>
+			
+		</center>
+		</main>
+    </body>
+</html>

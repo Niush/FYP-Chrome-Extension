@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			noLogin.style.visibility = 'visible';
 			
 			document.getElementById('notes-button').className += ' s12';
+			
+			noLogin.addEventListener('click', function(){
+				chrome.tabs.create({url: 'src/login/login.html'});
+			});
 		}else{
 			// If passphrase exist or not
 			if(u.passphrase == '' || u.passphrase == null){
@@ -271,5 +275,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			}
 		}
+		
+		// NIUSH - CLICK open website //
+		let dev_website = document.getElementById('dev_website');
+		dev_website.title = DEV;
+		dev_website.addEventListener('click', function(){
+			chrome.tabs.create({url: DEV_WEBSITE});
+		});
 	}
 });

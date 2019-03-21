@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	
 	
-	
-	
 	/***********************************/
 	/* HANDLING METHODS TO FILL ON LOAD*/
 	/***********************************/

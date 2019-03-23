@@ -17,46 +17,99 @@
         <script src="settings.js"></script>
     </head>
     <body>
+		<div id="loading" class="loading">
+			<img src="../../icons/icon128.png" style="width: 100px;"/><p>Loading..</p>
+		</div>
+	
 		<nav class="nav-extended">
-			<div class="nav-wrapper">
-			  <a href="#" class="brand-logo">Logo</a>
+			<div class="nav-wrapper" style="padding: 0 20px;">
+			  <a href="#" class="brand-logo">Minimal Productivity</a>
 			  <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 			  <ul id="nav-mobile" class="right hide-on-med-and-down">
-				<li><a href="sass.html">Sass</a></li>
-				<li><a href="badges.html">Components</a></li>
-				<li><a href="collapsible.html">JavaScript</a></li>
+				<li><a href="#!">v.0.1 Beta</a></li>
+				<li><a href="#!">Bug Report</a></li>
+				<li><a href="#!">Help</a></li>
 			  </ul>
 			</div>
 			<div class="nav-content">
-			  <ul class="tabs tabs-transparent">
-				<li class="tab"><a href="#test1">Test 1</a></li>
-				<li class="tab"><a class="active" href="#test2">Test 2</a></li>
-				<li class="tab"><a href="#test3">Tab 3</a></li>
-				<li class="tab"><a href="#test4">Test 4</a></li>
+			  <ul class="tabs tabs-transparent indigo darken-4">
+				<li class="tab"><a class="active waves-effect waves-light" href="#account">Account</a></li>
+				<li class="tab"><a class="waves-effect waves-light" href="#notes">Notes</a></li>
+				<li class="tab"><a class="waves-effect waves-light" href="#settings">Settings</a></li>
+				<li class="tab"><a class="waves-effect waves-light" href="#about">About</a></li>
 			  </ul>
 			</div>
 		</nav>
 
 		<ul class="sidenav" id="mobile-demo">
-			<li><a href="sass.html">Sass</a></li>
+			<li><a href="#!">v.0.1 Beta</a></li>
 			<li><a href="badges.html">Components</a></li>
 			<li><a href="collapsible.html">JavaScript</a></li>
 		</ul>
-
-		<div id="test1" class="col s12">Test 1</div>
-		<div id="test2" class="col s12">Test 2</div>
-		<div id="test3" class="col s12">Test 3</div>
-		<div id="test4" class="col s12">Test 4</div>
-	
 		
+		<!-- Modal Structure -->
+		<div id="welcomeModal" class="modal modal-fixed-footer">
+			<div class="modal-content">
+			  <h4>Thank You For Installing This Extension</h4>
+			  <p class="easter easter-1"><b>Minimal Productivy App</b> helps you stay focused and organized on work and study</p>
+			  
+			  <div class="row s12 valign-wrapper">
+				<div class="col s10">
+					<p>With this Extension you can:</p>
+					<ol>
+						<li>Save Notes & Sync between devices</li>
+						<li>Limit or Block Websites to Focus on Work and Study</li>
+						<li>Chat & Ask Questions to users in almost every web pages</li>
+						<li>Lock Webpages to Prevent Changes, unnecessary clicks and exits</li>
+						<li>Create Todo for each day</li>
+						<li>Take Basic Screenshots, Pomodoro & Focus Timers And many more.</li>
+					</ol>
+					<p>You Need to Login/Register to be able to Sync your Notes and Settings</p>
+					<button class="btn modal-close">Login / Register</button>
+					<br/>
+					<small><a href="https://niush.tk" target="_blank">Developed By: Niush Sitaula</a></small>
+				</div>
+				
+				<div class="col s2">
+					<center>
+						<img src="../../icons/icon128.png" style="width: 100px;"/>
+						<br/>
+						<small>STAY PRODUCTIVE</small>
+					</center>
+				</div>				  
+			  </div>
+			</div>
+			<div class="modal-footer">
+			  <a href="#!" class="modal-close waves-effect waves-green btn-flat">Lets Go</a>
+			</div>
+		</div>
+		
+		<div class="main section row">
+			<!-- ACCOUNT PAGE -->
+			<div id="account" class="col s12">Test 1</div>
+			
+			<!-- NOTES TAB -->
+			<div id="notes" class="col s12">Test 2</div>
+			
+			<!-- SETTINGS -->
+			<div id="settings" class="col s12">
+				<!-- Welcome Modal Trigger -->
+				<a class="btn indigo modal-trigger" href="#welcomeModal">Show Welcome Message</a>
+			</div>
+			
+			<!-- ABOUT TAB -->
+			<div id="about" class="col s12">Test 4</div>
+		</div>
+		
+		<a href="https://www.niush.tk/" target="_blank"><div class="dev-footer">&copy; 2019 Copyright Niush Sitaula</div></a>
 	
-		<footer class="page-footer">
+		<!-- <footer class="page-footer">
           <div class="footer-copyright">
             <div class="container">
             &copy; 2019 Copyright Niush Sitaula
             <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
             </div>
           </div>
-        </footer>
+        </footer> -->
     </body>
 </html>

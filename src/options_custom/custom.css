@@ -1,7 +1,181 @@
-/*
-// Add your own style rules here, not in css/main.css
-// or css/setting.css for easy updating reasons.
-*/
-body{
+body, html{
 	background: #EDEDED;
+	font-size: 1em;
 }
+
+/* Font */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../../icons/material-icon.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+i.material-icons:before{display:none;}
+
+/* Scroll Bar */
+::-webkit-scrollbar {
+  width:  5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+	background: #333;
+}
+
+::-webkit-scrollbar-track {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-button {
+  background: rgba(150,150,150,0);
+  height: 5px;
+}
+/* IE */
+body {
+scrollbar-face-color: #666;
+scrollbar-track-color: #ddd;
+}
+
+/* Loading Screen */
+.loading{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-flow: column;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	background: #ababab;
+	z-index: 999999;
+	border: 1px dashed black;
+	transition: all 0.5s ease;
+	display: none; /* TODO - show */
+}
+
+.loading img{
+	animation: jump 0.4s ease alternate infinite;
+}
+
+@keyframes jump{
+	0%{transform: translate(0,0);}
+	100%{transform: translate(0,20px);}
+}
+
+.loading p{
+	font-size: 1.5em;
+	font-weight: bold;
+	letter-spacing: 2px;
+	padding-left: 8px;
+}
+
+.loading.hidden{
+	opacity: 0.8;
+	transform: scale(0.95) translate(150%, 0);
+	pointer-events: none;
+}
+
+/* Basic Stylings */
+.main{
+	
+}
+
+.main > div{
+	animation: fade 0.5s ease forwards;
+}
+
+@keyframes fade{
+	0%{opacity: 0; transform: translate(0, -10px);}
+	100%{opacity: 1; transform: translate(0, 0);}
+}
+
+.dev-footer{
+	position: fixed;
+	bottom: 5px;
+	right: 5px;
+	background: teal;
+	padding: 5px 10px;
+	color: white;
+	border-radius: 20px;
+	transition: all 0.3s ease;
+}
+
+.dev-footer:hover{
+	box-shadow: 0 0 2px 2px #656565;
+}
+
+.modal small{
+	letter-spacing: 3px;
+}
+
+.modal p, .modal ol, .modal btn, .modal small, .modal .row{
+	margin: 3px 0 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* EASTER */
+.easter:after{
+	visibility: hidden;
+	opacity: 0;
+	font-size: 0.6em;
+	white-space: pre;
+	position: absolute;
+    bottom: 5px;
+    left: 25px;
+	transition: all 0.5s ease;
+}
+
+.easter:hover:after{
+	visibility: visible;
+	display: initial;
+	opacity: 1;
+}
+
+.easter-1:after{
+	content: '\A PS: Only if you are Determined.';
+}
+
+
+
+
+
+
+
+

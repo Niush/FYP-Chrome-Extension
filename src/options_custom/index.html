@@ -23,7 +23,7 @@
 	
 		<nav class="nav-extended">
 			<div class="nav-wrapper" style="padding: 0 20px;">
-			  <a href="#" class="brand-logo">Minimal Productivity</a>
+			  <a href="#" class="brand-logo">Minimal Productivity App</a>
 			  <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 			  <ul id="nav-mobile" class="right hide-on-med-and-down">
 				<li><a href="#!">v.0.1 Beta</a></li>
@@ -65,7 +65,7 @@
 						<li>Take Basic Screenshots, Pomodoro & Focus Timers And many more.</li>
 					</ol>
 					<p>You Need to Login/Register to be able to Sync your Notes and Settings</p>
-					<button class="btn modal-close">Login / Register</button>
+					<button id="modal-login-btn" class="btn modal-close">Login / Register</button>
 					<br/>
 					<small><a href="https://niush.tk" target="_blank">Developed By: Niush Sitaula</a></small>
 				</div>
@@ -86,13 +86,59 @@
 		
 		<div class="main section row">
 			<!-- ACCOUNT PAGE -->
-			<div id="account" class="col s12">Test 1</div>
+			<div id="account" class="col s12">
+				<div class="card hidden" id="no-login">
+					<div class="card-content">
+						<h5 class="card-title">You Need to Login for Syncing and Saving your Notes and Settings in the Cloud.</h5>
+						<p>You can still use the application, but the data will be lost on browser reset and app data clean.</p>
+						<br/>
+						<a class="btn btn-small teal darken-2" href="../login/login.html">Login/Register</a>
+					</div>
+					<div class="card-action">
+						<small>I highly recommend logging in. Will also be useful to track your focus improvements.</small>
+						<a href="#!" class="right blue-text">Privacy</a>
+					</div>
+				</div>
+				
+				<div class="card hidden" id="yes-login">
+					<div class="card-content">
+						<h5 class="card-title">Logged in as, <span id="username">Bob</span></h5>
+						<p>Notes Count : <span id="total_notes">5</span></p>
+						<p>Data Storage Usage : <span id="total_storage">5.1kb</span></p>
+						<small>More Images and Notes means more usage</small>
+						<br/>
+						<br/>
+						<a id="sync-btn" class="btn btn-small green darken-2" href="#!">Sync Now</a>
+						<a id="logout-btn" class="btn btn-small red darken-2" href="#!">Logout</a>
+					</div>
+					<div class="card-action">
+						<small>Thanks for using my application and staying productive</small>
+						<a href="#!" class="right blue-text">Privacy</a>
+					</div>
+				</div>
+			</div>
 			
 			<!-- NOTES TAB -->
 			<div id="notes" class="col s12">Test 2</div>
 			
 			<!-- SETTINGS -->
 			<div id="settings" class="col s12">
+				<div class="card">
+					<div class="card-tabs">
+					  <ul class="tabs tabs-transparent indigo accent-4 inner-tabs">
+						<li class="tab"><a class="active waves-effect waves-light" href="#test4">Focus Settings</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#test5">Disable Settings</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#test6">Configurations</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#test6">Miscellaneous</a></li>
+					  </ul>
+					</div>
+					<div class="card-content grey lighten-4 inner-tabs-content">
+					  <div id="test4">Test 1</div>
+					  <div id="test5">Test 2</div>
+					  <div id="test6">Test 3</div>
+					</div>
+				</div>
+			
 				<!-- Welcome Modal Trigger -->
 				<a class="btn indigo modal-trigger" href="#welcomeModal">Show Welcome Message</a>
 			</div>

@@ -32,26 +32,56 @@ function blockLinks(callback){
 }
 
 function openLogin(){
-	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
-		for(let i = 0 ; i < tabs.length ; i++){
-			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+"/src/login/login.html")){
-				chrome.tabs.update(tabs[i].id, {highlighted: true});
-				return;
-			}
-		}
-		chrome.tabs.create({url: 'src/login/login.html'});
-	});
+	openPages('/src/login/login.html','src/login/login.html');
 }
 
 function openSettings(){
+	openPages('/src/options_custom/index.html','src/options_custom/index.html#settings');
+}
+
+function openAccount(){
+	openPages('/src/options_custom/index.html','src/options_custom/index.html#account');
+}
+
+function openNotes(){
+	openPages('/src/options_custom/index.html','src/options_custom/index.html#notes');
+}
+
+function openPages(check,open){
 	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
 		for(let i = 0 ; i < tabs.length ; i++){
-			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+"/src/options_custom/index.html")){
+			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+check)){
 				chrome.tabs.update(tabs[i].id, {highlighted: true});
 				return;
 			}
 		}
-		chrome.tabs.create({url: 'src/options_custom/index.html'});
+		chrome.tabs.create({url: open});
+	});
+}
+
+function logout(){
+	if(confirm('Do you really want to Logout ?\nAll unsynced data will be lost.')){
+		this.innerHTML = 'Logout :(';
+		showMessage('Logging Out......','error');
+		CLEAR_ALL_LOCAL();
+		showMessage('Successfully Logged Out','warning');
+		setTimeout(function(){
+			chrome.runtime.reload();
+			location.reload();
+		}, 1000);
+	}else{
+		this.innerHTML = 'Logout :)';
+	}
+}
+
+function syncRequest(callback=function(){}){
+	chrome.extension.sendMessage({action: 'sync'}, function(response){
+		if(response.response != true){
+			showMessage(response.response,'error');
+		}else{
+			showMessage('Sync Successful.');
+		}
+		callback();
 	});
 }
 

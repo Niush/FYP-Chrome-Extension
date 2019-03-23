@@ -161,10 +161,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			// If request to A block or Lock Webpage (lockpage) //
 			if(request.action.toLowerCase() == "sync"){
 				u = new User();
-				u.syncNow('app', function(){
-					sendResponse({
-						response: true,
-					});
+				u.syncNow('app', function(status){
+					if(status == true){
+						sendResponse({
+							response: true,
+						});
+					}else{
+						sendResponse({
+							response: status,
+						});
+					}
 				});
 				
 				return true;

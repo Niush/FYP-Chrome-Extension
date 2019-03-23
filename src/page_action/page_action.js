@@ -47,19 +47,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				syncButton.addEventListener('click', function(){
 					let syncIcon = document.getElementById('syncing');
 					syncIcon.className += ' syncing';
-					
-					chrome.extension.sendMessage({action: 'sync'}, function(response){
-						if(response.response != true){
-							showMessage('Sync Failed');
-						}else{
-							showMessage('Sync Successful.');
-						}
+					syncRequest(function(){
 						syncIcon.className = 'material-icons';
 					});
-					
-					/* u.syncNow('user', function(){
-						syncIcon.className = 'material-icons';
-					}); */
+				});
+				
+				var accountsBtn = document.getElementById('accounts-btn');
+				var logoutBtn = document.getElementById('logout-btn');
+				accountsBtn.addEventListener('click', function(){
+					openAccount();
+				});
+				logoutBtn.addEventListener('click', function(){
+					logout();
 				});
 			}
 		}
@@ -236,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								yesFocus.style.setProperty("display", "none", "important");
 								yesFocus.style.visibility = 'hidden';
 								noFocusApply();
+								showMessage('Website Removed From Focus');
 							});
 						});
 						yesFocusApplied = true;
@@ -253,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								noFocus.style.setProperty("display", "none", "important");
 								noFocus.style.visibility = 'hidden';
 								yesFocusApply();
+								showMessage('Website Added To Focus');
 							});
 						});
 						noFocusApplied = true;
@@ -300,10 +301,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			chrome.tabs.create({url: DEV_WEBSITE});
 		});
 		
-		// Settings Buttin Click //
-		let settingsBtn = document.getElementById('settings-btn');
+		// Settings Button Click //
+		let settingsBtn = document.getElementById('settings-button');
 		settingsBtn.addEventListener('click', function(){
 			openSettings();
+		});
+		
+		// Notes Button Click //
+		let notesBtn = document.getElementById('notes-button');
+		notesBtn.addEventListener('click', function(){
+			openNotes();
 		});
 		
 	}

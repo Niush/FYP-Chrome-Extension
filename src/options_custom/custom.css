@@ -3,6 +3,10 @@ body, html{
 	font-size: 1em;
 }
 
+.toast{
+	font-weight: 700 !important;
+}
+
 /* Font */
 @font-face {
   font-family: 'Material Icons';
@@ -59,6 +63,11 @@ scrollbar-face-color: #666;
 scrollbar-track-color: #ddd;
 }
 
+.hidden{
+	display: none !important;
+	visibility: hidden;
+}
+
 /* Loading Screen */
 .loading{
 	display: flex;
@@ -94,9 +103,9 @@ scrollbar-track-color: #ddd;
 	padding-left: 8px;
 }
 
-.loading.hidden{
+.loading.slideoff{
 	opacity: 0.8;
-	transform: scale(0.95) translate(150%, 0);
+	transform: scale(0.99) translate(150%, 0);
 	pointer-events: none;
 }
 
@@ -106,6 +115,10 @@ scrollbar-track-color: #ddd;
 }
 
 .main > div{
+	animation: fade 0.5s ease forwards;
+}
+
+.inner-tabs-content > div{
 	animation: fade 0.5s ease forwards;
 }
 
@@ -137,7 +150,14 @@ scrollbar-track-color: #ddd;
 	margin: 3px 0 !important;
 }
 
+.inner-tabs .active{
+	background: #45a09a !important;
+}
 
+.inner-tabs .indicator{
+	z-index: 99 !important;
+	background: #ff0000 !important;
+}
 
 
 

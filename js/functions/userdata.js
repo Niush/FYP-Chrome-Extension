@@ -95,7 +95,7 @@ class User{
 				}
 				return delay(1000);
 			  }).catch(() => {
-				showMessage('Note Not Synced Properly','warning');
+				callback('Note Not Synced Properly');
 			  }).then(() => {
 				// 2. SYNC FOCUS
 				// AJAX SYNC FOCUS
@@ -104,7 +104,7 @@ class User{
 				//}
 				return delay(1000);
 			  }).catch(() => {
-				showMessage('Focus Sync went wrong','warning');
+				callback('Focus Sync went wrong');
 			  }).then(() => {
 				// 3. SYNC DISABLE APP
 				// AJAX SYNC Disable App
@@ -112,19 +112,21 @@ class User{
 				//	//Sync as// JSON.stringify(data.disable_app)
 				//}
 			  }).catch(() => {
-				showMessage('Disable Features Sync Failed','warning');
+				callback('Disable Features Sync Failed');
 			  }).then(() => {
 				data.last_sync = this.getUTC();
 				this.updateLocal();
-				callback();
-				showMessage('Synced Successful');
+				callback(true);
+				if(sender == 'user'){
+					showMessage('Synced Successful');
+				}
 			  });
         }else{
 			//Show the CheckUserAuth Error Message//
 			if(sender == 'user'){
 				showMessage(x, 'error');
 			}else{
-				console.warn(x);
+				callback(x);
 			}
         }
 	}

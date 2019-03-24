@@ -19,7 +19,7 @@ chrome.tabs.getSelected(null, function(tab) {
 function getHostName(url){
 	let parser = document.createElement('a');
 	parser.href = url;
-	return parser.hostname;
+	return parser.hostname.replace('www.','');
 }
 
 function isSecured(url){
@@ -289,7 +289,7 @@ class User{
 	get all_focus(){
 		return data['focus'];
 	}
-	add_focus(host,limit=1800, callback){
+	add_focus(host,limit=1800, callback=function(){}){
 		if(!this.check_focus(host)){
 			data.focus.push({url: host, 
 							limit_sec: limit,
@@ -307,16 +307,21 @@ class User{
 		
 		callback();
 	}
-	edit_focus(new_data){
+	edit_focus(host,limit=1800, callback=function(){}){
 		try{
-			let index = data.focus.findIndex(e => e.url == new_data.url);
+			let index = data.focus.findIndex(e => e.url == host);
 			if(index >= 0){ //If Found//
-				data.focus[index] = new_data;
+				data.focus[index].limit_sec = limit;
 				this.focus_synced = 0;
 				this.focus_modified_at = this.getUTC();
 				this.updateLocal();
+				callback('Focus Info Edited');
 				return true;
-			}			
+			}else{
+				this.add_focus(host, limit);
+				callback('Website Added to Focus');
+				return true;
+			}
 		}catch(e){
 			alert('Error during Operation');
 			return false;
@@ -336,7 +341,7 @@ class User{
 		this.focus_modified_at = this.getUTC();
 		this.updateLocal();
 		
-		callback();
+		callback(url);
 	}
 	check_focus(url){
 		let index = data.focus.findIndex(e => e.url == url);

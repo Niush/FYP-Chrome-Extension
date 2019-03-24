@@ -159,6 +159,18 @@ scrollbar-track-color: #ddd;
 	background: #ff0000 !important;
 }
 
+/* FOCUS SETTINGS PAGE */
+#focus-settings table{
+	border: 1px solid #DEDEDE;
+}
+
+#focus-settings td, #focus-settings th{
+	padding: 2px 20px;
+}
+
+#focus-settings table{
+	width: auto;
+}
 
 
 

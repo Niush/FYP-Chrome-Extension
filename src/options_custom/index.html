@@ -84,6 +84,30 @@
 			</div>
 		</div>
 		
+		<!-- EDIT OR ADD FOCUS MODAL -->
+		<div id="focus-edit-modal" class="modal">
+			<div class="modal-content">
+				<h4>Add/Edit Focus Website</h4>
+				<div class='row'>
+					<div class='input-field col s12'>
+						<input class='validate' type='text' name='new-focus-url' id='new-focus-url'/>
+						<label for='new-focus-url'>Website URL</label>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='input-field col s12'>
+						<input class='validate' max='1440' min='1' type='number' name='new-focus-limit' id='new-focus-limit'/>
+						<label for='new-focus-limit'>Focus Limit per day (in Minutes)</label>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='input-field col s12'>
+						<button id="focus-add-edit-confirm-button" class="btn indigo right">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<div class="main section row">
 			<!-- ACCOUNT PAGE -->
 			<div id="account" class="col s12">
@@ -126,28 +150,54 @@
 				<div class="card">
 					<div class="card-tabs">
 					  <ul class="tabs tabs-transparent indigo accent-4 inner-tabs">
-						<li class="tab"><a class="active waves-effect waves-light" href="#test4">Focus Settings</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#test5">Disable Settings</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#test6">Configurations</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#test6">Miscellaneous</a></li>
+						<li class="tab"><a class="active waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#disable-settings">Disable Settings</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#configurations">Configurations</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#miscellaneous">Miscellaneous</a></li>
 					  </ul>
 					</div>
 					<div class="card-content grey lighten-4 inner-tabs-content">
-					  <div id="test4">Test 1</div>
-					  <div id="test5">Test 2</div>
-					  <div id="test6">Test 3</div>
+						<!-- Focus Settings -->
+						<div id="focus-settings">
+							<button id="focus-create-button" class="btn blue waves-effect waves-light">Add New Website to Focus</button>
+							<br/>
+							<br/>
+						
+							<table class="table highlight responsive-table">
+								<thead class="grey lighten-2">
+									<th>Website</th>
+									<th>Limit</th>
+									<th>Bypass Tries</th>
+									<th>Today Total</th>
+									<th>Overall Total</th>
+									<th>Edit</th>
+									<th>Remove</th>
+								</thead>
+								<!-- All Data goes in this tbody from js -->
+								<tbody id="focus-settings-content">
+									
+								</tbody>
+							</table>
+						</div>
+						
+						<!-- Disable Settings -->
+						<div id="disable-settings">Test 2</div>
+						<!-- Configurations -->
+						<div id="configurations">Test 3</div>
+						<!-- Miscellaneous -->
+						<div id="miscellaneous">
+							<!-- Welcome Modal Trigger -->
+							<a class="btn indigo modal-trigger" href="#welcomeModal">Show Welcome Message</a>
+						</div>
 					</div>
 				</div>
-			
-				<!-- Welcome Modal Trigger -->
-				<a class="btn indigo modal-trigger" href="#welcomeModal">Show Welcome Message</a>
 			</div>
 			
 			<!-- ABOUT TAB -->
 			<div id="about" class="col s12">Test 4</div>
 		</div>
 		
-		<a href="https://www.niush.tk/" target="_blank"><div class="dev-footer">&copy; 2019 Copyright Niush Sitaula</div></a>
+		<a href="https://www.niush.tk/" target="_blank"><div class="dev-footer">&copy; 2019 - Niush Sitaula</div></a>
 	
 		<!-- <footer class="page-footer">
           <div class="footer-copyright">

@@ -85,6 +85,7 @@ function syncRequest(callback=function(){}){
 	});
 }
 
+let time_now_temp = new Date().toJSON().slice(0,10).replace(/-/g,'/');
 const INIT_USER_DATA = {
     user_id: '',
 	user_name: '',
@@ -96,9 +97,22 @@ const INIT_USER_DATA = {
 	disable_synced: 1,
     location: '',
     notes: [],
-    focus: [],
-    disable_app: [],
-    dim_time: [],
+    focus: [{url: 'facebook.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'youtube.com',limit_sec: 2700,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'messenger.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'instagram.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'reddit.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'twitter.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},
+			{url: 'pinterest.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp}],
+    disable_app: [	{url: 'google.com',disable_note: 0, disable_chat: 1},
+					{url: 'youtube.com',disable_note: 0, disable_chat: 1},
+					{url: 'messenger.com',disable_note: 0, disable_chat: 1},
+					{url: 'reddit.com',disable_note: 0, disable_chat: 1},
+					{url: 'twitter.com',disable_note: 0, disable_chat: 1},
+					{url: 'quora.com',disable_note: 0, disable_chat: 1},
+					{url: 'pinterest.com',disable_note: 0, disable_chat: 1},
+					{url: 'kongregate.com',disable_note: 1, disable_chat: 1},],
+    dim_time: [0,0],
     todo: [],
 	copy_datauri: false,
 }
@@ -110,8 +124,9 @@ const INTERNAL = 'Internal Chrome Page';
 const DEV = "Niush";
 const DEV_WEBSITE = "https://www.niush.tk";
 
-const BITCOIN_ADDR = "";
-const LITECOIN_ADDR = "";
+const BITCOIN_ADDR = "339CXZz6bHAvS8mAmgPp25vqhZsLRiEHz6";
+const LITECOIN_ADDR = "MTgxjaRYjWCaBbyivGnZLmzdA95b3tuHQc";
+const ETHER_ADDR = "0x76D980cB269C7AD5D915a5b48773b318ac811eC2";
 
 const CLEAR_ALL_LOCAL = function(){
 	chrome.storage.local.clear(function() {

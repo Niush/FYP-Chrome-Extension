@@ -392,7 +392,13 @@ class User{
 			return false;
 		}
 	}
-	
+	reset_focus(callback=function(){}){
+		data.focus = INIT_USER_DATA.focus;
+		this.focus_synced = 0;
+		this.focus_modified_at = this.getUTC();
+		this.updateLocal();
+		callback();
+	}
 	/* DISABLE APP - Also, a method to check if url is in disabled app list */
 	get all_disable_app(){
 		return data.disable_app;
@@ -511,6 +517,13 @@ class User{
 		
 		callback();
 	}
+	reset_disable_all(callback=function(){}){
+		data.disable_app = INIT_USER_DATA.disable_app;
+		this.disable_synced = 0;
+		this.disable_modified_at = this.getUTC();
+		this.updateLocal();
+		callback();
+	}
 	
 	/* TO-DO */
 	get all_todo(){
@@ -535,9 +548,19 @@ class User{
 		return data.copy_datauri;
 	}
 	
-	set copy_datauri(data){
-		data.copy_datauri = data;
+	set copy_datauri(status){
+		data.copy_datauri = status;
 		this.updateLocal();
+	}
+	
+	get disable_chat_every_where(){
+		return data.disable_chat_every_where;
+	}
+	
+	set disable_chat_every_where(status){
+		data.disable_chat_every_where = status;
+		this.updateLocal();
+		return true;
 	}
 }
 

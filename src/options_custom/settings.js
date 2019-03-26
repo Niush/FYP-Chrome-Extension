@@ -93,6 +93,36 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 		
+		let focusResetButton = document.getElementById('focus-reset-button');
+		focusResetButton.addEventListener('click', function(){
+			if(confirm('Reset Focused Websites to Default ?\nThis cannot be reverted ?')){
+				let captcha = prompt('Write "CONFIRM" to reset data: ');
+				if(captcha == "CONFIRM"){
+					u.reset_focus(function(){
+						appendFocusData();
+						showMessage('Focus Data Was Reset Completely');
+					});
+				}else{
+					showMessage('Reset Discarded');
+					return false;
+				}
+			}
+		});
+		
+		let minIsHigh = false;
+		newFocusLimitInput.addEventListener('keyup', function(){
+			checkFocusLimitInputTime();
+		});
+		
+		function checkFocusLimitInputTime(){
+			if(minIsHigh == false){
+				if(newFocusLimitInput.value > 120){
+					showMessage('Ayee, Focus for Good. You can limit to less Minutes.');
+					minIsHigh = true;
+				}
+			}
+		}
+		
 		function appendFocusData(){
 			u = new User();
 			let focusSettingsContent = document.getElementById('focus-settings-content');
@@ -143,6 +173,36 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		/****DISABLE SETTINGS SUB TAB****/
 		/*******************************/
+		let disableChatEveryWhere = document.getElementById('disable-chat-every-where');
+		if(u.disable_chat_every_where == 1){
+			disableChatEveryWhere.checked = true;
+		}
+		
+		disableChatEveryWhere.addEventListener('change', function(){
+			if(disableChatEveryWhere.checked){
+				if(confirm('Chat will be completely Disabled.\nAre you sure ?')){
+					u.disable_chat_every_where = 1;
+					showMessage('Universal Chats are now Disabled');
+					return true;
+				}else{
+					disableChatEveryWhere.checked = false;
+					return false;
+				}
+			}else{
+				u.disable_chat_every_where = 0;
+				showMessage('Chats are Now Enabled');
+				return true;
+			}
+		});
+		
+		let resetDisableButton = document.getElementById('reset-disable-button');
+		resetDisableButton.addEventListener('click', function(){
+			if(confirm('This will reset Notes and Chats Disabled from websites to Default.\nAre you sure ?')){
+				u.reset_disable_all(function(){
+					showMessage('All Disabled Notes and Chat will now Appear.');
+				});
+			}
+		});
 		
 		
 		// AFTER ALL LOADED - REMOVE LOADING SCREEN//

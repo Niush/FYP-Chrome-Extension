@@ -98,6 +98,7 @@
 					<div class='input-field col s12'>
 						<input class='validate' max='1440' min='1' type='number' name='new-focus-limit' id='new-focus-limit'/>
 						<label for='new-focus-limit'>Focus Limit per day (in Minutes)</label>
+						<small>1 day = 1440 Minutes</small>
 					</div>
 				</div>
 				<div class='row'>
@@ -150,9 +151,9 @@
 				<div class="card">
 					<div class="card-tabs">
 					  <ul class="tabs tabs-transparent indigo accent-4 inner-tabs">
-						<li class="tab"><a class="active waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
 						<li class="tab"><a class="waves-effect waves-light" href="#disable-settings">Disable Settings</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#configurations">Configurations</a></li>
+						<li class="tab"><a class="active waves-effect waves-light" href="#configurations">Configurations</a></li>
 						<li class="tab"><a class="waves-effect waves-light" href="#miscellaneous">Miscellaneous</a></li>
 					  </ul>
 					</div>
@@ -178,10 +179,29 @@
 									
 								</tbody>
 							</table>
+							
+							<br/>
+							<button id="focus-reset-button" class="btn red darken-2">Reset All Focus To Default</button>
+							
 						</div>
 						
 						<!-- Disable Settings -->
-						<div id="disable-settings">Test 2</div>
+						<div id="disable-settings">
+							<label class="row">
+								<input type="checkbox" id="disable-chat-every-where" />
+								<span class="black-text">Disable Chat In All Pages</span>
+							</label>
+							<br/>
+							<button class="row btn red accent-4" id="reset-disable-button">Reset all Disabled Note and Chat in Websites</button>
+							<br/>
+							<div class="row">
+								<b>Note:</b> All Webpages you visit in this Browser, will have Chat and Notes available on the screen as draggable icon. You can disable Chat & Notes or re-enable them by clicking on the Extension icon in the top right bar and choosing the preferred settings. If Disabled, chat and notes as selection will not appear in the webpages in next refresh.
+								<br/>
+								<small>(Also note that some settings might not appear on certain web pages.)</small>
+								<br/>
+								<small>Give it a try at: <a href="https://www.example.com" target="_blank">example.com</a></small>
+							</div>
+						</div>
 						<!-- Configurations -->
 						<div id="configurations">Test 3</div>
 						<!-- Miscellaneous -->

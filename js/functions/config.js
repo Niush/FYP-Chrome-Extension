@@ -95,6 +95,7 @@ const INIT_USER_DATA = {
 	focus_synced: 1,
     disable_modified_at: '',
 	disable_synced: 1,
+	disable_chat_every_where: 0,
     location: '',
     notes: [],
     focus: [{url: 'facebook.com',limit_sec: 1800,total_tries: 0,today_total: 0,all_total: 0,today_date: time_now_temp},

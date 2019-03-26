@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								yesNoteBlock.style.setProperty("display", "none", "important");
 								yesNoteBlock.style.visibility = 'hidden';
 								noNoteApply();
+								showMessage('Notes Enabled Here');
 							});
 						});
 						yesNoteBlockApplied = true;
@@ -114,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								noNoteBlock.style.setProperty("display", "none", "important");
 								noNoteBlock.style.visibility = 'hidden';
 								yesNoteApply();
+								showMessage('Notes Disabled in this Website');
 							});
 						});
 						noNoteBlockApplied = true;
@@ -144,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								yesChatBlock.style.setProperty("display", "none", "important");
 								yesChatBlock.style.visibility = 'hidden';
 								noChatApply();
+								showMessage('Chats are Now Enabled');
 							});
 						});
 						yesChatBlockApplied = true;
@@ -160,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								noChatBlock.style.setProperty("display", "none", "important");
 								noChatBlock.style.visibility = 'hidden';
 								yesChatApply();
+								showMessage('Chats Disabled in this Website');
 							});
 						});
 						noChatBlockApplied = true;

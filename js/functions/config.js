@@ -113,7 +113,7 @@ const INIT_USER_DATA = {
 					{url: 'quora.com',disable_note: 0, disable_chat: 1},
 					{url: 'pinterest.com',disable_note: 0, disable_chat: 1},
 					{url: 'kongregate.com',disable_note: 1, disable_chat: 1},],
-    dim_time: ["9:0:0","11:0:0"],
+    dim_time: ["00:00:00","00:00:00"],
     todo: [],
 	copy_datauri: false,
 }

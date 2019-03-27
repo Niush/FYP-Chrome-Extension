@@ -42,7 +42,7 @@ function dimScreen(){
 	`;
 	document.getElementsByTagName("html")[0].appendChild(dimContainer);
 }
-
+// DIM TIME CHECK MESSAGE //
 chrome.runtime.sendMessage(null, {action: "dim_time"}, function(response) {
 	//check response true
 	if(response.response == true){

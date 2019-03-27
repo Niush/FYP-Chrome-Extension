@@ -151,9 +151,9 @@
 				<div class="card">
 					<div class="card-tabs">
 					  <ul class="tabs tabs-transparent indigo accent-4 inner-tabs">
-						<li class="tab"><a class="waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
+						<li class="tab"><a class="active waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
 						<li class="tab"><a class="waves-effect waves-light" href="#disable-settings">Disable Settings</a></li>
-						<li class="tab"><a class="active waves-effect waves-light" href="#configurations">Configurations</a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#configurations">Configurations</a></li>
 						<li class="tab"><a class="waves-effect waves-light" href="#miscellaneous">Miscellaneous</a></li>
 					  </ul>
 					</div>
@@ -189,7 +189,7 @@
 						<div id="disable-settings">
 							<label class="row">
 								<input type="checkbox" id="disable-chat-every-where" />
-								<span class="black-text">Disable Chat In All Pages</span>
+								<span class="col black-text">Disable Chat In All Pages</span>
 							</label>
 							<br/>
 							<button class="row btn red accent-4" id="reset-disable-button">Reset all Disabled Note and Chat in Websites</button>
@@ -203,7 +203,26 @@
 							</div>
 						</div>
 						<!-- Configurations -->
-						<div id="configurations">Test 3</div>
+						<div id="configurations">
+							<div class='row'>
+								<p class="col s12"><b>Dim Screen Start & End time:</b></p>
+								<div class='input-field col s2'>
+									<input type='text' class="validate timepicker" id="dim-start-time-picker"/>
+									<label for='dim-start-time-picker'>Start Time: </label>
+								</div>
+								<div class='input-field col s2'>
+									<input type='text' class="validate timepicker" id="dim-end-time-picker"/>
+									<label for='dim-end-time-picker'>End Time: </label>
+								</div>
+								<div class='input-field col s2'>
+									<button class="btn orange darken-4 waves-effect" id="dim-time-reset-button">Disable Dim Time</button>
+								</div>
+							</div>
+							<label class="row">
+								<input type="checkbox" id="play_notification_sound" />
+								<span class="col black-text">Play Notification Sound</span>
+							</label>
+						</div>
 						<!-- Miscellaneous -->
 						<div id="miscellaneous">
 							<!-- Welcome Modal Trigger -->

@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+	// TIME PICKER //
+    var timepicker = document.querySelectorAll('.timepicker');
+    var instances = M.Timepicker.init(timepicker, {autoClose: true, twelveHour: false, container: 'body', onCloseEnd: function(){}});
+	
 	var u = new User();
 	setTimeout(function(){
 		main();
@@ -204,6 +208,45 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 		
+		/****CONFIGURATIONS SETTINGS SUB TAB****/
+		/*******************************/
+		let dimTimeResetButton = document.getElementById('dim-time-reset-button');
+		let dimStartTimePicker = document.getElementById('dim-start-time-picker');
+		let dimEndTimePicker = document.getElementById('dim-end-time-picker');
+		
+		dimStartTimePicker.value = u.dim_time[0];
+		dimEndTimePicker.value = u.dim_time[1];
+		
+		dimStartTimePicker.addEventListener('change', function(){
+			u.dim_time = [this.value+':00', u.dim_time[1]];
+		});
+		dimEndTimePicker.addEventListener('change', function(){
+			u.dim_time = [u.dim_time[0], this.value+':00'];
+		});
+		
+		dimTimeResetButton.addEventListener('click', function(){
+			u.dim_time = ['00:00:00','00:00:00'];
+			dimStartTimePicker.value = '00:00:00';
+			dimEndTimePicker.value = '00:00:00';
+			showMessage('Dim Mode Disabled');
+		});
+		
+		let playNotificationSound = document.getElementById('play_notification_sound');
+		if(localStorage.hasOwnProperty('play_notification_sound') && localStorage.getItem('play_notification_sound') == "false"){
+			//playNotificationSound.checked;
+		}else{
+			playNotificationSound.checked = true;
+		}
+		playNotificationSound.addEventListener('change',function(){
+			if(playNotificationSound.checked){
+				localStorage.setItem('play_notification_sound',"true");
+			}else{
+				localStorage.setItem('play_notification_sound',"false");
+			}
+		});
+		
+		
+		
 		
 		// AFTER ALL LOADED - REMOVE LOADING SCREEN//
 		setTimeout(function(){
@@ -212,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				document.getElementById('loading').remove();
 			}, 500);
 		}, 500);
+		M.updateTextFields();
 	}
 });
 

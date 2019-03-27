@@ -110,6 +110,39 @@ function injectToAll(){
 	});
 }
 
+function showNotification(titleInput, messageInput, tabId){
+	chrome.notifications.create({
+		type: 'progress',
+		message: messageInput,
+		iconUrl: '../../icons/icon128.png',
+		title: titleInput,
+		priority: 2,
+		requireInteraction: true,
+		progress: 0,
+	}, function(noti_id){
+		if(localStorage.hasOwnProperty('play_notification_sound') && localStorage.getItem('play_notification_sound') == "false"){
+			console.log('Silent Notication Shown');
+		}else{
+			let notificationSound = new Audio('../../sound/notification.ogg');
+			notificationSound.play();
+		}
+		
+		chrome.notifications.onClicked.addListener(function(){
+			let x = 0;
+			let fillProgress = setInterval(function(){
+				chrome.notifications.update(noti_id, {progress: x+=10});
+				if(x >= 100){
+					clearInterval(fillProgress);
+					chrome.notifications.clear(noti_id, function(){
+						var updateProperties = { 'active': true };
+						//chrome.tabs.update(tabId, updateProperties, (tab) => { });
+					});
+				}
+			}, 50);
+		});
+	});
+}
+
   /****************************/
  /*** M A I N ---- ON LOAD ***/
 /****************************/
@@ -177,9 +210,27 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			
 			if(request.action.toLowerCase() == "dim_time"){
-				u = new User();
-				//u.dim_time
-				if((Date.parse('01/01/2011 '+u.getClockTime()) > Date.parse('01/01/2011 '+u.dim_time[0])) && (Date.parse('01/01/2011 '+u.getClockTime()) < Date.parse('01/01/2011 '+u.dim_time[1]))){
+				u = new User(function(){
+					var currentD = new Date();
+					var dimStart = new Date();
+					dimStart.setHours(u.dim_time[0].slice(0,2), u.dim_time[0].slice(3,5), u.dim_time[0].slice(6,8));
+					var dimEnd = new Date();
+					dimEnd.setHours(u.dim_time[1].slice(0,2), u.dim_time[1].slice(3,5), u.dim_time[1].slice(6,8));
+					if(currentD >= dimStart && currentD < dimEnd ){
+						sendResponse({
+							response: true,
+						});
+						return true;
+					}else{
+						sendResponse({
+							response: false,
+						});
+						return false;
+					}
+				});		
+				/* var regExp = /(\d{1,2})\:(\d{1,2})\:(\d{1,2})/;
+				if(parseInt(u.getClockTime().replace(regExp, "$1$2$3")) > parseInt(u.dim_time[0].replace(regExp, "$1$2$3")) && 
+					parseInt(u.getClockTime().replace(regExp, "$1$2$3")) < parseInt(u.dim_time[1].replace(regExp, "$1$2$3"))){
 					sendResponse({
 						response: true,
 					});
@@ -189,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						response: false,
 					});
 					return false;
-				}
+				} */
 			}
 		  }
 		);

@@ -175,6 +175,22 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 				return true;
 			}
+			
+			if(request.action.toLowerCase() == "dim_time"){
+				u = new User();
+				//u.dim_time
+				if((Date.parse('01/01/2011 '+u.getClockTime()) > Date.parse('01/01/2011 '+u.dim_time[0])) && (Date.parse('01/01/2011 '+u.getClockTime()) < Date.parse('01/01/2011 '+u.dim_time[1]))){
+					sendResponse({
+						response: true,
+					});
+					return true;
+				}else{
+					sendResponse({
+						response: false,
+					});
+					return false;
+				}
+			}
 		  }
 		);
 			

@@ -56,6 +56,10 @@ class User{
 		return new Date().toJSON().slice(0,10).replace(/-/g,'/');
 	}
 	
+	getClockTime(){
+		return (new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds()).toString();
+	}
+	
 	// TODO: Verifiy User Id and Passphrase from server 
 	checkUserAuth(){
 		if(internetStatus()){

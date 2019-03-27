@@ -29,6 +29,28 @@ function upgradeOrReconnectChanges(){
 	connectToExtension();
 }
 
+/*********************************/
+/***** DIM SCREEN FUNCTIONS *****/
+/*******************************/
+function dimScreen(){
+	// Dim Container Here //
+	let dimContainer = document.createElement('NS-dim-container-'+new Date().getTime());
+	const shadowRoot = dimContainer.attachShadow({mode: 'open'});
+	shadowRoot.innerHTML = `
+		<style>div{animation: showchange 0.4s ease forwards;} @keyframes showchange{0%{opacity: 0.1;} 100%{opacity: 0.3;}}</style>
+		<div style="pointer-events: none; position: fixed !important; width: 100%; height: 100%; top: 0; left: 0; background: #323232; opacity: 0.3; z-index: 9999999 !important;"></div>
+	`;
+	document.getElementsByTagName("html")[0].appendChild(dimContainer);
+}
+
+chrome.runtime.sendMessage(null, {action: "dim_time"}, function(response) {
+	//check response true
+	if(response.response == true){
+		console.log('DIM Screen Initialized');
+		dimScreen();
+	}
+});
+
 setTimeout(function(){
 	// NOTE: TODO: IMPORTANT: THIS IS DISABLED ALTHOUGH MIGHT BE NEEDED TO SEE MESSAGE CHANGES - SEEMS TO WORK WITHOUT THIS FOR NOW //
 	//upgradeOrReconnectChanges(); //Call on Upgrade and Reconnect - Change Port etc.
@@ -51,6 +73,7 @@ setTimeout(function(){
 	  }
 	);
 
+	/* BLOCK LINKS FUNCTIONS */
 	let pagelock = 0;
 	let ablocker;
 	let windowCoverContainer;

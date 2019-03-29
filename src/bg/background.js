@@ -147,6 +147,8 @@ function showNotification(titleInput, messageInput, tabId){
  /*** M A I N ---- ON LOAD ***/
 /****************************/
 document.addEventListener('DOMContentLoaded', function() {	
+	injectToAll(); // Called to Inject to all opened pages //
+
 	let u; // USER
 	
 	/* Use Callbacks if needed / Promise might not work */
@@ -246,8 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		  }
 		);
-		
-		injectToAll(); // Called to Inject to all opened pages //
 			
 	}, START_DELAY);
 	

@@ -132,33 +132,38 @@ setTimeout(function(){
 	/*********************************************/
 	/*  CODES TO RUN AFTER WINDOW LOADED DONE   */
 	/*******************************************/
-	window.onload=function(){
-			
-		/* let chatShadowContainer = document.createElement('NS-chat-shadow-container-'+new Date().getTime());
-		const shadowRoot = chatShadowContainer.attachShadow({mode: 'open'});
-		shadowRoot.innerHTML = `
-			<style>div{animation: showchange 1s ease forwards;} @keyframes showchange{0%{background: #323232dd;} 100%{background: transparent}}</style>
-			<div style="position: absolute !important; width: 100%; height: 100%; top: 0; left: 0; background: transparent; z-index: 999999 !important;"></div>
-		`;
-		document.getElementsByTagName('body')[0].appendChild(chatShadowContainer); */
-		
-		/*******************
-		 IMPORTING Materialize.js
-		*******************/
-		/* var mat = document.createElement("script");
-		mat.type = "text/javascript";
-		mat.src = "chrome-extension://"+chrome.runtime.id+"/js/materialize/materialize.min.js";
-		document.body.appendChild(mat); */
-		/**************************
-		 IMPORTING Materialize.css
-		**************************/
-		/* var matc = document.createElement("link");
-		matc.rel = "stylesheet";
-		matc.href = "chrome-extension://"+chrome.runtime.id+"/css/materialize.min.css";
-		document.body.appendChild(matc); */
-		
-	}//ON WINDOW LOAD END //
-
+	// Check for Old NS extension container and remove them //
+	if(document.querySelector('NS-extension-container') != null){
+		let oldContainers = document.getElementsByTagName('NS-extension-container');
+		console.log(oldContainers);
+		for(let i = 0 ; i < oldContainers.length ; i++){
+			oldContainers[i].parentNode.removeChild(oldContainers[i]);
+		}
+	}
+	
+	// Shadow Root Container - For extension //
+	let extensionContainer = document.createElement('NS-extension-container');
+	const shadowRoot = extensionContainer.attachShadow({mode: 'open'});
+	document.getElementsByTagName('body')[0].appendChild(extensionContainer);
+	// Chat Container //
+	let chatShadowContainer = document.createElement('NS-chat-shadow-container-'+new Date().getTime());
+	chatShadowContainer.innerHTML = '<input type="text"/>';
+	extensionContainer.shadowRoot.appendChild(chatShadowContainer);
+	
+	/*******************
+	 IMPORTING Materialize.js
+	*******************/
+	/* var mat = document.createElement("script");
+	mat.type = "text/javascript";
+	mat.src = "chrome-extension://"+chrome.runtime.id+"/js/materialize/materialize.min.js";
+	document.body.appendChild(mat); */
+	/**************************
+	 IMPORTING Materialize.css
+	**************************/
+	/* var matc = document.createElement("link");
+	matc.rel = "stylesheet";
+	matc.href = "chrome-extension://"+chrome.runtime.id+"/css/materialize.min.css";
+	document.body.appendChild(matc); */
 
 	
 

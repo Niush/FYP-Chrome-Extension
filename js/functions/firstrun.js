@@ -1,8 +1,10 @@
 /*******************************/
 /* ON INSTALL EVENT LISTENER  */
 /*****************************/
+let injection_needed = false;
 chrome.runtime.onInstalled.addListener(function (object) {
 	if(object.reason == "install"){
+		injection_needed = true;
 		chrome.tabs.create({url: "src/options_custom/index.html?show=welcome"}, function (tab) {
 			console.log("Thank You For Installing Minimal Productivity Extension.");
 			
@@ -43,7 +45,7 @@ chrome.runtime.onInstalled.addListener(function (object) {
 						});
 					}
 				});
-			}, 5000);
+			}, 2500);
 		}catch{
 			
 		}
@@ -65,5 +67,9 @@ function checkFirstRun(){
 		);
 	  }
 	});
+	
+	if(injection_needed == true){
+		//injectToAll(); // Called to Inject to all opened pages //
+	}
 }
 /******************/

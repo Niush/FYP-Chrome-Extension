@@ -1,3 +1,8 @@
+chrome.runtime.onUpdateAvailable.addListener(function(){
+	alert('Minimal Productivity App - Update Available\nMake sure all changes are saved.\nUpdate will being shortly.');
+});
+
+
 /*******************************/
 /* ON INSTALL EVENT LISTENER  */
 /*****************************/

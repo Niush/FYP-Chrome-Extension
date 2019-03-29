@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				var ablock = document.getElementById('ablock-button');
 				ablock.style.setProperty("display", "block", "important");
 				ablock.style.visibility = 'visible';
-				ablock.addEventListener('click', function(){		
+				ablock.addEventListener('click', function(){				
 					//Kinda Works - this also =//chrome.tabs.executeScript(null,{code: blockLinksWorker()});
 					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 						chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {

@@ -1,613 +1,275 @@
-/**
-* Place your custom CSS styles here.
-**/
-.NS_ball_container, .NS_app_overlay, .NS_ball_container *{
-animation : none;
-animation-delay : 0;
-animation-direction : normal;
-animation-duration : 0;
-animation-fill-mode : none;
-animation-iteration-count : 1;
-animation-name : none;
-animation-play-state : running;
-animation-timing-function : ease;
-backface-visibility : visible;
-background : 0;
-background-attachment : scroll;
-background-clip : border-box;
-background-color : transparent;
-background-image : none;
-background-origin : padding-box;
-background-position : 0 0;
-background-position-x : 0;
-background-position-y : 0;
-background-repeat : repeat;
-background-size : auto auto;
-border : 0;
-border-style : none;
-border-width : medium;
-border-color : inherit;
-border-bottom : 0;
-border-bottom-color : inherit;
-border-bottom-left-radius : 0;
-border-bottom-right-radius : 0;
-border-bottom-style : none;
-border-bottom-width : medium;
-border-collapse : separate;
-border-image : none;
-border-left : 0;
-border-left-color : inherit;
-border-left-style : none;
-border-left-width : medium;
-border-radius : 0;
-border-right : 0;
-border-right-color : inherit;
-border-right-style : none;
-border-right-width : medium;
-border-spacing : 0;
-border-top : 0;
-border-top-color : inherit;
-border-top-left-radius : 0;
-border-top-right-radius : 0;
-border-top-style : none;
-border-top-width : medium;
-bottom : auto;
-box-shadow : none;
-box-sizing : content-box;
-caption-side : top;
-clear : none;
-clip : auto;
-color : inherit;
-columns : auto;
-column-count : auto;
-column-fill : balance;
-column-gap : normal;
-column-rule : medium none currentColor;
-column-rule-color : currentColor;
-column-rule-style : none;
-column-rule-width : none;
-column-span : 1;
-column-width : auto;
-content : normal;
-counter-increment : none;
-counter-reset : none;
-cursor : auto;
-direction : ltr;
-display : inline;
-empty-cells : show;
-float : none;
-font : normal;
-font-family : inherit;
-font-size : medium;
-font-style : normal;
-font-variant : normal;
-font-weight : normal;
-height : auto;
-hyphens : none;
-left : auto;
-letter-spacing : normal;
-line-height : normal;
-list-style : none;
-list-style-image : none;
-list-style-position : outside;
-list-style-type : disc;
-margin : 0;
-margin-bottom : 0;
-margin-left : 0;
-margin-right : 0;
-margin-top : 0;
-max-height : none;
-max-width : none;
-min-height : 0;
-min-width : 0;
-opacity : 1;
-orphans : 0;
-outline : 0;
-outline-color : invert;
-outline-style : none;
-outline-width : medium;
-overflow : visible;
-overflow-x : visible;
-overflow-y : visible;
-padding : 0;
-padding-bottom : 0;
-padding-left : 0;
-padding-right : 0;
-padding-top : 0;
-page-break-after : auto;
-page-break-before : auto;
-page-break-inside : auto;
-perspective : none;
-perspective-origin : 50% 50%;
-position : static;
-right : auto;
-tab-size : 8;
-table-layout : auto;
-text-align : inherit;
-text-align-last : auto;
-text-decoration : none;
-text-decoration-color : inherit;
-text-decoration-line : none;
-text-decoration-style : solid;
-text-indent : 0;
-text-shadow : none;
-text-transform : none;
-top : auto;
-transform : none;
-transform-style : flat;
-transition : none;
-transition-delay : 0s;
-transition-duration : 0s;
-transition-property : none;
-transition-timing-function : ease;
-unicode-bidi : normal;
-vertical-align : baseline;
-visibility : visible;
-white-space : normal;
-widows : 0;
-width : auto;
-word-spacing : normal;
-z-index : auto;
-/* basic modern patch */
-all: initial;
-all: unset;
+/* Material Font CSS */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../../icons/material-icon.woff2) format('woff2');
 }
 
-.ns_overlay{
-position: fixed;
-width: 100%;
-height: 100%;
-top: 0px;
-left: 0px;
-background: black;
-opacity: 0.3;
-border-radius: 0;
-margin: 0;
-padding: 0;
-box-shadow: none;
-border: 0;
-outline: 0;
-pointer-events: none;
-z-index: 99999999;
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Floating CSS */
-.NS_app_overlay{
-z-index: 99999999;
-position: fixed;
-width: 100%;
-height: 100%;
-top: 0;
-bottom: 0;
-left: 0;
-right: 0;
-pointer-events: none;
-transition: all 0.5s ease;
-background: none;
+i.material-icons:before{display:none;}
 
-margin:0 !important;
-padding: 0 !important;
-border-radius: 0 !important;
-box-shadow: none !important;
-border: 0 !important;
-outline: 0 !important;
+NS-tiny-message{
+	position: fixed;
+	top: 10px;
+	right: 20px;
+	font-weight: 500;
+	background: #545454;
+	color: white;
+	padding: 5px 15px;
+	border-radius: 10px;
+	animation: fade 0.3s ease forwards;
 }
 
-.NS_app_overlay.NS_overlay_active{
-background: #505050;
-background: rgba(30,30,30,0.4);
-}
-
-.NS_ball_container{
-font-family: "Verdana",Sans;
-z-index: 999999999;
-position: fixed;
-margin:0;
-padding: 0;
-border-radius: 0;
-box-shadow: none;
-border: 0;
-outline: 0;
-}
-
-.NS_ball_container div{
-margin: 0;
-padding: 0;
-border-radius: 0;
-}
-
-.NS_balls{
--webkit-touch-callout: none; /* iOS Safari */
--webkit-user-select: none; /* Safari */
--khtml-user-select: none; /* Konqueror HTML */
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* Internet Explorer/Edge */
-	user-select: none; /* Non-prefixed version, currently
-						  supported by Chrome and Opera */
-	
-position: fixed;
-width: 20px;
-height: 20px;
-text-align: center;
-padding: 5px !important;
-line-height: 20px;
-border-radius: 50% !important;
-border: 1px solid brown;
-transition: all 0.1s ease-out;
-cursor: pointer;
-}
-
-#NS_chat_ball {
-right: 10px;
-bottom: 30px;
-top: 90%;
-background-color: teal;
-color: white;
-}
-
-#NS_note_ball {
-left: 10px;
-bottom: 30px;
-top: 90%;
-background-color: yellow;
-color: black;
-}
-
-#NS_chat_ball.NS_appeal, #NS_note_ball.NS_appeal{
-animation: appealChat 2s 3 linear alternate;
-}
-
-@keyframes appealChat{
-from{transform: scale(1) translate(0,0); box-shadow: 1px 1px 1px 1px brown;}
-20%{transform: scale(1.05)  translate(0,-10px); box-shadow: 1px 1px 1px 1px green;}
-40%{transform: scale(1)  translate(0,0); box-shadow: 1px 1px 1px 1px red;}
-60%{transform: scale(1.05)  translate(0,-10px); box-shadow: 1px 1px 1px 1px orange;}
-80%{transform: scale(0.95)  translate(0,5px); box-shadow: 1px 1px 1px 1px brown;}
-to{transform: scale(1)  translate(0,0); box-shadow: 1px 1px 1px 1px solid;}
-}
-
-
-/* NS CHAT CONTAINER */
-.NS_chat_loading{
-position: absolute;
-top: 45%;
-text-align: center;
-left: 0;
-width: 100%;
-font-weight: 500;
-}
-
-.NS_chat_container{
-position: fixed;
-bottom: 30px;
-right: 50px;
-height: 90vh;
-width: 250px;
-border: 3px solid #ac8;
-border: 3px solid rgba(100,150,90,0.5);
-background: rgba(20,20,20,0.8);
-transform-origin: bottom right;
-transform: scale(0) translate(10px,0);
-opacity: 0;
-color: white;
-transition: all 0.5s ease;
-
-margin:0 !important;
-padding: 0 !important;
-border-radius: 0 !important;
-box-shadow: none !important;
-border: 0 !important;
-outline: 0 !important;
-}
-
-.NS_chat_container:after{
-content: "";
-width: 0; 
-height: 0; 
-border-top: 8px solid transparent;
-border-bottom: 8px solid transparent;
-border-left: 8px solid rgba(20,20,20,0.5);	
-position: absolute;
-right: -10px;
-bottom: 6px;
-}
-
-.NS_chat_container.NS_open{
-transform: scale(1) translate(0,0);
-opacity: 1;
-}
-
-.NS_chat_container .NS_chat_content{
-text-align: left;
-width: 100%;
-height: 100%;
-border: 0;
-outline: 0;
-}
-
-
-/* NS Note CONTAINER */
-.NS_note_loading{
-position: absolute;
-top: 45%;
-text-align: center;
-left: 0;
-width: 100%;
-font-weight: 500;
-}
-
-.NS_note_container{
-position: fixed;
-bottom: 30px;
-left: 50px;
-height: 90vh;
-width: 250px;
-border: 3px solid #ac8;
-border: 3px solid rgba(100,150,90,0.5);
-background: rgba(20,20,20,0.5);
-transform-origin: bottom left;
-transform: scale(0) translate(10px,0);
-opacity: 0;
-transition: all 0.5s ease;
-
-margin:0 !important;
-padding: 0 !important;
-border-radius: 0 !important;
-box-shadow: none !important;
-border: 0 !important;
-outline: 0 !important;
-}
-
-.NS_note_container:after{
-content: "";
-width: 0; 
-height: 0; 
-border-top: 8px solid transparent;
-border-bottom: 8px solid transparent;
-border-right: 8px solid rgba(20,20,20,0.5);
-position: absolute;
-left: -11px;
-bottom: 5px;
-}
-
-.NS_note_container.NS_open{
-transform: scale(1) translate(0,0);
-opacity: 1;
-}
-
-.NS_note_container .NS_note_content{
-text-align: left;
-width: 100%;
-border: 0;
-outline: 0;
-}
-
-
-
-/* CHAT CONTENT CSS */
-.NS_chat_log.preloadNoAnimation *{
-animation-duration: 0s !important;
--webkit-animation-duration: 0s !important;
-transition:background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
-}
-
-.NS_chat_log{
-max-height: 60vh;
-min-height: 60vh;
-overflow-y: auto;
-overflow-x: hidden;
-}
-
-.NS_msg_loading{
-font-size: 1.4em;
-}
-
-.NS_error_msg{
-color: red;
-margin: 0;
-padding: 5px 0 0 0;
-}
-
-.NS_hide_loader{
-height: 50px;
-transition: all 0.5s ease;
-overflow: hidden;
-animation: NS_hide_loader 0.3s 1s ease forwards;
-}
-
-@keyframes NS_hide_loader {
-from{opacity: 1; transform: translate(0,0); height: 50px;}
-to{opacity: 0; transform: translate(-50px,0); height: 0;}
-}
-
-.NS_msg{
-opacity: 0;
-max-height: 0;
-}
-
-.NS_show_msg{
-transition: all 0.5s ease;
-animation: NS_show_msg 0.3s 1s ease forwards;
-}
-
-@keyframes NS_show_msg {
-from{opacity: 0; transform: translate(-10px,0); max-height: 0;}
-to{opacity: 1; transform: translate(0,0); max-height: 1000000px;}
-}
-/* MESSAGE */
-.NS_message{
-padding: 5px 0;
-border-top: 1px dotted black;
-animation: NS_showMessage 0.5s ease forwards;
-}
-
-.NS_my_message{
-color: teal;
-}
-
-/*Show Message From Side with Fade*/
-@keyframes NS_showMessage{
-from{opacity:0; transform: translate(-50px,0); max-height: 0; background: gray;}
-to{opacity:1; transform: translate(0,0); max-height: 1000px; background: initial;}
-}
-
-.NS_message p{
-margin: 0 0 0 0;
-padding: 0;
-overflow-wrap: break-word;
-}
-
-.NS_message small:before{
-content: "- ";
-}
-/* Form Message */
-.NS_chat_composer{
-display: flex;
-}
-
-.NS_chat_composer input{
-flex: 1 auto;
-}
-
-.NS_chat_composer button{
-border-radius: 0;
-}
-
-
-
-/* NOTE CONTENT CSS */
-.NS_note_container{
-overflow: auto;
-width: 250px;
-width: auto;
-min-width: 220px;
-max-width: 700px;
-overflow: hidden;
-}
-
-::-webkit-resizer{ border: 9px solid rgba(0,0,0,.1); border-bottom-color: rgba(0,0,0,.5); border-right-color: rgba(0,0,0,.5); outline: 1px solid rgba(0,0,0,.2); box-shadow: 0 0 5px 3px rgba(0,0,0,.1) }
-
-.NS_note_content{
-display: flex;
-flex-wrap: wrap;
-align-items: start;
-justify-content: space-between;
-justify-content: space-evenly;
-max-height: 85vh;
-overflow: auto !important;
-resize: horizontal;
-max-width: 700px;
-min-width: 220px;
-}
-
-.NS_note{
-background: #e6c318;
-color: #323232;
-font-size: 0.8em;
-padding: 5px !important;
-margin: 3px !important;
-margin-bottom: 8px !important;
-max-width: 300px !important;
-}
-
-.NS_note_header{
-display: flex;
-justify-content: space-between;
-align-items: center;
-background: teal;
-color: wheat;
-font-weight: 700;
-padding: 5px !important;
-}
-
-.NS_note_title{
-flex: 2;
-}
-
-.NS_note_edit, .NS_note_delete, .NS_note_save{
-padding: 0 5px !important;
-cursor: pointer;
-font-size: 1.5em;
-}
-
-.NS_note_save{
+body{
+	margin: 0;
+	padding: 0;
+	margin: 0 auto;
 	font-size: 1em;
 }
 
-.NS_note_delete{
-	color: red;
+/* Scroll Bar */
+::-webkit-scrollbar {
+  width:  5px;
+  height: 5px;
 }
 
-.NS_note_body, .NS_note_body_edit{
-display: flex;
-padding: 2px 1px !important;
-margin: 0;
-max-height: 300px;
-min-width: 220px;
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 5px;
 }
 
-.NS_note_body_edit{
-	width: 280px;
-	resize: vertical;
-	background: beige;
-    color: black;
-    border: 1px dashed;
-	transition: all 0.3s ease;
+::-webkit-scrollbar-thumb:hover{
+	background: #333;
 }
 
-.NS_note_title_edit{
-	border: 1px dashed;
+::-webkit-scrollbar-track {
+  background: #ddd;
+  border-radius: 5px;
 }
 
+::-webkit-scrollbar-button {
+  background: rgba(150,150,150,0);
+  height: 0;
+}
+/* IE */
+body {
+	scrollbar-face-color: #666;
+	scrollbar-track-color: #ddd;
+}
 
-/* note composer */
-.NS_note_composer{
-	font-size: 0.8em;
-	width: unset;
-	display: flex;
-	flex-flow: column;
-	background: #DEDEDE;
+.ui-resizable-helper{
+	border: 1px solid #656565;
+}
+
+.ui-resizable-n, .ui-resizable-w {
+	box-shadow: inset 0 0 0 10px #898989;
+	opacity: 0.2;
+}
+
+.ui-resizable-n{
 	width: 100%;
-	
+	height: 7px;
+	z-index: 90;
+    position: absolute;
+    top: 0;
+	cursor: n-resize;
+}
+
+.ui-resizable-w{
+	height: 100%;
+	width: 7px;
+	z-index: 90;
+    position: absolute;
+    left: 0;
+    top: 0;
+	cursor: w-resize;
+}
+
+.confirmModal{
+	width: 500px !important;
+	z-index: 99999999 !important;
+}
+
+/* NS Notes Floating Stylings */
+#NS-notes-floating-icon {
+	overflow: visible;
+	z-index: 9999999;
 	position: fixed;
-    bottom: -214px;
+	bottom: 50px;
+	left: auto !important;
+	right: 5px;
+	transition: all 0.3s ease;
+	user-select: none;
+}
+
+#NS-notes-container {
+	visibility: hidden;
+	z-index: 999999;
+	opacity: 0;
+	-webkit-transform: translate(0, 20px);
+	transform: translate(0, 20px);
+	background: #FEFEFE;
+	color: black;
+	position: fixed;
+	right: 15px;
+	transition: all 0.5s ease;
+	width: 350px;
+	height: 400px;
+	bottom: 60px;
+	border-radius: 5px;
+	box-shadow: 0 0 1px 2px #898989;
+	overflow-y: auto;
+	overflow-x: hidden;
+	font-family: Arial;
+}
+
+#NS-notes-container.show {
+	visibility: visible;
+	opacity: 1;
+	transform: translate(0, 0);
+}
+
+.NS-notes-title-container{
+	padding: 0 10px;
+	margin-bottom: 5px;
+	position: relative;
+}
+
+.NS-notes-title-container > p{
+	border-bottom: 1px solid #565656;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin: 10px 0 0 0;
+	padding: 0 0 10px 0;
+	cursor: pointer;
+	/* display: flex; */
+}
+
+span.NS-note-title{
+	animation: fade 0.3s ease forwards;
+}
+
+.NS-note-inline-control{
+	position: absolute;
+	right: 0;
+	background: #FEFEFE;
+	padding: 0 15px;
+	display: inline;
+	opacity: 0;
+	transform: translate(10px, 0);
+	visibility: hidden;
+	transition: all 0.3s ease-in-out;
+}
+
+.NS-note-inline-control i{
+	opacity: 0.5;
+	font-size: 1.2em;
 	transition: all 0.5s ease;
 }
 
-.NS_note_composer.NS_note_active{
+.NS-note-inline-control i:hover{
+	opacity: 0.8;
+}
+
+.NS-notes-title-container p:hover > .NS-note-inline-control{
+	visibility: visible;
+	transform: translate(0, 0);
+	opacity: 1;
+}
+
+.NS-notes-title-container p.NS-edit-mode{
+	padding: 0;
+	border: none;
+}
+
+.NS-note-inline-control-save{
+	display: none !important;
+}
+
+p.NS-edit-mode .NS-note-inline-control-save{
+	display: inline !important;
+}
+
+p.NS-edit-mode .NS-note-inline-control-edit{
+	display: none;
+}
+
+.NS-note-title.NS-note-title-edit{
+	margin: 0 !important;
+    padding: 0 0 10px 0 !important;
+    height: inherit !important;
+	border-width: 2px !important;
+	font-weight: 500;
+	opacity: 0.6;
+	animation: fade 0.3s ease forwards;
+}
+
+@keyframes fade{
+	0%{opacity: 0; transform: scale(0.95);}
+	100%{opacity: 1; transform: scale(1);}
+}
+
+.NS-notes-input-new-container{
+	position: sticky;
 	bottom: 0;
+	background: white;
+	width: 100%;
+	padding: 0 10px;
 }
 
-.NS_note_composer input{
-	border-bottom: 2px solid teal;
-	padding: 5px !important;
+.NS-notes-input-new-container > input::placeholder{
+	color: #898989 !important;
+	font-size: 0.9em;
 }
 
-.NS_note_composer input:focus .NS_note_composer{
-	bottom: 0;
+.NS-notes-input-new-container > button{
+	position: absolute;
+	right: 12px;
+	top: 5px;
+	visibility: hidden;
+	opacity: 0;
+	transition: all 0.5s ease;
 }
 
-.NS_note_composer textarea{
-	height: 120px;
-	overflow-x: hidden;
-	overflow-y: auto;
-	padding: 5px !important;
+.NS-notes-input-new-container input:valid ~ button{
+	visibility: visible;
+	opacity: 1;
 }
 
-.NS_note_composer button{
-	background: orange;
-	padding: 5px;
-	cursor: pointer;
-	text-align: center;
-	font-weight: 700;
+/* Notes Editor Inner */
+.NS-notes-content-editor-container{
+	width: 100%;
+    position: absolute;
+    background: #EFEFEF;
+    top: 43px;
+    left: 0;
+	min-height: calc(100% - 43px);
+    padding: 13px;
+	visibility: hidden;
+	opacity: 0;
+	transform: translate(200px, 0);
 	transition: all 0.3s ease;
 }
 
-.NS_note_composer button:hover{
-	background: teal;
-	color: white;
-}
-
-.NS_note_composer #NS_note_close{
-	background: maroon;
+.NS-notes-content-editor-container.show{
+	visibility: visible;
+	opacity: 1;
+	transform: translate(0, 0);
 }

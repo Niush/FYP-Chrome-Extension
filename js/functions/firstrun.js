@@ -27,6 +27,26 @@ chrome.runtime.onInstalled.addListener(function (object) {
 				app_id: chrome.runtime.id,
 			}
 		);
+		
+		try{
+			setTimeout(function(){
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+					if(tabs.length > 0){
+						chrome.tabs.executeScript(tabs[0].id, {
+						  code: '',
+						}, _=>{
+						  let e = chrome.runtime.lastError;
+						  console.log(e);
+						  if(typeof e == 'undefined'){
+							chrome.tabs.sendMessage(tabs[0].id, {action: "extension_updated"});
+						  }
+						});
+					}
+				});
+			}, 5000);
+		}catch{
+			
+		}
 	}
 });
 

@@ -22,7 +22,7 @@
 		 "48": "icons/icon48.png"
 	  },
 	  "default_popup": "src/page_action/page_action.html",
-	  "default_title": "Productivity App - Action Menu Controller"
+	  "default_title": "Productivity App - Settings"
   },
   "permissions": [
 	"storage",

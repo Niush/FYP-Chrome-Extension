@@ -102,7 +102,7 @@ function injectToAll(){
 			for( ; j < t; j++ ) {
 				currentTab = currentWindow.tabs[j];
 				// Skip chrome:// and https:// pages
-				if( ! currentTab.url.match(/(chrome|file|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
+				if( ! currentTab.url.match(/(chrome|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
 					injectIntoTab(currentTab);
 				}
 			}
@@ -147,8 +147,6 @@ function showNotification(titleInput, messageInput, tabId){
  /*** M A I N ---- ON LOAD ***/
 /****************************/
 document.addEventListener('DOMContentLoaded', function() {	
-	injectToAll(); // Called to Inject to all opened pages //
-
 	let u; // USER
 	
 	/* Use Callbacks if needed / Promise might not work */
@@ -160,9 +158,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		u = new User(); // Define User - Although no parameters LOL// //Also could callback
 		
-		/*Used to Store in Browser*/
-		//store.set('user', { name:'Marcus' });
-		//alert(store.get('user').name);
+		chrome.tabs.onActivated.addListener(function(activeInfo) {
+			checkTabFeature(activeInfo);
+		});
+		
+		chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+			checkTabFeature(tab);
+		});
+		
+		function checkTabFeature(activeInfo){
+			chrome.tabs.executeScript(activeInfo.tabId, {
+			  code: '',
+			}, _=>{
+			  let e = chrome.runtime.lastError;
+			  if(e != undefined){ //If error during inject it is internal page so dull icon
+				chrome.browserAction.setIcon({path: "../../icons/icon48_grey.png"});
+			  }else{
+				chrome.browserAction.setIcon({path: "../../icons/icon48.png"});
+				u = new User();
+			  }
+			});
+		}
 		
 		if(internetStatus()){
 			//Check if in queue//
@@ -210,27 +226,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			
 			if(request.action.toLowerCase() == "dim_time"){
-				u = new User(function(){
-					var currentD = new Date();
-					var dimStart = new Date();
-					dimStart.setHours(u.dim_time[0].slice(0,2), u.dim_time[0].slice(3,5), u.dim_time[0].slice(6,8));
-					var dimEnd = new Date();
-					dimEnd.setHours(u.dim_time[1].slice(0,2), u.dim_time[1].slice(3,5), u.dim_time[1].slice(6,8));
-					if(currentD >= dimStart && currentD < dimEnd ){
-						sendResponse({
-							response: true,
-						});
-						return true;
-					}else{
-						sendResponse({
-							response: false,
-						});
-						return false;
-					}
-				});		
-				/* var regExp = /(\d{1,2})\:(\d{1,2})\:(\d{1,2})/;
-				if(parseInt(u.getClockTime().replace(regExp, "$1$2$3")) > parseInt(u.dim_time[0].replace(regExp, "$1$2$3")) && 
-					parseInt(u.getClockTime().replace(regExp, "$1$2$3")) < parseInt(u.dim_time[1].replace(regExp, "$1$2$3"))){
+				u = new User();
+				var currentD = new Date();
+				var dimStart = new Date();
+				dimStart.setHours(u.dim_time[0].slice(0,2), u.dim_time[0].slice(3,5), u.dim_time[0].slice(6,8));
+				var dimEnd = new Date();
+				dimEnd.setHours(u.dim_time[1].slice(0,2), u.dim_time[1].slice(3,5), u.dim_time[1].slice(6,8));
+				if(currentD >= dimStart && currentD < dimEnd ){
 					sendResponse({
 						response: true,
 					});
@@ -240,10 +242,12 @@ document.addEventListener('DOMContentLoaded', function() {
 						response: false,
 					});
 					return false;
-				} */
+				}
 			}
 		  }
 		);
+		
+		injectToAll(); // Called to Inject to all opened pages //
 			
 	}, START_DELAY);
 	

@@ -132,39 +132,74 @@ setTimeout(function(){
 	/*********************************************/
 	/*  CODES TO RUN AFTER WINDOW LOADED DONE   */
 	/*******************************************/
+	/* var mat = document.createElement("script");
+	mat.type = "text/javascript";
+	mat.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery.min.js";
+	document.body.appendChild(mat); */
+	
 	// Check for Old NS extension container and remove them //
 	if(document.querySelector('NS-extension-container') != null){
 		let oldContainers = document.getElementsByTagName('NS-extension-container');
-		console.log(oldContainers);
+		//console.log(oldContainers);
 		for(let i = 0 ; i < oldContainers.length ; i++){
 			oldContainers[i].parentNode.removeChild(oldContainers[i]);
 		}
 	}
 	
-	// Shadow Root Container - For extension //
-	let extensionContainer = document.createElement('NS-extension-container');
-	const shadowRoot = extensionContainer.attachShadow({mode: 'open'});
-	document.getElementsByTagName('body')[0].appendChild(extensionContainer);
-	// Chat Container //
-	let chatShadowContainer = document.createElement('NS-chat-shadow-container-'+new Date().getTime());
-	chatShadowContainer.innerHTML = '<input type="text"/>';
-	extensionContainer.shadowRoot.appendChild(chatShadowContainer);
+	// HACK: we need to "bleed" font-faces to outside the shadow dom because of a bug in chrome #COPIED - THANKS IF WORKED
+	document.querySelector('head').innerHTML += '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
 	
-	/*******************
-	 IMPORTING Materialize.js
-	*******************/
-	/* var mat = document.createElement("script");
-	mat.type = "text/javascript";
-	mat.src = "chrome-extension://"+chrome.runtime.id+"/js/materialize/materialize.min.js";
-	document.body.appendChild(mat); */
-	/**************************
-	 IMPORTING Materialize.css
-	**************************/
-	/* var matc = document.createElement("link");
-	matc.rel = "stylesheet";
-	matc.href = "chrome-extension://"+chrome.runtime.id+"/css/materialize.min.css";
-	document.body.appendChild(matc); */
+	let rootElHtml = `
+		<NS-extension-container id="NS-extension-container">
+		  <template id="cls-template">
+		  </template>
+		</div>
+	`;
+	
+	document.body.innerHTML += rootElHtml;
+	
+	let rootEl = document.querySelector('#NS-extension-container'),
+	  templateEl = rootEl.querySelector('template'),
+	  shadow = rootEl.attachShadow({
+		mode: 'open'
+	  });
+	
+	// Shadow Root Container - For extension // // MY CODE
+	/* let extensionContainer = document.createElement('NS-extension-container');
+	let noteTemplate = document.createElement('NS-note-template');
+	let shadowRoot = extensionContainer.attachShadow({mode: 'open'}); */
+	
+	/* IMPORTING ALL JS */
+	let jsLinks = [
+	  chrome.extension.getURL('../../js/jquery/jquery.min.js'),
+	  chrome.extension.getURL('../../src/inject/iframe/js/index.js'),
+	  chrome.extension.getURL('../../js/jquery/jquery-ui.min.js'),
+	  chrome.extension.getURL('../../js/materialize/materialize.min.js'),
+	].map(p => `<script src="${p}" type="text/javascript"></script>`).join("\n")
+	
+	/* ALL CSS */
+	let cssLinks = [
+	  chrome.extension.getURL('../../css/materialize.min.css'),
+	  chrome.extension.getURL('../../src/inject/iframe/css/style.css'),
+	].map(p => `<link rel="stylesheet" href="${p}" />`).join("\n")
+	
+	// inject css/js into template content
+	let templateNodeContents = document.createElement('div')
+	templateNodeContents.innerHTML = [cssLinks, jsLinks].join("\n")
+	for (let node of templateNodeContents.childNodes)
+		templateEl.content.appendChild(node)
+	
+	fetch(chrome.extension.getURL('src/inject/iframe/index.html')).then((data) => {
+	  data.text().then((body) => {
+		let noteContainer = document.createElement('NS-extension-note-container')
 
+		shadow.appendChild(document.importNode(templateEl.content, true))
+		noteContainer.innerHTML = body
+		shadow.appendChild(noteContainer)
+	  })
+	})
+	
+	document.getElementsByTagName('body')[0].appendChild(shadow);
 	
 
 	

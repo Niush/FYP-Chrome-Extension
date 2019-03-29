@@ -1,21 +1,9 @@
-NS-tiny-message{
-	position: fixed;
-	top: 10px;
-	right: 20px;
-	font-weight: 500;
-	background: #545454;
-	color: white;
-	padding: 5px 15px;
-	border-radius: 10px;
-	animation: NS-fade 0.3s ease forwards;
-}
-
-/* Material Font CSS */
-/* @font-face {
+/* fallback */
+@font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(../../icons/material-icon.woff2) format('woff2');
+  src: url('../../../../icons/material-icon.woff2') format('woff2');
 }
 
 .material-icons {
@@ -35,62 +23,54 @@ NS-tiny-message{
 }
 
 i.material-icons:before{display:none;}
-
-NS-tiny-message{
-	position: fixed;
-	top: 10px;
-	right: 20px;
-	font-weight: 500;
-	background: #545454;
-	color: white;
-	padding: 5px 15px;
-	border-radius: 10px;
-	animation: NS-fade 0.3s ease forwards;
-}
-
-.NS-right-float{
+	
+body{
 	margin: 0;
 	padding: 0;
 	margin: 0 auto;
 	font-size: 1em;
-	opacity: 0.1;
-} */
+}
 
 /* Scroll Bar */
-/* .NS-right-float ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width:  5px;
   height: 5px;
 }
 
-.NS-right-float ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #666;
   border-radius: 5px;
 }
 
-.NS-right-float ::-webkit-scrollbar-thumb:hover{
+::-webkit-scrollbar-thumb:hover{
 	background: #333;
 }
 
-.NS-right-float ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #ddd;
   border-radius: 5px;
 }
 
-.NS-right-float ::-webkit-scrollbar-button {
+::-webkit-scrollbar-button {
   background: rgba(150,150,150,0);
   height: 0;
 }
+/* IE */
+body {
+	scrollbar-face-color: #666;
+	scrollbar-track-color: #ddd;
+}
 
-.NS-right-float .ui-resizable-helper{
+.ui-resizable-helper{
 	border: 1px solid #656565;
 }
 
-.NS-right-float .ui-resizable-n, .ui-resizable-w {
+.ui-resizable-n, .ui-resizable-w {
 	box-shadow: inset 0 0 0 10px #898989;
 	opacity: 0.2;
 }
 
-.NS-right-float .ui-resizable-n{
+.ui-resizable-n{
 	width: 100%;
 	height: 7px;
 	z-index: 90;
@@ -99,7 +79,7 @@ NS-tiny-message{
 	cursor: n-resize;
 }
 
-.NS-right-float .ui-resizable-w{
+.ui-resizable-w{
 	height: 100%;
 	width: 7px;
 	z-index: 90;
@@ -109,13 +89,13 @@ NS-tiny-message{
 	cursor: w-resize;
 }
 
-.NS-right-float .confirmModal{
+.confirmModal{
 	width: 500px !important;
 	z-index: 99999999 !important;
 }
 
 /* NS Notes Floating Stylings */
-/*#NS-notes-floating-icon {
+#NS-notes-floating-icon {
 	overflow: visible;
 	z-index: 9999999;
 	position: fixed;
@@ -126,7 +106,7 @@ NS-tiny-message{
 	user-select: none;
 }
 
-.NS-right-float #NS-notes-container {
+#NS-notes-container {
 	visibility: hidden;
 	z-index: 999999;
 	opacity: 0;
@@ -167,10 +147,11 @@ NS-tiny-message{
 	margin: 10px 0 0 0;
 	padding: 0 0 10px 0;
 	cursor: pointer;
-} */
+	/* display: flex; */
+}
 
-/* span.NS-note-title{
-	animation: NS-fade 0.3s ease forwards;
+span.NS-note-title{
+	animation: fade 0.3s ease forwards;
 }
 
 .NS-note-inline-control{
@@ -225,10 +206,10 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 	border-width: 2px !important;
 	font-weight: 500;
 	opacity: 0.6;
-	animation: NS-fade 0.3s ease forwards;
+	animation: fade 0.3s ease forwards;
 }
 
-@keyframes NS-fade{
+@keyframes fade{
 	0%{opacity: 0; transform: scale(0.95);}
 	100%{opacity: 1; transform: scale(1);}
 }
@@ -258,10 +239,10 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 .NS-notes-input-new-container input:valid ~ button{
 	visibility: visible;
 	opacity: 1;
-} */
+}
 
 /* Notes Editor Inner */
-/* .NS-notes-content-editor-container{
+.NS-notes-content-editor-container{
 	width: 100%;
     position: absolute;
     background: #EFEFEF;
@@ -279,4 +260,4 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 	visibility: visible;
 	opacity: 1;
 	transform: translate(0, 0);
-} */
+}

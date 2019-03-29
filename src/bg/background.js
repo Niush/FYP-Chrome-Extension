@@ -178,6 +178,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			  }else{
 				chrome.browserAction.setIcon({path: "../../icons/icon48.png"});
 				u = new User();
+				
+				/* chrome.tabs.executeScript(activeInfo.tabId, { file: "../../js/jquery/jquery.min.js" }, function () {
+					chrome.tabs.executeScript(activeInfo.tabId, { file: "../../js/jquery/jquery-ui.min.js" }, function(){
+						chrome.tabs.executeScript(activeInfo.tabId, { file: "../../js/materialize/materialize.min.js" }, function(){
+							chrome.tabs.executeScript(activeInfo.tabId, { file: "../../js/functions/inject_chat.js" }, function(){
+								
+							});
+						});
+					});
+				}); */
 			  }
 			});
 		}

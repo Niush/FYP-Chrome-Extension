@@ -1,13 +1,14 @@
 <style>
 	NS-notes-floating-icon{
 		position: fixed !important;
-		bottom: 10px;
-		right: 10px;
-		z-index: 9999999;
+		bottom: 20px !important;
+		right: 20px !important;
+		left: auto !important;
+		z-index: 9999999 !important;
 		transition: all 0.3s ease;
 		user-select: none !important;
 		color: #fff;
-		overflow: hidden;
+		overflow: hidden !important;
 		width: 40px;
 		height: 40px;
 		line-height: 40px;
@@ -20,6 +21,13 @@
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 0 3px 4px #ABABAB;
+		visibility: hidden;
+		opacity: 0;
+	}
+	
+	NS-notes-floating-icon.NS-shown{
+		visibility: visible;
+		opacity: 1;
 	}
 	
 	NS-notes-floating-icon.NS-pulse{
@@ -61,13 +69,15 @@
 		color: black;
 		position: fixed !important;
 		right: 15px !important;
-		transition: all 0.5s ease;
 		bottom: 60px !important;
+		left: auto !important;
 		border-radius: 5px !important;
 		box-shadow: 0 0 1px 2px #898989 !important;
 		overflow-y: auto !important;
 		overflow-x: hidden !important;
 		font-family: Arial !important;
+		transition: all 0.5s ease;
+		top: auto !important;
 	}
 	
 	NS-notes-iframe-container.show{
@@ -87,12 +97,15 @@
 		padding: 0 !important;
 		position: relative !important;
 		display: block !important;
-		border: 0 !important !important;
-		outline: 0 !important !important;
+		border: 0 !important;
+		outline: 0 !important;
 	}
 	
-	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-helper{
-		border: 1px solid #656565;
+	.ui-resizable-helper{
+		border: 1px dashed #656565 !important;
+		opacity: 1 !important;
+		display: inline-block !important;
+		border-radius: 8px;
 	}
 	
 	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-n, ns-notes-iframe-container .ui-resizable-handle.ui-resizable-w {
@@ -115,6 +128,19 @@
 		height: 7px !important;
 		cursor: n-resize !important;
 	}
+	
+	NS-closer-iframe{
+		position: absolute;
+		top: 13px;
+		right: 10px;
+		color: white;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+	
+	NS-closer-iframe:hover{
+		transform: scale(1.2) rotate(180deg);
+	}
 </style>
 <!-- Class to pulse NS-pulse -->
 <NS-notes-floating-icon id="NS-notes-floating-icon">
@@ -123,33 +149,5 @@
 
 <NS-notes-iframe-container>
 	<iframe class="NS-notes-iframe" src=""></iframe>
+	<NS-closer-iframe>X</NS-closer-iframe>
 </NS-notes-iframe-container>
-
-<!-- console.log(chrome.runtime.id);
-window.onload = function(){
-	var jq = document.createElement("script");
-	jq.type = "text/javascript";
-	jq.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery.min.js";
-	document.querySelector('head').appendChild(jq);
-	
-	var jqu = document.createElement("script");
-	jqu.type = "text/javascript";
-	jqu.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery-ui.min.js";
-	document.querySelector('head').appendChild(jqu);
-
-	let NSNotesFloatingIcon = $("#NS-notes-floating-icon");
-	let isChatOpen = false;
-	let NSNotesIconTop = $(window).height() - 50;
-	//Draggable Chat Btn
-	NSNotesFloatingIcon.draggable({ axis: "y", containment: "window",	
-									start: function() {
-										NSNotesFloatingIcon.css('transition','none');
-									}, stop: function() {
-										NSNotesFloatingIcon.css('transition','all 0.3s ease');
-									}
-								});
-								
-	NSNotesFloatingIcon.click(function(){
-		alert('click');
-	});
-} -->

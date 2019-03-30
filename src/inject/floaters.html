@@ -1,11 +1,11 @@
 <style>
 	NS-notes-floating-icon{
-		position: fixed;
+		position: fixed !important;
 		bottom: 10px;
 		right: 10px;
 		z-index: 9999999;
 		transition: all 0.3s ease;
-		user-select: none;
+		user-select: none !important;
 		color: #fff;
 		overflow: hidden;
 		width: 40px;
@@ -16,7 +16,7 @@
 		border-radius: 50%;
 		cursor: pointer;
 		vertical-align: middle;
-		display: flex;
+		display: flex !important;
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 0 3px 4px #ABABAB;
@@ -51,23 +51,23 @@
 	NS-notes-iframe-container{
 		width: 350px;
 		height: 400px;
-		display: block;
+		display: block !important;
 		visibility: hidden;
-		z-index: 999999;
+		z-index: 999999 !important;
 		opacity: 0;
 		-webkit-transform: translate(0, 20px);
 		transform: translate(0, 20px);
 		background: #FEFEFE;
 		color: black;
-		position: fixed;
-		right: 15px;
+		position: fixed !important;
+		right: 15px !important;
 		transition: all 0.5s ease;
-		bottom: 60px;
-		border-radius: 5px;
-		box-shadow: 0 0 1px 2px #898989;
-		overflow-y: auto;
-		overflow-x: hidden;
-		font-family: Arial;
+		bottom: 60px !important;
+		border-radius: 5px !important;
+		box-shadow: 0 0 1px 2px #898989 !important;
+		overflow-y: auto !important;
+		overflow-x: hidden !important;
+		font-family: Arial !important;
 	}
 	
 	NS-notes-iframe-container.show{
@@ -81,14 +81,14 @@
 	}
 	
 	.NS-notes-iframe{
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		position: relative;
-		display: block;
-		border: 0 !important;
-		outline: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		position: relative !important;
+		display: block !important;
+		border: 0 !important !important;
+		outline: 0 !important !important;
 	}
 	
 	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-helper{
@@ -96,24 +96,24 @@
 	}
 	
 	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-n, ns-notes-iframe-container .ui-resizable-handle.ui-resizable-w {
-		box-shadow: inset 0 0 0 10px #898989;
-		opacity: 0.2;
+		box-shadow: inset 0 0 0 10px #898989 !important;
+		opacity: 0.2 !important;
 		z-index: 9999999 !important;
-		left: 0;
-		top: 0;
-		position: absolute;
+		left: 0 !important;
+		top: 0 !important;
+		position: absolute !important;
 	}
 	
 	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-w{
-		width: 7px;
-		height: 100%;
-		cursor: w-resize;
+		width: 7px !important;
+		height: 100% !important;
+		cursor: w-resize !important;
 	}
 	
 	ns-notes-iframe-container .ui-resizable-handle.ui-resizable-n{
-		width: 100%;
-		height: 7px;
-		cursor: n-resize;
+		width: 100% !important;
+		height: 7px !important;
+		cursor: n-resize !important;
 	}
 </style>
 <!-- Class to pulse NS-pulse -->

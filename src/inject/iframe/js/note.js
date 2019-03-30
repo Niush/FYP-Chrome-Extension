@@ -1,54 +1,12 @@
-$(document).ready(function() {	
-	let NSNotesFloatingIcon = $("#NS-notes-floating-icon");
-	let NSNotesContainer = $("#NS-notes-container");
-	let isChatOpen = false;
-	let NSNotesIconTop = $(window).height() - 50;
-	//Draggable Chat Btn
-	NSNotesFloatingIcon.draggable({ axis: "y", containment: "window",	
-									start: function() {
-										NSNotesFloatingIcon.css('transition','none');
-									}, stop: function() {
-										NSNotesFloatingIcon.css('transition','all 0.3s ease');
-									}
-								});
-							
-	NSNotesContainer.resizable({animate: true, handles: 'n, w' , 
-									start: function() {
-										NSNotesContainer.css('transition','none');
-									}, stop: function() {
-										setTimeout(function(){
-											NSNotesContainer.css('transition','all 0.5s ease');
-										}, 1000);
-									}
-								});	
-	//Note Btn Click Event
-	let noteContentLoaded = false;
-	NSNotesFloatingIcon.click(function() {
-		if (isChatOpen) {
-			NSNotesContainer.removeClass("show");
-			NSNotesFloatingIcon.css('top',NSNotesIconTop);
-			isChatOpen = false;
-			NSNotesFloatingIcon.draggable( 'enable' )
-		} else {
-			if(noteContentLoaded == false){
-				fillNotes(loadNoteContent);
-				noteContentLoaded = true;
-			}
-			NSNotesContainer.addClass("show");
-			NSNotesIconTop = NSNotesFloatingIcon.position().top;
-			NSNotesFloatingIcon.css('top',$(window).height() - 50);
-			isChatOpen = true;
-			NSNotesFloatingIcon.draggable( 'disable' )
-		}
-	});
-	NSNotesFloatingIcon.click();
-	
+$(document).ready(function() {								
+	fillNotes(loadNoteContent);
+
 	function fillNotes(callback){
 		// Fill Notes title dom here //
 		//$('.NS-notes-title-container').html('');
 		callback();
 	}
-	
+
 	function loadNoteContent(){
 		// EDIT BUTTON CLICK - EVENT //
 		let NSNoteEditing = false;

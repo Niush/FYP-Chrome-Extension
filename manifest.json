@@ -52,15 +52,13 @@
         "<all_urls>"
       ],
       "js": [
-        "src/inject/inject.js",
 		"js/jquery/jquery.min.js",
 		"js/jquery/jquery-ui.min.js",
-		"js/materialize/materialize.min.js",
-		"src/inject/iframe/js/index.js"
+        "src/inject/inject.js"
       ],
 	  "run_at": "document_start"
     }
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; font-src 'self';",
-  "web_accessible_resources": ["src/inject/iframe/index.html", "src/inject/iframe/css/style.css", "js/functions/inject_chat.js", "js/materialize/materialize.min.js", "css/materialize.min.css", "js/jquery/jquery.min.js", "js/jquery/jquery-ui.min.js"]
+  "web_accessible_resources": ["icons/material-icon.woff2","src/inject/floaters.html", "src/inject/iframe/index.html", "src/inject/iframe/css/style.css", "js/functions/inject_chat.js", "js/materialize/materialize.min.js", "css/materialize.min.css", "js/jquery/jquery.min.js", "js/jquery/jquery-ui.min.js", "src/inject/iframe/note.html"]
 }

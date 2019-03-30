@@ -29,6 +29,7 @@ body{
 	padding: 0;
 	margin: 0 auto;
 	font-size: 1em;
+	overflow-x: hidden;
 }
 
 /* Scroll Bar */
@@ -61,7 +62,7 @@ body {
 	scrollbar-track-color: #ddd;
 }
 
-.ui-resizable-helper{
+/* .ui-resizable-helper{
 	border: 1px solid #656565;
 }
 
@@ -87,10 +88,10 @@ body {
     left: 0;
     top: 0;
 	cursor: w-resize;
-}
+} */
 
 .confirmModal{
-	width: 500px !important;
+	width: 80vw !important;
 	z-index: 99999999 !important;
 }
 
@@ -114,7 +115,8 @@ body {
 	transform: translate(0, 20px);
 	background: #FEFEFE;
 	color: black;
-	position: fixed;
+	/* position: fixed; */
+	position: relative;
 	right: 15px;
 	transition: all 0.5s ease;
 	width: 350px;

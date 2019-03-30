@@ -1,3 +1,13 @@
+/* var jq = document.createElement("script");
+jq.type = "text/javascript";
+jq.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery.min.js";
+document.querySelector('head').appendChild(jq);
+
+var jqu = document.createElement("script");
+jqu.type = "text/javascript";
+jqu.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery-ui.min.js";
+document.querySelector('head').appendChild(jqu);
+ */
 // Wait Inject for some seconds - Except few Things //
 function upgradeOrReconnectChanges(){
 	var port;
@@ -132,15 +142,10 @@ setTimeout(function(){
 	/*********************************************/
 	/*  CODES TO RUN AFTER WINDOW LOADED DONE   */
 	/*******************************************/
-	/* var mat = document.createElement("script");
-	mat.type = "text/javascript";
-	mat.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery.min.js";
-	document.body.appendChild(mat); */
 	
 	// Check for Old NS extension container and remove them //
 	if(document.querySelector('NS-extension-container') != null){
 		let oldContainers = document.getElementsByTagName('NS-extension-container');
-		//console.log(oldContainers);
 		for(let i = 0 ; i < oldContainers.length ; i++){
 			oldContainers[i].parentNode.removeChild(oldContainers[i]);
 		}
@@ -149,58 +154,68 @@ setTimeout(function(){
 	// HACK: we need to "bleed" font-faces to outside the shadow dom because of a bug in chrome #COPIED - THANKS IF WORKED
 	document.querySelector('head').innerHTML += '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
 	
-	let rootElHtml = `
-		<NS-extension-container id="NS-extension-container">
-		  <template id="cls-template">
-		  </template>
-		</div>
-	`;
-	
-	document.body.innerHTML += rootElHtml;
-	
-	let rootEl = document.querySelector('#NS-extension-container'),
-	  templateEl = rootEl.querySelector('template'),
-	  shadow = rootEl.attachShadow({
-		mode: 'open'
-	  });
-	
-	// Shadow Root Container - For extension // // MY CODE
-	/* let extensionContainer = document.createElement('NS-extension-container');
-	let noteTemplate = document.createElement('NS-note-template');
-	let shadowRoot = extensionContainer.attachShadow({mode: 'open'}); */
-	
-	/* IMPORTING ALL JS */
-	let jsLinks = [
-	  chrome.extension.getURL('../../js/jquery/jquery.min.js'),
-	  chrome.extension.getURL('../../src/inject/iframe/js/index.js'),
-	  chrome.extension.getURL('../../js/jquery/jquery-ui.min.js'),
-	  chrome.extension.getURL('../../js/materialize/materialize.min.js'),
-	].map(p => `<script src="${p}" type="text/javascript"></script>`).join("\n")
-	
-	/* ALL CSS */
-	let cssLinks = [
-	  chrome.extension.getURL('../../css/materialize.min.css'),
-	  chrome.extension.getURL('../../src/inject/iframe/css/style.css'),
-	].map(p => `<link rel="stylesheet" href="${p}" />`).join("\n")
-	
-	// inject css/js into template content
-	let templateNodeContents = document.createElement('div')
-	templateNodeContents.innerHTML = [cssLinks, jsLinks].join("\n")
-	for (let node of templateNodeContents.childNodes)
-		templateEl.content.appendChild(node)
-	
-	fetch(chrome.extension.getURL('src/inject/iframe/index.html')).then((data) => {
+	// Copying all the HTML from floaters.html to create the floating button - used external file make code cleaner //
+	fetch(chrome.extension.getURL('src/inject/floaters.html')).then((data) => {
 	  data.text().then((body) => {
-		let noteContainer = document.createElement('NS-extension-note-container')
-
-		shadow.appendChild(document.importNode(templateEl.content, true))
+		let noteContainer = document.createElement('NS-extension-container');
 		noteContainer.innerHTML = body
-		shadow.appendChild(noteContainer)
+		document.getElementsByTagName('body')[0].appendChild(noteContainer);
+		
+		floatersScripts();
 	  })
 	})
 	
-	document.getElementsByTagName('body')[0].appendChild(shadow);
 	
+	// Applying all clicks and moves and logic to Floating icons and events //
+	function floatersScripts(){
+		setTimeout(function(){
+			let NSNotesIconTop = $(window).height() - 50;
+			let isNoteOpen = false;
+			let noteContentLoaded = false;
+			let NSNotesFloatingIcon = $('NS-notes-floating-icon');
+			let NSNotesIframeContainer = $('NS-notes-iframe-container');
+			let NSNotesIframe = $('.NS-notes-iframe');
+			NSNotesFloatingIcon.draggable({ axis: "y", containment: "window",	
+									start: function() {
+										NSNotesFloatingIcon.css('transition','none');
+									}, stop: function() {
+										NSNotesFloatingIcon.css('transition','all 0.3s ease');
+									}
+								});
+								
+			NSNotesIframeContainer.resizable({animate: true, handles: 'n, w' , 
+									start: function() {
+										NSNotesIframeContainer.css('transition','none');
+										NSNotesIframe.css('pointer-events','none');
+									}, stop: function() {
+										setTimeout(function(){
+											NSNotesIframeContainer.css('transition','all 0.5s ease');
+											NSNotesIframe.css('pointer-events','initial');
+										}, 1000);
+									}
+								});
+								
+			NSNotesFloatingIcon.click(function() {
+				if (isNoteOpen) {
+					NSNotesIframeContainer.removeClass("show");
+					NSNotesFloatingIcon.css('top',NSNotesIconTop);
+					isNoteOpen = false;
+					NSNotesFloatingIcon.draggable( 'enable' )
+				} else {
+					if(noteContentLoaded == false){
+						NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
+						noteContentLoaded = true;
+					}
+					NSNotesIframeContainer.addClass("show");
+					NSNotesIconTop = NSNotesFloatingIcon.position().top;
+					NSNotesFloatingIcon.css('top',$(window).height() - 50);
+					isNoteOpen = true;
+					NSNotesFloatingIcon.draggable( 'disable' )
+				}
+			});
+		}, 200);
+	}
+
 
 	
 	/******ON PAGE LOAD CODE PROVIDED BY THE extensionizr*****/
@@ -217,4 +232,4 @@ setTimeout(function(){
 		}
 		}, 10);
 	}); */
-}, 1500);
+}, 500);

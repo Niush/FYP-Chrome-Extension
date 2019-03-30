@@ -234,6 +234,52 @@ document.addEventListener('DOMContentLoaded', function() {
 				return true;
 			}
 			
+			// focus or not this page //
+			if(request.action.toLowerCase() == "focus_check"){
+				u = new User();
+				if(u.check_focus(getHostName(sender.url))){
+					sendResponse({
+						response: true,
+					});
+				}else{
+					sendResponse({
+						response: false,
+					});
+				}
+				return false;
+			}
+			
+			// Check If focus page is crossed limit //
+			if(request.action.toLowerCase() == "check_limit_cross"){
+				u = new User();
+				if(u.check_limit_cross(getHostName(sender.url))){
+					sendResponse({
+						response: true,
+					});
+				}else{
+					sendResponse({
+						response: false,
+					});
+				}
+				return false;
+			}
+			
+			// Increment the focus time every call which is made probably every 5 seconds //
+			if(request.action.toLowerCase() == "increment_focus"){
+				u = new User();
+				if(u.increment_focus(getHostName(sender.url))){
+					sendResponse({
+						response: true,
+					});
+					u = new User();
+				}else{
+					sendResponse({
+						response: false,
+					});
+				}
+				return false;
+			}
+			
 			// If request to A block or Lock Webpage (lockpage) //
 			if(request.action.toLowerCase() == "sync"){
 				u = new User();

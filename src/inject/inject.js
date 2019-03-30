@@ -74,6 +74,90 @@ var dimCheck = function() {
 };
 dimCheck();
 
+// CHECK AND WORK WITH FOCUS MODE //
+/***** FOCUS URL WORK WITH  *****/
+/*******************************/
+var focusCheck = function() {
+	if(typeof chrome.app.isInstalled!=='undefined'){
+		chrome.runtime.sendMessage(null, {action: "focus_check"}, function(response) {
+			if(response) {
+				if(response.response == true){
+					focusThis(); // Page focused so continue..
+				}
+			} else {
+				setTimeout(focusCheck, 3000);
+			}
+		});
+	}
+};
+focusCheck();
+
+function focusThis(){
+	console.log('Focus Mode Active - On this URL');
+	checkLimitCross(function(res){ // Page focused now check for limit crossed..
+		if(res){
+			limitCrossed(); // If limit crossed call this..
+		}else{
+			limitNotCrossed(); // If Limit not crossed call this..
+		}
+	});
+}
+
+function checkLimitCross(callback){
+	if(typeof chrome.app.isInstalled!=='undefined'){
+		chrome.runtime.sendMessage(null, {action: "check_limit_cross"}, function(response) {
+			if(response) {
+				if(response.response == true){
+					callback(true);
+					return true; // If limit crossed call this..
+				}else{
+					callback(false);
+					return false; // If Limit not crossed call this..
+				}
+			} else {
+				setTimeout(checkLimitCross, 3000);
+			}
+		});
+	}
+}
+
+function limitCrossed(when='before'){
+	if(when == 'before'){
+		alert('Limit Already Crossed');
+	}else if(when == 'now'){
+		alert('Limit Just got Crossed...');
+	}
+}
+
+function limitNotCrossed(){
+	let todayTotalIncrement = setInterval(function(){
+		if (!document.hidden) {
+			if(typeof chrome.app.isInstalled!=='undefined'){
+				chrome.runtime.sendMessage(null, {action: "increment_focus"}, function(response) {
+					if(response) {
+						if(response.response == true){
+							console.log('increment by 5');
+							// If active tab just crossed the limit //
+							checkLimitCross(function(res){
+								if(res){
+									limitCrossed('now');
+									clearInterval(todayTotalIncrement);
+									return true;
+								}
+							});
+						}else{
+							console.log('FAILED increment');
+						}
+					} else {
+						setTimeout(limitNotCrossed, 1000);
+					}
+				});
+			}
+		}
+	}, 4900);//Every 5 seconds with strict 100ms deduct
+}
+
+
 /***********************************/
 /*  CODES TO RUN AFTER DELAY      */
 /*********************************/
@@ -158,7 +242,7 @@ setTimeout(function(){
 			if(typeof chrome.app.isInstalled!=='undefined'){
 				//chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 					chrome.runtime.sendMessage(null, {action: "note_disabled_check"}, function(response) {
-						if(response && response.response) {
+						if(response) {
 							if(response.response == true){
 								showNote();
 							}

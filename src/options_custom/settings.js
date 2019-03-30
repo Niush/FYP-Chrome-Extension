@@ -133,13 +133,21 @@ document.addEventListener('DOMContentLoaded', function() {
 			focusSettingsContent.innerHTML = '';
 			let all_focus = u.all_focus;
 			for(let i = 0 ; i < all_focus.length ; i++){
+				let today_total_content_style
+				if(all_focus[i].limit_sec <= all_focus[i].today_total){
+					today_total_content_style = '<td class="red lighten-1 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+				}else if((all_focus[i].limit_sec)/2 <= all_focus[i].today_total){
+					today_total_content_style = '<td class="orange darken-2 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+				}else{
+					today_total_content_style = '<td>'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+				}
 				focusSettingsContent.innerHTML = focusSettingsContent.innerHTML+ `
 					<td>`+all_focus[i].url+`</td>
-					<td>`+(all_focus[i].limit_sec)/60+` min </td>
-					<td>`+all_focus[i].total_tries+`</td>
-					<td>`+all_focus[i].today_total+` min</td>
-					<td>`+all_focus[i].all_total+` min</td>
-					<td>`+'<button class="btn btn-small focus-edit-button green lighten-1" limit='+(all_focus[i].limit_sec)/60+' url='+all_focus[i].url+'>Edit</button>'+`</td>
+					<td>`+Math.floor((all_focus[i].limit_sec)/60)+` min </td>
+					<td>`+all_focus[i].total_tries+`</td>`
+					+ today_total_content_style +
+					`<td>`+all_focus[i].all_total+` min</td>
+					<td>`+'<button class="btn btn-small focus-edit-button green lighten-1" limit='+Math.floor((all_focus[i].limit_sec)/60)+' url='+all_focus[i].url+'>Edit</button>'+`</td>
 					<td>`+'<button class="btn btn-small focus-delete-button red" url='+all_focus[i].url+'>Remove</button>'+`</td>
 				`;
 			}

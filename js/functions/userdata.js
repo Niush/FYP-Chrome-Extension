@@ -362,6 +362,18 @@ class User{
 		}
 		return false;
 	}
+	check_limit_cross(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If not found//
+			if(data.focus[index].today_total >= data.focus[index].limit_sec){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
 	increment_focus(url){
 		// Increment every 5 seconds //
 		let index = data.focus.findIndex(e => e.url == url);
@@ -393,6 +405,14 @@ class User{
 			return true;
 		}else{
 			alert('Web Site is not on Focus Mode');
+			return false;
+		}
+	}
+	all_total(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If not found//
+			return data.focus[index].all_total;
+		}else{
 			return false;
 		}
 	}

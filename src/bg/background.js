@@ -202,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		chrome.runtime.onMessage.addListener(
 		  function(request, sender, sendResponse) {
 			console.log("MESSAGE: " + request.action);
+			//console.log(sender);
 			// If request to screenshot //
 			if(request.action.toLowerCase() == "screenshot"){
 				//console.log(request.tabInfo);
@@ -214,6 +215,22 @@ document.addEventListener('DOMContentLoaded', function() {
 					});
 				}, 1200);
 				
+				return true;
+			}
+			
+			// If request to chat_disabled_check //
+			if(request.action.toLowerCase() == "note_disabled_check"){
+				u = new User();
+				if(u.check_disable_note(getHostName(sender.url)) == 0){
+					sendResponse({
+						response: true,
+					});
+				}else{
+					sendResponse({
+						response: false,
+					});
+				}
+				//console.log(sender);
 				return true;
 			}
 			

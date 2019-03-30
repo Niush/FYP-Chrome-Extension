@@ -141,13 +141,48 @@
 	NS-closer-iframe:hover{
 		transform: scale(1.2) rotate(180deg);
 	}
+	
+	NS-loading-iframe{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		font-weight: 700;
+		font-size: 1.5em;
+		background: #dbdbdb;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-flow: column;
+		letter-spacing: 3px;
+		transition: all 0.3s ease;
+	}
+	
+	NS-loading-iframe.NS-hide{
+		opacity: 0;
+		transform: translate(200px, 0);
+		pointer-events: none;
+	}
+	
+	NS-loading-iframe-small{
+		font-size: 0.5em;
+		letter-spacing: 5px;
+	}
 </style>
 <!-- Class to pulse NS-pulse -->
 <NS-notes-floating-icon id="NS-notes-floating-icon">
-	<i class="material-icons">menu</i>
+	<i class="material-icons">note_add</i>
 </NS-notes-floating-icon>
 
 <NS-notes-iframe-container>
 	<iframe class="NS-notes-iframe" src=""></iframe>
 	<NS-closer-iframe>X</NS-closer-iframe>
+	<NS-loading-iframe>
+		<NS-loading-iframe-small>MPA</NS-loading-iframe-small>
+		<br/>
+		<NS-loading-iframe-big>Loading</NS-loading-iframe-big>
+	</NS-loading-iframe>
 </NS-notes-iframe-container>

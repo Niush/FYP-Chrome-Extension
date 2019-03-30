@@ -58,17 +58,19 @@ function dimScreen(){
 }
 // DIM TIME CHECK MESSAGE //
 var dimCheck = function() {
-    chrome.runtime.sendMessage(null, {action: "dim_time"}, function(response) {
-		//check if response arrived//
-		if(response && response.response) {
-			//check response true
-			if(response.response == true){
-				dimScreen();
+	if(typeof chrome.app.isInstalled!=='undefined'){
+		chrome.runtime.sendMessage(null, {action: "dim_time"}, function(response) {
+			//check if response arrived//
+			if(response) {
+				//check response true
+				if(response.response == true){
+					dimScreen();
+				}
+			} else {
+				setTimeout(dimCheck, 3000);
 			}
-		} else {
-			setTimeout(dimCheck, 3000);
-		}
-	});
+		});
+	}
 };
 dimCheck();
 
@@ -151,118 +153,142 @@ setTimeout(function(){
 	/*  CODES TO RUN AFTER WINDOW LOADED DONE   */
 	/*******************************************/
 	$(document).ready(function(){
-		// Check for Old NS extension container and remove them //
-		if(document.querySelector('NS-extension-container') != null){
-			let oldContainers = document.getElementsByTagName('NS-extension-container');
-			for(let i = 0 ; i < oldContainers.length ; i++){
-				oldContainers[i].parentNode.removeChild(oldContainers[i]);
+		// CHECK FOR CHAT DISABLED OR NOT //
+		var noteDisabledCheck = function() {
+			if(typeof chrome.app.isInstalled!=='undefined'){
+				//chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+					chrome.runtime.sendMessage(null, {action: "note_disabled_check"}, function(response) {
+						if(response && response.response) {
+							if(response.response == true){
+								showNote();
+							}
+						} else {
+							setTimeout(noteDisabledCheck, 3000);
+						}
+					});
+				//});
 			}
-		}
+		};
+		noteDisabledCheck();
 		
-		// HACK: we need to "bleed" font-faces to outside the shadow dom because of a bug in chrome #COPIED - THANKS IF WORKED
-		document.querySelector('head').innerHTML += '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
-		
-		// Copying all the HTML from floaters.html to create the floating button - used external file make code cleaner //
-		fetch(chrome.extension.getURL('src/inject/floaters.html')).then((data) => {
-		  data.text().then((body) => {
-			let noteContainer = document.createElement('NS-extension-container');
-			noteContainer.innerHTML = body
-			document.getElementsByTagName('body')[0].appendChild(noteContainer);
-			
-			floatersScripts();
-		  })
-		})
-		
-		//***** NOTE FLOATING Function *******//
-		// Applying all clicks and moves and logic to Floating icons and events //
-		function floatersScripts(){
-			setTimeout(function(){
-				let NSNotesIconTop = $(window).height() - 50;
-				let isNoteOpen = false;
-				let noteContentLoaded = false;
-				let NSNotesFloatingIcon = $('NS-notes-floating-icon');
-				let NSNotesIframeContainer = $('NS-notes-iframe-container');
-				let NSNotesIframe = $('.NS-notes-iframe');
-				
-				// If localstorage has top status saved put the icon to top px //
-				if(localStorage.hasOwnProperty('ns-note-top')){
-					NSNotesFloatingIcon.css('top',parseInt(localStorage.getItem('ns-note-top')));
-					NSNotesIconTop = localStorage.getItem('ns-note-top');
+		function showNote(){
+			// Check for Old NS extension container and remove them //
+			if(document.querySelector('NS-extension-container') != null){
+				let oldContainers = document.getElementsByTagName('NS-extension-container');
+				for(let i = 0 ; i < oldContainers.length ; i++){
+					oldContainers[i].parentNode.removeChild(oldContainers[i]);
 				}
+			}
+			
+			// HACK: we need to "bleed" font-faces to outside the shadow dom because of a bug in chrome #COPIED - THANKS IF WORKED
+			//document.querySelector('head').innerHTML += '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
+			// >>>>> ENABLE TO SHOW ICONS // NOT NOW
+			
+			// Copying all the HTML from floaters.html to create the floating button - used external file make code cleaner //
+			fetch(chrome.extension.getURL('src/inject/floaters.html')).then((data) => {
+			  data.text().then((body) => {
+				let noteContainer = document.createElement('NS-extension-container');
+				noteContainer.innerHTML = body
+				document.getElementsByTagName('body')[0].appendChild(noteContainer);
 				
-				checkPositionChanges();
-				
-				$(window).resize(function(){
-					checkPositionChanges();
-				});
-				
-				function checkPositionChanges(){
-					// WORKS KINDA ...MEH....NO Thanks for now....it might be enough.
-					let resizeChangesH = $(window).height();
-					let resizeChangesW = $(window).width();
-					//console.log(resizeChangesW);
-					//console.log(NSNotesIframeContainer.outerWidth());
-					if(parseInt(localStorage.getItem('ns-note-top')) > resizeChangesH){
-						NSNotesFloatingIcon.css('top', resizeChangesH - 60);
-						NSNotesIconTop = resizeChangesH - 60;
-						NSNotesIconTop = localStorage.setItem('ns-note-top', resizeChangesH - 60);
-					}
-
-					if(resizeChangesW < NSNotesIframeContainer.outerWidth() + 100){
-						NSNotesIframeContainer.css('width', resizeChangesW - 100);
+				floatersScripts();
+			  })
+			})
+			
+			//***** NOTE FLOATING Function *******//
+			// Applying all clicks and moves and logic to Floating icons and events //
+			function floatersScripts(){
+				setTimeout(function(){
+					let NSNotesIconTop = $(window).height() - 50;
+					let isNoteOpen = false;
+					let noteContentLoaded = false;
+					let NSNotesFloatingIcon = $('NS-notes-floating-icon');
+					let NSNotesIframeContainer = $('NS-notes-iframe-container');
+					let NSNotesIframe = $('.NS-notes-iframe');
+					
+					// If localstorage has top status saved put the icon to top px //
+					if(localStorage.hasOwnProperty('ns-note-top')){
+						NSNotesFloatingIcon.css('top',parseInt(localStorage.getItem('ns-note-top')));
+						NSNotesIconTop = localStorage.getItem('ns-note-top');
 					}
 					
-					if(resizeChangesH < NSNotesIframeContainer.outerHeight() + 100){
-						NSNotesIframeContainer.css('height', resizeChangesH - 100);
-					}
-				}
-				
-				NSNotesFloatingIcon.addClass('NS-shown');
-				
-				NSNotesFloatingIcon.draggable({ axis: "y", containment: "window",	
-										start: function() {
-											NSNotesFloatingIcon.css('transition','none');
-										}, stop: function() {
-											NSNotesFloatingIcon.css('transition','all 0.3s ease');
-											localStorage.setItem('ns-note-top',NSNotesFloatingIcon.position().top);
-										}
-									});
-									
-				NSNotesIframeContainer.resizable({animate: true, handles: 'n, w' , 
-										start: function() {
-											NSNotesIframeContainer.css('transition','none');
-											NSNotesIframe.css('pointer-events','none');
-										}, stop: function() {
-											setTimeout(function(){
-												NSNotesIframeContainer.css('transition','all 0.5s ease');
-												NSNotesIframe.css('pointer-events','initial');
-											}, 1000);
-										}
-									});
-									
-				NSNotesFloatingIcon.click(function() {
-					if (isNoteOpen) {
-						NSNotesIframeContainer.removeClass("show");
-						NSNotesFloatingIcon.css('top',NSNotesIconTop);
-						isNoteOpen = false;
-						NSNotesFloatingIcon.draggable( 'enable' )
-					} else {
-						if(noteContentLoaded == false){
-							NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
-							noteContentLoaded = true;
+					checkPositionChanges();
+					
+					$(window).resize(function(){
+						checkPositionChanges();
+					});
+					
+					function checkPositionChanges(){
+						// WORKS KINDA ...MEH....NO Thanks for now....it might be enough.
+						let resizeChangesH = $(window).height();
+						let resizeChangesW = $(window).width();
+						//console.log(resizeChangesW);
+						//console.log(NSNotesIframeContainer.outerWidth());
+						if(parseInt(localStorage.getItem('ns-note-top')) > resizeChangesH){
+							NSNotesFloatingIcon.css('top', resizeChangesH - 60);
+							NSNotesIconTop = resizeChangesH - 60;
+							NSNotesIconTop = localStorage.setItem('ns-note-top', resizeChangesH - 60);
 						}
-						NSNotesIframeContainer.addClass("show");
-						NSNotesIconTop = NSNotesFloatingIcon.position().top;
-						NSNotesFloatingIcon.css('top',$(window).height() - 50);
-						isNoteOpen = true;
-						NSNotesFloatingIcon.draggable( 'disable' )
+
+						if(resizeChangesW < NSNotesIframeContainer.outerWidth() + 100){
+							NSNotesIframeContainer.css('width', resizeChangesW - 100);
+						}
+						
+						if(resizeChangesH < NSNotesIframeContainer.outerHeight() + 100){
+							NSNotesIframeContainer.css('height', resizeChangesH - 100);
+						}
 					}
-				});
-				
-				$('NS-closer-iframe').click(function(){
-					NSNotesFloatingIcon.click();
-				});
-			}, 200);
+					
+					NSNotesFloatingIcon.addClass('NS-shown');
+					
+					NSNotesFloatingIcon.draggable({ axis: "y", containment: "window",	
+											start: function() {
+												NSNotesFloatingIcon.css('transition','none');
+											}, stop: function() {
+												NSNotesFloatingIcon.css('transition','all 0.3s ease');
+												localStorage.setItem('ns-note-top',NSNotesFloatingIcon.position().top);
+											}
+										});
+										
+					NSNotesIframeContainer.resizable({animate: true, handles: 'n, w' , 
+											start: function() {
+												NSNotesIframeContainer.css('transition','none');
+												NSNotesIframe.css('pointer-events','none');
+											}, stop: function() {
+												setTimeout(function(){
+													NSNotesIframeContainer.css('transition','all 0.5s ease');
+													NSNotesIframe.css('pointer-events','initial');
+												}, 1000);
+											}
+										});
+										
+					NSNotesFloatingIcon.click(function() {
+						if (isNoteOpen) {
+							NSNotesIframeContainer.removeClass("show");
+							NSNotesFloatingIcon.css('top',NSNotesIconTop);
+							isNoteOpen = false;
+							NSNotesFloatingIcon.draggable( 'enable' )
+						} else {
+							if(noteContentLoaded == false){
+								NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
+								NSNotesIframe.on('load', function(){
+									$('NS-loading-iframe').addClass('NS-hide');
+								});
+								noteContentLoaded = true;
+							}
+							NSNotesIframeContainer.addClass("show");
+							NSNotesIconTop = NSNotesFloatingIcon.position().top;
+							NSNotesFloatingIcon.css('top',$(window).height() - 50);
+							isNoteOpen = true;
+							NSNotesFloatingIcon.draggable( 'disable' )
+						}
+					});
+					
+					$('NS-closer-iframe').click(function(){
+						NSNotesFloatingIcon.click();
+					});
+				}, 200);
+			}
 		}
 	});
 

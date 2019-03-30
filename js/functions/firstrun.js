@@ -43,7 +43,7 @@ chrome.runtime.onInstalled.addListener(function (object) {
 						  code: '',
 						}, _=>{
 						  let e = chrome.runtime.lastError;
-						  console.log(e);
+						  //console.log(e);
 						  if(typeof e == 'undefined'){
 							chrome.tabs.sendMessage(tabs[0].id, {action: "extension_updated"});
 						  }

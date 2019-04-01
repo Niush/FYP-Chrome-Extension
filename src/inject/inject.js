@@ -83,6 +83,8 @@ var focusCheck = function() {
 			if(response) {
 				if(response.response == true){
 					focusThis(); // Page focused so continue..
+				}else{
+					checkUsageToFocus(); //Look for website usage to check if this needs to be focused//
 				}
 			} else {
 				setTimeout(focusCheck, 3000);
@@ -123,9 +125,13 @@ function checkLimitCross(callback){
 
 function limitCrossed(when='before'){
 	if(when == 'before'){
-		alert('Limit Already Crossed');
+		blockPage();
+		// And - Increment Total Web Access Tries //
+		if(typeof chrome.app.isInstalled!=='undefined'){
+			chrome.runtime.sendMessage(null, {action: "increment_total_tries"});
+		}
 	}else if(when == 'now'){
-		alert('Limit Just got Crossed...');
+		blockPage('now');
 	}
 }
 
@@ -157,6 +163,238 @@ function limitNotCrossed(){
 	}, 4900);//Every 5 seconds with strict 100ms deduct
 }
 
+function blockPage(mode){
+	if(document.querySelector('[id^="NS-focused-container-"]') === null){
+		if(null === null){
+			let focusEndContent = `
+			<style>
+				NS-focus-container{
+					position: fixed;
+					display: block;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					width: 100%;
+					z-index: 99999999;
+					background: #EFEFEF;
+					user-select: none;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					flex-flow: column;
+					text-align: center;
+					font-family: Arial;
+					letter-spacing: 2px;
+					animation: NS-show-fast 0.5s ease forwards;
+				}
+				
+				@keyframes NS-show-fast{
+					0%{transform: scale(1.3) rotate(5deg);}
+					100%{transform: scale(1) rotate(0);}
+				}
+
+				NS-focus-title-message{
+					font-size: 1.5em;
+					margin: 10px 0;
+				}
+
+				NS-focus-title-motivate{
+					font-size: 1em;
+					opacity: 0.7;
+					font-family: Courier;
+				}
+
+				NS-focus-subtitle-message{
+					font-size: 0.7em;
+					opacity: 0.5;
+					padding: 10px 0;
+				}
+
+				NS-focus-button-container{
+					margin: 20px;
+				}
+
+				NS-focus-button-container *{
+					padding: 10px;
+					font-weight: 700;
+					cursor: pointer;
+				}
+
+				NS-focus-button-container *:hover{
+					box-shadow: 1px 0 2px 2px #ababab;
+				}
+
+				NS-focus-ok-button{
+					background: #33691e;
+					color: white;
+					border-radius: 30px 30px 5px 30px;
+					transition: all 0.3s ease;
+				}
+
+				NS-focus-ok-button:after{
+					content: "Close Site";
+				}
+
+				NS-focus-emergency-button{
+					background: #aa331e;
+					color: white;
+					border-radius: 30px 30px 30px 5px;
+					transition: all 0.3s ease;
+				}
+
+				NS-focus-emergency-button:after{
+					content: "Emergency 1 Minutes Access";
+				}
+
+				NS-focus-bypass-button{
+					margin-top: 20px;
+					font-size: 0.8em;
+					color: darkblue;
+					cursor: pointer;
+					transition: all 0.3s ease;
+				}
+
+				NS-focus-bypass-button:hover{
+					text-decoration: underline;
+				}
+
+				NS-focus-ok-button:after, NS-focus-emergency-button:after, NS-focus-bypass-button:after{
+					visibility: hidden;
+					opacity: 0;
+					font-weight: 700;
+					color: white;
+					background: #323232;
+					position: absolute;
+					padding: 8px 0;
+					bottom: 20px;
+					left: 0;
+					width: 100%;
+					text-align: center;
+					transition: all 0.5s ease;
+				}
+
+				NS-focus-bypass-button:after{
+					content: "And Consider yourself a Looser..";
+				}
+
+				NS-focus-ok-button:hover:after, NS-focus-emergency-button:hover:after, NS-focus-bypass-button:hover:after{
+					visibility: visible;
+					opacity: 1;
+					transform: translate(0,-20px);
+				}
+
+				NS-focus-footer{
+					position: absolute;
+					font-size: 0.5em;
+					bottom: 2px;
+					left: 2px;
+					font-weight: 700;
+				}
+			</style>
+
+			<NS-focus-container>
+				<img src="`+ chrome.extension.getURL('icons/icon128.png') +`" style="width: 80px; margin-bottom: 20px;">
+				
+				<NS-focus-title-message>
+					Website Usage has crossed Limit
+				</NS-focus-title-message>
+				<NS-focus-title-motivate>
+					Work, Learn or Meditate Stay Productive
+				</NS-focus-title-motivate>
+				<NS-focus-subtitle-message>
+					* * *
+					<br/>
+					<NS-focus-subtitle-url></NS-focus-subtitle-url>
+				</NS-focus-subtitle-message>
+				<NS-focus-button-container>
+					<NS-focus-ok-button>OK</NS-focus-ok-button>
+					<NS-focus-emergency-button>1 Min</NS-focus-emergency-button>
+				</NS-focus-button-container>
+				<NS-focus-bypass-button>
+					I Don't Care
+				</NS-focus-bypass-button>
+				
+				<NS-focus-footer>By: Niush Sitaula | Minimal Productivity App</NS-focus-footer>
+				
+			</NS-focus-container>
+			`;
+
+			let parentContainer = 'NS-focused-container-'+new Date().getTime();
+			let focusedContainer = document.createElement(parentContainer);
+			focusedContainer.id = parentContainer;
+			let shadowRoot = focusedContainer.attachShadow({mode: 'open'});
+			shadowRoot.innerHTML = focusEndContent; // variable content html
+
+			document.getElementsByTagName("html")[0].appendChild(focusedContainer);
+			console.log('WEBSITE IS LIMITED - GO TO WORK');
+
+			if(mode == "emergency"){
+				$(shadowRoot.querySelector('NS-focus-emergency-button')).remove();
+			}else if(mode == "strict"){
+				$(shadowRoot.querySelector('NS-focus-title-message')).html('You Can Do Better, Don\'t Waste Your Time');
+				$(shadowRoot.querySelector('NS-focus-emergency-button')).remove();
+				$(shadowRoot.querySelector('NS-focus-ok-button')).html('OK, I am a Good Boy');
+				$(shadowRoot.querySelector('NS-focus-bypass-button')).html('Just, Leave Me Alone');
+				$(shadowRoot.querySelector('NS-focus-subtitle-message')).remove();
+				$(shadowRoot.querySelector('NS-focus-footer')).remove();
+			}else if(mode == "now"){
+				$(shadowRoot.querySelector('NS-focus-title-message')).html("Psst.."+$(shadowRoot.querySelector('NS-focus-title-message')).html());
+			}
+			
+			let motivations = ['Work, Learn or Meditate Stay Productive', 'Why waste your time here, Detox for good', 'Quality and Clutter Free Life, Stay Motivated', 'Why not read something useful. Sounds Great', 'You Run The Day, Or The Day Runs You. Choose Wisely.']
+
+			function randomMotivate(){
+				$(shadowRoot.querySelector('NS-focus-title-motivate')).html(motivations[Math.floor(motivations.length * Math.random())]);
+			}
+			randomMotivate();
+			let motivateShuffle = setInterval(function(){
+				randomMotivate();
+			}, 7000);
+			
+			$(shadowRoot.querySelector('NS-focus-subtitle-url')).html(window.location.hostname);
+			
+			$(shadowRoot.querySelector('NS-focus-ok-button')).click(function(){
+				if(typeof chrome.app.isInstalled!=='undefined'){
+					chrome.runtime.sendMessage(null, {action: "close_tab"});
+				}
+			});
+
+			$(shadowRoot.querySelector('NS-focus-emergency-button')).click(function(){
+				focusedContainer.remove();
+				clearInterval(motivateShuffle);
+				setTimeout(function(){
+					blockPage('emergency');
+				}, 60000);
+			});
+
+			$(shadowRoot.querySelector('NS-focus-bypass-button')).click(function(){
+				focusedContainer.remove();
+				clearInterval(motivateShuffle);
+				if(mode != "strict"){
+					setTimeout(function(){
+						blockPage('strict');
+					}, 60000);
+				}
+			});
+		}
+	}
+}
+
+let noFocusUsage = 0;
+function checkUsageToFocus(){
+	let noFocusUsageCheck = setInterval(function(){
+		if (!document.hidden) {
+			noFocusUsage += 10;
+			if(noFocusUsage >= 3600){
+				alert('You have been using this website for quite some time, why not focus and limit this website.\nYou can do this from the Extension Menu in the top right. - MPA');
+				clearInterval(noFocusUsageCheck);
+			}
+		}else{
+			noFocusUsage += 5;
+		}
+	}, 10000);
+}
 
 /***********************************/
 /*  CODES TO RUN AFTER DELAY      */

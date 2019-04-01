@@ -135,11 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			for(let i = 0 ; i < all_focus.length ; i++){
 				let today_total_content_style
 				if(all_focus[i].limit_sec <= all_focus[i].today_total){
-					today_total_content_style = '<td class="red lighten-1 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+					today_total_content_style = '<td class="red lighten-1 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min</td>';
 				}else if((all_focus[i].limit_sec)/2 <= all_focus[i].today_total){
-					today_total_content_style = '<td class="orange darken-2 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+					today_total_content_style = '<td class="orange darken-2 white-text">'+Math.floor((all_focus[i].today_total)/60)+' min</td>';
 				}else{
-					today_total_content_style = '<td>'+Math.floor((all_focus[i].today_total)/60)+' min<td>';
+					today_total_content_style = '<td>'+Math.floor((all_focus[i].today_total)/60)+' min</td>';
 				}
 				focusSettingsContent.innerHTML = focusSettingsContent.innerHTML+ `
 					<td>`+all_focus[i].url+`</td>

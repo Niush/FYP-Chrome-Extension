@@ -280,6 +280,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				return false;
 			}
 			
+			// Increment Wb Access Tries of Focus Limit exceeded pages //
+			if(request.action.toLowerCase() == "increment_total_tries"){
+				u = new User();
+				u.increment_total_tries(getHostName(sender.url));
+				return true;
+			}
+			
 			// If request to A block or Lock Webpage (lockpage) //
 			if(request.action.toLowerCase() == "sync"){
 				u = new User();
@@ -316,6 +323,12 @@ document.addEventListener('DOMContentLoaded', function() {
 					});
 					return false;
 				}
+			}
+			
+			if(request.action.toLowerCase() == "close_tab"){
+				chrome.tabs.query({ active: true }, function(tabs) {
+					chrome.tabs.remove(tabs[0].id);
+				});
 			}
 		  }
 		);

@@ -244,6 +244,14 @@ document.addEventListener('DOMContentLoaded', function() {
 						});
 						yesFocusApplied = true;
 					}
+					
+					var showQuotaUsed = document.getElementById('show-focus-quota');
+					let data = u.get_focus_data_current(currentHost);
+					showQuotaUsed.innerHTML = Math.round(((data.today_total)/60) * 100) / 100 + ' Min / ' + Math.round(((data.limit_sec)/60) * 100) / 100 + ' Min Used';
+					showQuotaUsed.innerHTML += '<br/><small title="Updates Every Day"> All Time: '+ Math.round(((data.all_total)/60) * 100) / 100 + ' Min</small>';
+					showQuotaUsed.innerHTML += '<br/><small title="Total Website Access tries after Limit crossed"> Access Tries: '+ (data.total_tries) + ' times</small>';
+					showQuotaUsed.style.setProperty("display", "block", "important");
+					showQuotaUsed.style.visibility = 'visible';
 				}
 				
 				function noFocusApply(){
@@ -262,6 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
 						});
 						noFocusApplied = true;
 					}
+					
+					var showQuotaUsed = document.getElementById('show-focus-quota');
+					showQuotaUsed.style.setProperty("display", "none", "important");
+					showQuotaUsed.style.visibility = 'hidden';
 				}
 				
 				if(u.check_focus(currentHost)){
@@ -317,5 +329,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			openNotes();
 		});
 		
+		if(tabInfo.url.search(chrome.extension.getURL('src/page_action/page_action.html')) >= 0){
+			window.close();
+		}
 	}
 });

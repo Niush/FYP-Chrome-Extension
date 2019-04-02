@@ -4,7 +4,11 @@
 	<meta charset="UTF-8">
 	<title>Notes - MPA</title>
 	<link rel='stylesheet' href='../../../css/materialize.min.css'>
+	<link rel='stylesheet' href='../../../css/quill.snow.css'>
 	<link rel="stylesheet" href="css/note.css">
+	<script type="text/javascript" src="../../../js/functions/config.js"></script>
+	<script type="text/javascript" src="../../../js/functions/userdata.js"></script>
+	<script type="text/javascript" src="../../../js/quill/quill.js"></script>
 </head>
 <body>
 	<div class="NS-right-float">
@@ -18,24 +22,18 @@
 				<i class="material-icons left" id="back-to-notes-home-button" style="cursor: pointer; padding: 5px; visibility: hidden; position: absolute; left: 10px; top: 5px;">keyboard_arrow_left</i>
 				Notes
 			</h5>
-			
+			<div class="progress red" style="margin: 0 !important;">
+				<div class="indeterminate teal"></div>
+			</div>
 			<div class="NS-notes-title-container">
-				<p note_id="10293">
-					<span class="NS-note-title">Test Note 1</span>
-					<span class="NS-note-inline-control">
-						<i class="NS-note-inline-control-edit material-icons">edit</i>
-						<i class="NS-note-inline-control-save material-icons">save</i>
-						<i class="NS-note-inline-control-delete material-icons">delete_forever</i>
-					</span>
-				</p>
-				<p note_id="029">
+				<!-- <p note_id="029">
 					<span class="NS-note-title">Test Note 2</span>
 					<span class="NS-note-inline-control">
 						<i class="NS-note-inline-control-edit material-icons">edit</i>
 						<i class="NS-note-inline-control-save material-icons">save</i>
 						<i class="NS-note-inline-control-delete material-icons">delete_forever</i>
 					</span>
-				</p>
+				</p> -->
 				<!-- <p note_id="11293" class="NS-edit-mode">
 					<input class="NS-note-title NS-note-title-edit validate" required type="text" value="Test Note 4 Editing"/>
 					<span class="NS-note-inline-control">
@@ -62,6 +60,7 @@
 					  </div>
 					</form>
 				</div>
+				<div id="quillNote"></div>
 			</div>
 		</div>
 		
@@ -75,7 +74,6 @@
 			  <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="cancelConfirm">Cancel</a>
 			</div>
 		</div>
-		
 	</div>
 
 	<script src='../../../js/materialize/materialize.min.js'></script>

@@ -1,10 +1,32 @@
 $(document).ready(function() {								
+	let u = new User();
+	
 	fillNotes(loadNoteContent);
 
 	function fillNotes(callback){
-		// Fill Notes title dom here //
-		//$('.NS-notes-title-container').html('');
-		callback();
+		showSpinner();
+		u = new User(function(){
+			// Fill Notes title dom here //
+			$('.NS-notes-title-container').html('');
+			$('.NS-notes-title-container').empty();;
+			
+			let notes = u.all_note_titles();
+			for(let i = 0 ; i < notes.length ; i++){
+				var titleContent = $('<p>');
+				titleContent.attr('note_id', notes[i].id);
+				titleContent.html(`
+					<span class="NS-note-title">`+notes[i].title+`</span>
+					<span class="NS-note-inline-control">
+						<i class="NS-note-inline-control-edit material-icons">edit</i>
+						<i class="NS-note-inline-control-save material-icons">save</i>
+						<i class="NS-note-inline-control-delete material-icons">delete_forever</i>
+					</span>
+				`);
+				$('.NS-notes-title-container').append(titleContent);
+			}
+			callback();
+			hideSpinner();
+		});
 	}
 
 	function loadNoteContent(){
@@ -38,10 +60,9 @@ $(document).ready(function() {
 		
 		function NSSaveInput(el){
 			// DO ALL THE SAVE TO u User() request here and continue with UI changes //
-			
 			let pContainer = el.parent().parent();
-			//pContainer.attr('note_id');
-			let titleEditContainer = pContainer.children('.NS-note-title-edit');
+			let titleEditContainer = pContainer.children('.NS-note-title-edit'); // These 4 lines are kinda not needed but I ain'g gonna remove them anyway //
+			u.edit_note_title(pContainer.attr('note_id'), titleEditContainer.val()); //Edit title
 			pContainer.removeClass('NS-edit-mode');
 			titleEditContainer.replaceWith('<span class="NS-note-title">'+titleEditContainer.val()+'</span>');
 			$('.NS-note-inline-control-edit').show();
@@ -64,10 +85,11 @@ $(document).ready(function() {
 				if(result == true){
 					// DO ALL THE REMOVE FROM u User() request here and continue with UI changes //
 					let pContainer = el.parent().parent();
-					//pContainer.attr('note_id');
+					u.delete_note(pContainer.attr('note_id'));
 					pContainer.fadeTo(200, 0.01, function(){ 
 						$(this).slideUp(150, function() {
-							$(this).remove(); 
+							$(this).remove();
+							fillNotes(loadNoteContent);
 						}); 
 					});
 				}
@@ -89,14 +111,6 @@ $(document).ready(function() {
 			$('#cancelConfirm').focus();
 		}	
 		
-		// New Note Adding Button //
-		$('#NS-notes-input-new-button').click(function(){
-			let note_title = $('#NS-notes-input-new').val();
-			if(note_title != '' || note_title != null){
-				// INSERT INTO u User and Refresh all the Notes + also add events as needed //
-			}
-		});
-		
 		// Note Click to Enlarge show all button //
 		$('.NS-note-title').click(function(){
 			//$(this).parent().attr('note_id');
@@ -114,4 +128,43 @@ $(document).ready(function() {
 			$('.NS-notes-content-editor-container').removeAttr('note_id');
 		});
 	}
+	
+	// New Note Adding Button //
+	$('#NS-notes-input-new-button').click(function(e){
+		let note_title = $('#NS-notes-input-new').val();
+		if(note_title != '' && note_title != null){
+			// INSERT INTO u User and Refresh all the Notes + also add events as needed //
+			if(u.add_note(note_title)){
+				$('#NS-notes-input-new').val('');
+				fillNotes(loadNoteContent);
+			}else{
+				showMessage('Adding Note Failed','error');
+			}
+		}else{
+			M.Toast.dismissAll();
+			showMessage('Please Provide A Title');
+		}
+	});
+	
+	$('#NS-notes-input-new').keyup(function(k){
+		if(k.key == "Enter" && k.keyCode == 13){
+			$('#NS-notes-input-new-button').click();
+		}
+	});
+	
+	function showSpinner(){
+		setTimeout(function(){
+			$('.progress').css('opacity','1');
+		}, 500);
+	}
+	
+	function hideSpinner(){
+		setTimeout(function(){
+			$('.progress').css('opacity','0');
+		}, 1000);
+	}
+	
+	var quill = new Quill('#quillNote', {
+	  theme: 'snow'
+	});
 });

@@ -41,7 +41,7 @@ class User{
 		  if(result.user_data == undefined || result.user_data == ''){
 			new User().resetLocal();
 		  }else{
-			data = JSON.parse(result.user_data);
+			data = result.user_data;
 			//console.log(_self.data);
 			callback();
 		  }
@@ -139,7 +139,7 @@ class User{
 	updateLocal(){
 		chrome.storage.local.set(
 			{
-				user_data: JSON.stringify(data),
+				user_data: data,
 				app_id: chrome.runtime.id,
 			}
 		);
@@ -250,6 +250,28 @@ class User{
 	get all_note(){
 		return data.notes;
 	}
+	all_note_titles(){
+		let titles = [];
+		for(let i = 0 ; i < data.notes.length ; i++){
+			if(data.notes[i].status == 1){
+				titles.push({'id':data.notes[i].id, 'title':data.notes[i].title, 'modified_at': data.notes[i].modified_at});
+			}
+		}
+		titles.sort(function(a,b){
+		  return new Date(b.modified_at) - new Date(a.modified_at);
+		});
+		return titles;
+	}
+	edit_note_title(id, newTitle){
+		let index = data.notes.findIndex(e => e.id == id);
+		if(index >= 0){ //If found//
+			data.notes[index].title = newTitle;
+			data.notes[index].modified_at = this.getUTC();
+			this.updateLocal();
+			return true;
+		}
+		return false;
+	}
 	get_note(id){
 		let index = data.notes.findIndex(e => e.id == id);
 		if(index >= 0){ //If found//
@@ -258,9 +280,19 @@ class User{
 		alert('Note Not Found');
 		return false;
 	}
-	add_note(new_data){
-		data.notes.push(new_data);
+	add_note(noteTitle){
+		let unique_id = (this.getUTC()).toString()+(Math.floor(Math.random() * 500) + 1).toString();
+		data.notes.push({
+                    "id": unique_id,
+                    "title": noteTitle,
+                    "note": "",
+                    "synced": 0,
+                    "public": 0,
+                    "status": 1,
+                    "modified_at": this.getUTC()
+		});
 		this.updateLocal();
+		return true;
 	}
 	edit_note(new_data){
 		try{
@@ -282,6 +314,7 @@ class User{
 		let index = data.notes.findIndex(e => e.id == id);
 		if(index >= 0){ //If found//
 			data.notes[index].status = 0;
+			data.notes[index].modified_at = this.getUTC();
 			this.updateLocal();
 			return true;
 		}
@@ -359,6 +392,13 @@ class User{
 				this.updateLocal();
 			}
 			return true;
+		}
+		return false;
+	}
+	get_focus_data_current(url){
+		let index = data.focus.findIndex(e => e.url == url);
+		if(index >= 0){ //If found//
+			return data.focus[index];
 		}
 		return false;
 	}

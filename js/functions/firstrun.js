@@ -21,7 +21,7 @@ chrome.runtime.onInstalled.addListener(function (object) {
 			//localStorage.setItem("user_data", JSON.stringify(INIT_USER_DATA));
 			chrome.storage.local.set(
 				{
-					user_data: JSON.stringify(INIT_USER_DATA),
+					user_data: INIT_USER_DATA,
 					app_id: chrome.runtime.id,
 				}
 			);
@@ -66,7 +66,7 @@ function checkFirstRun(){
 		console.log("Extension Data Reset. Ooof.");
 		chrome.storage.local.set(
 			{
-				user_data: JSON.stringify(INIT_USER_DATA),
+				user_data: INIT_USER_DATA,
 				app_id: chrome.runtime.id,
 			}
 		);

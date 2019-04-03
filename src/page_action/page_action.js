@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	var elems = document.querySelectorAll('.dropdown-trigger');
 	var instances = M.Dropdown.init(elems, {coverTrigger: false, });
 	
+	var tooltips = document.querySelectorAll('.tooltipped');
+	var instances = M.Tooltip.init(tooltips, {margin: 0, transitionMovement: 5, outDuration: 0});
+	
 	var noLogin = document.getElementById('no-login');
 	var yesLogin = document.getElementById('yes-login');
 	
@@ -19,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			var syncButton = document.getElementById('sync-button');
 			syncButton.style.setProperty("display", "block", "important");
 			syncButton.style.visibility = 'visible';
-			syncButton.style.cursor = 'not-allowed';
-			syncButton.className = 'btn btn-small grey col s2 offset-s1';
+			syncButton.style.cursor = 'not-allowed !important';
+			syncButton.style.opacity = '0.7';
 			syncButton.addEventListener('click', function(){
 				showMessage('Login to Sync Data','error');
 			});
@@ -36,7 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}else{
 				// IF LOGGED IN USER AND ALL COOL SHOW NAME AND SHOW OTHER STUFFS THAT MIGHT NEED LOGIN //
 				// If All Cool Show name
-				yesLogin.innerHTML = u.user_name;
+				var accountsUserName = document.getElementById('accounts-user-name');
+				accountsUserName.innerHTML = u.user_name;
 				yesLogin.style.setProperty("display", "block", "important");
 				yesLogin.style.visibility = 'visible';
 				
@@ -241,6 +245,12 @@ document.addEventListener('DOMContentLoaded', function() {
 								noFocusApply();
 								showMessage('Website Removed From Focus');
 							});
+							
+							chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+								chrome.tabs.sendMessage(tabs[0].id, {action: "stop_focus"}, function(response) {
+									console.log("STOP FOCUS MODE REQUEST RESPONDED WITH: "+response.response);
+								});
+							});
 						});
 						yesFocusApplied = true;
 					}
@@ -266,6 +276,12 @@ document.addEventListener('DOMContentLoaded', function() {
 								noFocus.style.visibility = 'hidden';
 								yesFocusApply();
 								showMessage('Website Added To Focus');
+								
+								chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+									chrome.tabs.sendMessage(tabs[0].id, {action: "start_focus"}, function(response) {
+										console.log("START FOCUS MODE REQUEST RESPONDED WITH: "+response.response);
+									});
+								});
 							});
 						});
 						noFocusApplied = true;

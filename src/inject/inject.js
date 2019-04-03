@@ -74,6 +74,7 @@ var dimCheck = function() {
 };
 dimCheck();
 
+var stopFocus = false;
 // CHECK AND WORK WITH FOCUS MODE //
 /***** FOCUS URL WORK WITH  *****/
 /*******************************/
@@ -137,11 +138,18 @@ function limitCrossed(when='before'){
 
 function limitNotCrossed(){
 	let todayTotalIncrement = setInterval(function(){
-		if (!document.hidden) {
+		if(stopFocus == true){
+			clearInterval(todayTotalIncrement);
+			return true;
+		}else if(!document.hidden) {
 			if(typeof chrome.app.isInstalled!=='undefined'){
 				chrome.runtime.sendMessage(null, {action: "increment_focus"}, function(response) {
 					if(response) {
 						if(response.response == true){
+							if(stopFocus == true){
+								clearInterval(todayTotalIncrement);
+								return true;
+							}
 							console.log('increment by 5');
 							// If active tab just crossed the limit //
 							checkLimitCross(function(res){
@@ -364,6 +372,9 @@ function blockPage(mode){
 				focusedContainer.remove();
 				clearInterval(motivateShuffle);
 				setTimeout(function(){
+					if(stopFocus == true){
+						return true;
+					}
 					blockPage('emergency');
 				}, 60000);
 			});
@@ -373,6 +384,9 @@ function blockPage(mode){
 				clearInterval(motivateShuffle);
 				if(mode != "strict"){
 					setTimeout(function(){
+						if(stopFocus == true){
+							return true;
+						}
 						blockPage('strict');
 					}, 60000);
 				}
@@ -389,6 +403,8 @@ function checkUsageToFocus(){
 			if(noFocusUsage >= 3600){
 				alert('You have been using this website for quite some time, why not focus and limit this website.\nYou can do this from the Extension Menu in the top right. - MPA');
 				clearInterval(noFocusUsageCheck);
+				noFocusUsage = 0;
+				return false;
 			}
 		}else{
 			noFocusUsage += 5;
@@ -422,6 +438,18 @@ setTimeout(function(){
 			setTimeout(function(){
 				message.remove();
 			}, 5000);
+		}else if(request.action == "stop_focus"){
+			stopFocus = true;
+			if(document.querySelector('[id^="NS-focused-container-"]') != null){
+				document.querySelector('[id^="NS-focused-container-"]').parentNode.removeChild(document.querySelector('[id^="NS-focused-container-"]'));
+			}
+			sendResponse({response: true});
+		}else if(request.action == "start_focus"){
+			stopFocus = false;
+			setTimeout(function(){
+				limitNotCrossed();
+			}, 2000);
+			sendResponse({response: true});
 		}
 	  }
 	);

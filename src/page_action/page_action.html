@@ -64,85 +64,125 @@
 		0%{transform: rotate(0);}
 		100%{transform: rotate(360deg);}
 	}
+	
+	.row{
+		margin-bottom: 0 !important;
+	}
+	
+	.settings-row{
+		margin: 5px 0;
+	}
+	
+	.settings-row .row .col{
+		padding: 0 !important;
+	}
+	
+	.settings-row div button{
+		margin: 0 !important;
+	}
+	
+	.yes-no-button{
+		display: flex;
+		justify-content: center;
+	}
 </style>
 
 <body class="blue-grey darken-1">
 	<div class="row">
+	  
 		<div class="col s12">
-			  <h5 class="white-text">Minimal Productivity App</h5>
-			  
-			  <!-- If not logged in -->
-			  <a href="#"><button id="no-login" class="waves-effect waves-light btn btn-small green col s12 hidden">Login/Register</button></a>
-			  <br/>
-			  
-			  <!-- If Logged In -->
-			  <!-- Dropdown Trigger -->
-			  <a id="yes-login" class='dropdown-trigger btn btn-small col s12 hidden' href='#' data-target='dropdown1'>John Doe</a>
-			  <!-- Dropdown Structure -->
-			  <ul id='dropdown1' class='dropdown-content'>
-				<li id="accounts-btn"><a href="#!">Account</a></li>
-				<li id="logout-btn"><a href="#!">Logout</a></li>
-			  </ul>
-			  
-			  <!-- Inner Links Access buttons -->
-			  <a id="settings-button" href="#"><button class="waves-effect waves-light btn btn-small green col s12">Settings</button></a>
-			  <br/>
-			  <a href="#"><button id="notes-button" class="waves-effect waves-light btn btn-small blue col s9">Notes</button></a>
-			  <a href="#"><button id="sync-button" class="waves-effect waves-light btn btn-small blue accent-2 col s2 offset-s1 hidden" title="Sync Now">
+			<h6 class="white-text col s12 valign-wrapper">
+				<span class="col s10" style="font-weight: 500;">Minimal Productivity App</span>
+				<!-- If not logged in -->
+				<button id="no-login" class="waves-effect waves-light btn btn-small green hidden btn-floating pulse tooltipped" data-position="bottom" data-tooltip="Login Now to Sync Between Devices">
+					<i class="material-icons">person_add</i>
+				</button>
+				
+				<!-- If Logged In -->
+				<!-- Dropdown Trigger -->
+				<button id="yes-login" class="dropdown-trigger waves-effect waves-light btn btn-small hidden btn-floating" data-target='dropdown1'>
+					<i class="material-icons">person</i>
+				</button>
+				<!-- Dropdown Structure -->
+				<ul id='dropdown1' class='dropdown-content'>
+					<li><a href="#!" style="opacity: 0.6; font-size: 0.9em; padding: 5px auto;" id="accounts-user-name">John Doe</a></li>
+					<li id="accounts-btn"><a href="#!">Account</a></li>
+					<li id="logout-btn"><a href="#!" class="orange darken-2 white-text">Logout</a></li>
+				</ul>
+			</h6>
+			
+			<!-- Inner Links Access buttons -->
+			<div class="row">
+				<!-- NO NOTE BLOCK -->
+				<div id="no-note-block" class="hidden col s6">
+					<button class="yes-no-button btn btn-small green col s12" title="Disable Note">
+						<i class="material-icons left">check_circle</i>Note
+					</button>
+				</div>
+				<!-- YES NOTE BLOCK -->
+				<div id="yes-note-block" class="hidden col s6">
+					<button class="yes-no-button btn btn-small red col s12" title="Enable Note">
+						<i class="material-icons left">block</i>Note
+					</button>
+				</div>
+
+				<!-- NO CHAT BLOCK -->
+				<div id="no-chat-block" class="hidden col s6 ">
+					<button class="yes-no-button btn btn-small green accent-4 col s12" title="Disable Chat">
+						<i class="material-icons left">check_circle</i>Chat
+					</button>
+				</div>
+				<!-- YES NOTE BLOCK -->
+				<div id="yes-chat-block" class="hidden col s6 ">
+					<button class="yes-no-button btn btn-small red accent-4 col s12" title="Enable Chat">
+						<i class="material-icons left">not_interested</i>Chat
+					</button>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div id="no-focus" class="col s12 hidden">
+					<button class="btn btn-small deep-purple col s12" title="Add Website to Focus">
+						Add to Focus
+					</button>
+				</div>
+
+				<div id="yes-focus" class="col s12 hidden">
+					<button class="btn btn-small red darken-3 col s12" title="Remove Website from Focus Mode (And Waste Time)">
+						Remove Focus
+					</button>
+				</div>
+			</div>
+			
+			<span class="col s12 center white-text hidden" style="font-weight: 700; letter-spacing: 2px;" id="show-focus-quota"></span>
+		</div>
+	</div>
+	
+	<div class="settings-row" style="display: flex; justify-content: center;">
+		<div id="settings-button">
+			<button class="waves-effect waves-purple btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Settings">
+				<i class="material-icons">settings</i>
+			</button>
+		</div>
+		<div id="sync-button" class="hidden">
+			<button class="waves-effect waves-light btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Sync Now">
 				<i id="syncing" class="material-icons">sync</i>
-			  </button></a>
-			  <br/>
-			  <!-- NO NOTE BLOCK -->
-			  <a href="#" id="no-note-block" class="hidden">
-				<button class="btn btn-small green col s4" title="Disable Note">
-					<i class="material-icons left">check_circle</i>Note
-				</button>
-			  </a>
-			  <!-- YES NOTE BLOCK -->
-			  <a href="#" id="yes-note-block" class="hidden">
-				<button class="btn btn-small red col s4" title="Enable Note">
-					<i class="material-icons left">block</i>Note
-				</button>
-			  </a>
-			  
-			  <!-- NO CHAT BLOCK -->
-			  <a href="#" id="no-chat-block" class="hidden">
-				<button class="btn btn-small green accent-4 col s4 offset-s1" title="Disable Chat">
-					<i class="material-icons left">check_circle</i>Chat
-				</button>
-			  </a>
-			  <!-- YES NOTE BLOCK -->
-			  <a href="#" id="yes-chat-block" class="hidden">
-				<button class="btn btn-small red accent-4 col s4 offset-s1" title="Enable Chat">
-					<i class="material-icons left">not_interested</i>Chat
-				</button>
-			  </a>
-			  
-			  <a href="#">
-				<button id="screenshot-button" class="waves-effect waves-light btn btn-small blue accent-4 col s2 offset-s1 hidden" title="Take Screenshot">
-				<i class="material-icons">add_a_photo</i>
-			  </button></a>
-			  <br/>
-			  
-			  <a href="#" id="no-focus" class="hidden">
-				<button class="btn btn-small deep-purple col s9" title="Add Website to Focus">
-					Add to Focus
-				</button>
-			  </a>
-			  
-			  <a href="#" id="yes-focus" class="hidden">
-				<button class="btn btn-small red accent-3 col s9" title="Remove Website from Focus Mode (And Waste Time)">
-					Remove Focus
-				</button>
-			  </a>
-			  
-			  <a href="#">
-				<button id="ablock-button" class="waves-effect waves-light btn btn-small purple accent-4 col s2 offset-s1 hidden" title="Lock Webpage">
+			</button>
+		</div>
+		<div id="ablock-button" class="hidden">
+			<button class="waves-effect waves-grey btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Lock Webpage">
 				<i class="material-icons">lock</i>
-			  </button></a>
-			  
-			  <br/>
-			  <span class="col s9 center white-text hidden" style="font-weight: 700;" id="show-focus-quota"></span>
+			</button>
+		</div>
+		<div id="screenshot-button" class="hidden">
+			<button class="waves-effect waves-orange btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Take Screenshot">
+				<i class="material-icons">add_a_photo</i>
+			</button>
+		</div>
+		<div id="notes-button">
+			<button class="waves-effect waves-blue btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Notes">
+				<i class="material-icons">note_add</i>
+			</button>
 		</div>
 	</div>
 	

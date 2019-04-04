@@ -1,6 +1,7 @@
 $(document).ready(function() {								
 	let u = new User();
 	
+	let note_modified_at;
 	var firstQuill = true;
 	var toolbarOptions = [
 	  ['bold', 'italic', 'underline', 'strike', 'code-block', { 'color': [] }, { 'size': ['small', false, 'large'] }],
@@ -26,7 +27,8 @@ $(document).ready(function() {
 			}else{
 				let note_id = $('#quillNote').attr('note_id');
 				let editedNote = $('#quillNote .ql-editor').html();
-				u.edit_note(note_id, editedNote, function(){
+				u.edit_note(note_id, editedNote, function(_note_modified_at){
+					note_modified_at = _note_modified_at;
 					showSpinner();
 					hideSpinner();
 				});
@@ -159,13 +161,13 @@ $(document).ready(function() {
 			
 			$('.NS-notes-content-editor-container').addClass('show');
 			
-			let modified_at = u.get_note(note_id).modified_at;
+			note_modified_at = u.get_note(note_id).modified_at;
 			setInterval(function(){
 				if (document.hidden) {
 					u = new User(function(){
-						if(u.get_note(note_id).modified_at != modified_at){
+						if(u.get_note(note_id).modified_at != note_modified_at){
 							dismissNote();
-							modified_at = u.get_note(note_id).modified_at;
+							note_modified_at = u.get_note(note_id).modified_at;
 						}
 					});
 				}

@@ -153,16 +153,19 @@ body {
 	margin: 10px 0 0 0;
 	padding: 0 0 10px 0;
 	cursor: pointer;
+	position: relative;
 	/* display: flex; */
 }
 
 span.NS-note-title{
+	display: block;
 	animation: fade 0.3s ease forwards;
 }
 
 .NS-note-inline-control{
 	position: absolute;
 	right: 0;
+	top: 0;
 	background: #FEFEFE;
 	padding: 0 15px;
 	display: inline;

@@ -297,13 +297,14 @@ class User{
 		return true;
 	}
 	edit_note(id, editedNote, callback){
+		let note_modified_at = this.getUTC();
 		let index = data.notes.findIndex(e => e.id == id);
 		if(index >= 0){ //If found//
 			data.notes[index].note = editedNote;
-			data.notes[index].modified_at = this.getUTC();
+			data.notes[index].modified_at = note_modified_at;
 			data.notes[index].synced = 0;
 			this.updateLocal();
-			callback();
+			callback(note_modified_at);
 			return true;
 		}
 		return false;

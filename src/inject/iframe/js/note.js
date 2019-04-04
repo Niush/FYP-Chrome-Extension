@@ -28,9 +28,14 @@ $(document).ready(function() {
 				let note_id = $('#quillNote').attr('note_id');
 				let editedNote = $('#quillNote .ql-editor').html();
 				u.edit_note(note_id, editedNote, function(_note_modified_at){
-					note_modified_at = _note_modified_at;
-					showSpinner();
-					hideSpinner();
+					if(_note_modified_at == 'undo'){
+						quill.history.undo();
+						return false;
+					}else{
+						note_modified_at = _note_modified_at;
+						showSpinner();
+						hideSpinner();
+					}
 				});
 			}
 		}, 500);
@@ -146,6 +151,7 @@ $(document).ready(function() {
 			$('#cancelConfirm').focus();
 		}	
 		
+		let checkNotesChanges;
 		// Note Click to Enlarge show all button //
 		$('.NS-note-title').click(function(){
 			//$(this).parent().attr('note_id');
@@ -162,7 +168,7 @@ $(document).ready(function() {
 			$('.NS-notes-content-editor-container').addClass('show');
 			
 			note_modified_at = u.get_note(note_id).modified_at;
-			setInterval(function(){
+			checkNotesChanges = setInterval(function(){
 				if (document.hidden) {
 					u = new User(function(){
 						if(u.get_note(note_id).modified_at != note_modified_at){
@@ -177,9 +183,14 @@ $(document).ready(function() {
 		$('#back-to-notes-home-button').click(function(){
 			let note_id = $('#quillNote').attr('note_id');
 			let editedNote = $('#quillNote .ql-editor').html();
+			clearTimeout(checkNotesChanges);
 			clearTimeout(quillTimer);
 			firstQuill = true;
-			u.edit_note(note_id, editedNote, function(){
+			u.edit_note(note_id, editedNote, function(para){
+				if(para == 'undo'){
+					quill.history.undo();
+					return false;
+				}
 				// Execute some save functionality because go back then do save //
 				$('#back-to-notes-home-button').css({'visibility': 'hidden'});
 				$('.NS-notes-content-editor-container').removeClass('show');
@@ -241,5 +252,12 @@ $(document).ready(function() {
 		$('#quillNote').removeAttr('note_id');
 		$('#quillNote .ql-editor').html('');
 		fillNotes(loadNoteContent);
+		let checkChangedNotesListAlso = setInterval(function(){
+			if (document.hidden) {
+				fillNotes(loadNoteContent);
+			}else{
+				clearInterval(checkChangedNotesListAlso);
+			}
+		}, 3000);
 	}
 });

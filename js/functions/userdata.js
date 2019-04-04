@@ -37,15 +37,17 @@ var data;
 class User{
 	constructor(callback=function(){}){
 		var _self = this;
-		chrome.storage.local.get(['user_data'], function(result) {
-		  if(result.user_data == undefined || result.user_data == ''){
-			new User().resetLocal();
-		  }else{
-			data = result.user_data;
-			//console.log(_self.data);
-			callback();
-		  }
-		});
+		if(typeof chrome.app.isInstalled!=='undefined'){
+			chrome.storage.local.get(['user_data'], function(result) {
+			  if(result.user_data == undefined || result.user_data == ''){
+				new User().resetLocal();
+			  }else{
+				data = result.user_data;
+				//console.log(_self.data);
+				callback();
+			  }
+			});
+		}
 	}
 	
 	getUTC(){
@@ -297,15 +299,23 @@ class User{
 		return true;
 	}
 	edit_note(id, editedNote, callback){
-		let note_modified_at = this.getUTC();
-		let index = data.notes.findIndex(e => e.id == id);
-		if(index >= 0){ //If found//
-			data.notes[index].note = editedNote;
-			data.notes[index].modified_at = note_modified_at;
-			data.notes[index].synced = 0;
-			this.updateLocal();
-			callback(note_modified_at);
-			return true;
+		let noteSize = Math.round(Math.round((new Blob([editedNote]).size))/1000000);
+		if(noteSize > 15){
+			alert('Note Size Limit Exceeded. One Note can use ~15 MB storage.\nYour Note reached: ' + noteSize + ' MB');
+			showMessage('Note Size Limit Exceeded. One Note can use ~15 MB storage.\nYour Note reached: ' + noteSize + ' MB', 'error');
+			callback('undo');
+			return false;
+		}else{
+			let note_modified_at = this.getUTC();
+			let index = data.notes.findIndex(e => e.id == id);
+			if(index >= 0){ //If found//
+				data.notes[index].note = editedNote;
+				data.notes[index].modified_at = note_modified_at;
+				data.notes[index].synced = 0;
+				this.updateLocal();
+				callback(note_modified_at);
+				return true;
+			}
 		}
 		return false;
 	}

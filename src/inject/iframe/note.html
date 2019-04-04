@@ -20,7 +20,7 @@
 		<div id="NS-notes-container show">
 			<h5 style="font-weight: 700; padding: 8px 0; margin: 0;" class="row center indigo accent-2 white-text">
 				<i class="material-icons left" id="back-to-notes-home-button" style="cursor: pointer; padding: 5px; visibility: hidden; position: absolute; left: 10px; top: 5px;">keyboard_arrow_left</i>
-				Notes
+				<span id="open_notes_new_tab" style="cursor: pointer;" title="Open Notes in New Tab">Notes</span>
 			</h5>
 			<div class="progress red" style="margin: 0 !important;">
 				<div class="indeterminate teal"></div>
@@ -50,16 +50,7 @@
 			</div>
 			
 			<div class="NS-notes-content-editor-container">
-				<div class="row">
-					<form class="col s12">
-					  <div class="row">
-						<div class="input-field col s12">
-						  <textarea id="textarea1" class="materialize-textarea"></textarea>
-						  <label for="textarea1">Test Note 1:</label>
-						</div>
-					  </div>
-					</form>
-				</div>
+				<span id="note-title-here" style="padding: 0px 0 0px 17px; opacity: 0.8; font-weight: bold; background: white; display: block; letter-spacing: 1px; white-space: nowrap; text-overflow: ellipsis;">Apple</span>
 				<div id="quillNote"></div>
 			</div>
 		</div>

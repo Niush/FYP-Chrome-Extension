@@ -267,6 +267,7 @@ class User{
 		if(index >= 0){ //If found//
 			data.notes[index].title = newTitle;
 			data.notes[index].modified_at = this.getUTC();
+			data.notes[index].synced = 0;
 			this.updateLocal();
 			return true;
 		}
@@ -289,25 +290,22 @@ class User{
                     "synced": 0,
                     "public": 0,
                     "status": 1,
-                    "modified_at": this.getUTC()
+                    "modified_at": this.getUTC(),
+					"url": currentHost,
 		});
 		this.updateLocal();
 		return true;
 	}
-	edit_note(new_data){
-		try{
-			let index = data.notes.findIndex(e => e.id == new_data.id);
-			if(index >= 0){ //If found//
-				data.notes[index] = new_data;
-				this.updateLocal();
-				return true;
-			}
-		}catch(e){
-			alert('Note was not found. Opps..');
-			return false;
+	edit_note(id, editedNote, callback){
+		let index = data.notes.findIndex(e => e.id == id);
+		if(index >= 0){ //If found//
+			data.notes[index].note = editedNote;
+			data.notes[index].modified_at = this.getUTC();
+			data.notes[index].synced = 0;
+			this.updateLocal();
+			callback();
+			return true;
 		}
-		
-		alert('Failed to Edit The Changed Note.');
 		return false;
 	}
 	delete_note(id){
@@ -315,10 +313,22 @@ class User{
 		if(index >= 0){ //If found//
 			data.notes[index].status = 0;
 			data.notes[index].modified_at = this.getUTC();
+			data.notes[index].synced = 0;
 			this.updateLocal();
 			return true;
 		}
 		alert('Failed to Execute Delete. Probably Note does not exist.');
+		return false;
+	}
+	change_public_status(id, status){
+		let index = data.notes.findIndex(e => e.id == id);
+		if(index >= 0){ //If found//
+			data.notes[index].public = status;
+			data.notes[index].modified_at = this.getUTC();
+			data.notes[index].synced = 0;
+			this.updateLocal();
+			return true;
+		}
 		return false;
 	}
 	

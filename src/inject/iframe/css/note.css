@@ -252,10 +252,10 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 	width: 100%;
     position: absolute;
     background: #EFEFEF;
-    top: 43px;
+    top: 45px;
     left: 0;
-	min-height: calc(100% - 43px);
-    padding: 13px;
+	min-height: calc(100% - 45px);
+    padding: 0;
 	visibility: hidden;
 	opacity: 0;
 	transform: translate(200px, 0);
@@ -266,4 +266,26 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 	visibility: visible;
 	opacity: 1;
 	transform: translate(0, 0);
+}
+
+.ql-container{
+	font-family: "Times New Roman" !important;
+	font-size: 1.1em !important;
+}
+
+.ql-container strong{
+	font-weight: 700 !important;
+}
+
+.ql-snow .ql-editor img {
+    max-width: 250px !important;
+}
+
+.ql-toolbar.ql-snow{
+	background: white;
+}
+
+.ql-editor.ql-blank::before{
+	letter-spacing: 2px;
+	font-style: unset;
 }

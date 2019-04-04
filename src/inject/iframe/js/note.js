@@ -1,6 +1,39 @@
 $(document).ready(function() {								
 	let u = new User();
 	
+	var firstQuill = true;
+	var toolbarOptions = [
+	  ['bold', 'italic', 'underline', 'strike', 'code-block', { 'color': [] }, { 'size': ['small', false, 'large'] }],
+	  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'script': 'sub'}, { 'script': 'super' }, { 'align': [] }, 'clean', 'image'],
+	];
+	
+	var quill = new Quill('#quillNote', {
+		theme: 'snow',
+		placeholder: 'Your Note Goes Here....',
+		modules: {
+			toolbar: toolbarOptions
+		},
+	});
+	
+	let quillTimer;
+	quill.on('text-change', function(delta, source) {
+		//console.log(delta);
+		clearTimeout(quillTimer);
+		
+		quillTimer = setTimeout(function(){
+			if(firstQuill){
+				firstQuill = false;
+			}else{
+				let note_id = $('#quillNote').attr('note_id');
+				let editedNote = $('#quillNote .ql-editor').html();
+				u.edit_note(note_id, editedNote, function(){
+					showSpinner();
+					hideSpinner();
+				});
+			}
+		}, 500);
+	});
+	
 	fillNotes(loadNoteContent);
 
 	function fillNotes(callback){
@@ -114,18 +147,46 @@ $(document).ready(function() {
 		// Note Click to Enlarge show all button //
 		$('.NS-note-title').click(function(){
 			//$(this).parent().attr('note_id');
+			let note_id = $(this).parent().attr('note_id');
 			$('#back-to-notes-home-button').css({'visibility': 'visible'});
-			$('.NS-notes-content-editor-container').attr('note_id', $(this).parent().attr('note_id'));
+			$('.NS-notes-content-editor-container').attr('note_id', note_id);
+			
+			firstQuill = true;
+			$('#quillNote').attr('note_id', note_id);
+			//$('#quillNote .ql-editor').html(u.get_note(note_id).note);
+			quill.clipboard.dangerouslyPasteHTML(u.get_note(note_id).note, 'api');
+			$('#note-title-here').html(u.get_note(note_id).title);
+			
 			$('.NS-notes-content-editor-container').addClass('show');
+			
+			let modified_at = u.get_note(note_id).modified_at;
+			setInterval(function(){
+				if (document.hidden) {
+					u = new User(function(){
+						if(u.get_note(note_id).modified_at != modified_at){
+							dismissNote();
+							modified_at = u.get_note(note_id).modified_at;
+						}
+					});
+				}
+			}, 3000);		
 		});
 		// Notes Enlarge to Back < - list//
 		$('#back-to-notes-home-button').click(function(){
-			//$('.NS-notes-content-editor-container').val();
-			//$('.NS-notes-content-editor-container').attr('note_id');
-			// Execute some save functionality because go back then do save //
-			$('#back-to-notes-home-button').css({'visibility': 'hidden'});
-			$('.NS-notes-content-editor-container').removeClass('show');
-			$('.NS-notes-content-editor-container').removeAttr('note_id');
+			let note_id = $('#quillNote').attr('note_id');
+			let editedNote = $('#quillNote .ql-editor').html();
+			clearTimeout(quillTimer);
+			firstQuill = true;
+			u.edit_note(note_id, editedNote, function(){
+				// Execute some save functionality because go back then do save //
+				$('#back-to-notes-home-button').css({'visibility': 'hidden'});
+				$('.NS-notes-content-editor-container').removeClass('show');
+				$('.NS-notes-content-editor-container').removeAttr('note_id');
+				//$('#note-title-here').html('');
+				quill.clipboard.dangerouslyPasteHTML('', 'api');
+				$('#quillNote').removeAttr('note_id');
+				$('#quillNote .ql-editor').html('');
+			});
 		});
 	}
 	
@@ -152,6 +213,10 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#open_notes_new_tab").click(function(){
+		openNotes();
+	});
+	
 	function showSpinner(){
 		setTimeout(function(){
 			$('.progress').css('opacity','1');
@@ -164,7 +229,15 @@ $(document).ready(function() {
 		}, 1000);
 	}
 	
-	var quill = new Quill('#quillNote', {
-	  theme: 'snow'
-	});
+	function dismissNote(){
+		clearTimeout(quillTimer);
+		firstQuill = true;
+		$('#back-to-notes-home-button').css({'visibility': 'hidden'});
+		$('.NS-notes-content-editor-container').removeClass('show');
+		$('.NS-notes-content-editor-container').removeAttr('note_id');
+		quill.clipboard.dangerouslyPasteHTML('', 'api');
+		$('#quillNote').removeAttr('note_id');
+		$('#quillNote .ql-editor').html('');
+		fillNotes(loadNoteContent);
+	}
 });

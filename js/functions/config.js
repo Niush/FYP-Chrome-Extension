@@ -44,18 +44,22 @@ function openAccount(){
 }
 
 function openNotes(){
-	openPages('/src/options_custom/index.html','src/options_custom/index.html#notes');
+	openPages('/src/options_custom/index.html','src/options_custom/index.html#notes', true);
 }
 
-function openPages(check,open){
+function openPages(check,open, pinned=false){
 	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
 		for(let i = 0 ; i < tabs.length ; i++){
 			if(tabs[i].url.includes("chrome-extension://"+chrome.runtime.id+check)){
-				chrome.tabs.update(tabs[i].id, {highlighted: true});
+				chrome.tabs.update(tabs[i].id, {highlighted: true, selected: true, active:true});
 				return;
 			}
 		}
-		chrome.tabs.create({url: open});
+		if(pinned){
+			chrome.tabs.create({url: open, selected: true, active:true, pinned: true});
+		}else{
+			chrome.tabs.create({url: open, selected: true, active:true});
+		}
 	});
 }
 

@@ -5,14 +5,19 @@ $(document).ready(function() {
 	var firstQuill = true;
 	var toolbarOptions = [
 	  ['bold', 'italic', 'underline', 'strike', 'code-block', { 'color': [] }, { 'size': ['small', false, 'large'] }],
-	  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'script': 'sub'}, { 'script': 'super' }, { 'align': [] }, 'clean', 'image'],
+	  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'script': 'sub'}, { 'script': 'super' }, { 'align': [] }, 'clean', 'image', 'screenshot'],
 	];
 	
 	var quill = new Quill('#quillNote', {
 		theme: 'snow',
 		placeholder: 'Your Note Goes Here....',
 		modules: {
-			toolbar: toolbarOptions
+			toolbar: {
+				container: toolbarOptions,
+				handlers: {
+					'screenshot': () => { takeScreenshot(); }
+				}
+			}
 		},
 	});
 	
@@ -260,4 +265,16 @@ $(document).ready(function() {
 			}
 		}, 3000);
 	}
+	
+	function takeScreenshot(){
+		if(typeof chrome.app.isInstalled!=='undefined'){
+			chrome.runtime.sendMessage({
+				action: "screenshot_note"
+			}, function (response) {
+				console.log(response.response);
+			});
+		}else{
+			alert('Opps. Application might be Disabled.');
+		}
+	}	
 });

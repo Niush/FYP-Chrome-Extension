@@ -60,5 +60,5 @@
     }
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; font-src 'self';",
-  "web_accessible_resources": ["icons/icon128.png", "icons/material-icon.woff2","src/inject/floaters.html", "src/inject/iframe/index.html", "src/inject/iframe/css/style.css", "js/functions/inject_chat.js", "js/materialize/materialize.min.js","js/quill/quill.js" , "css/materialize.min.css","css/quill.snow.css" , "js/jquery/jquery.min.js", "js/jquery/jquery-ui.min.js", "src/inject/iframe/note.html"]
+  "web_accessible_resources": ["src/options_custom/index.html", "icons/icon128.png", "icons/material-icon.woff2","src/inject/floaters.html", "src/inject/iframe/index.html", "src/inject/iframe/css/style.css", "js/functions/inject_chat.js", "js/materialize/materialize.min.js","js/quill/quill.js" , "css/materialize.min.css","css/quill.snow.css" , "js/jquery/jquery.min.js", "js/jquery/jquery-ui.min.js", "src/inject/iframe/note.html"]
 }

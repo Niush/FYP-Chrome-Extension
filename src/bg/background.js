@@ -3,10 +3,16 @@ let START_DELAY = 500;
 let datauri = ""; //Stores current data uri the latest one
 
 // Take Screen shot of that active page -quality changed //
-function takeScreenShot(tabInfo, quality=100){
+function takeScreenShot(tabInfo, quality=100, coords, callback){
 	chrome.tabs.captureVisibleTab(tabInfo.windowId,{'quality': quality},function(screenshotUrl) {
 		//datauri = screenshotUrl;
-		cropData(screenshotUrl, tabInfo.width, tabInfo.height); //No x and y
+		if(coords == null){
+			cropData(screenshotUrl, tabInfo.width, tabInfo.height); //No x and y
+		}else{
+			cropData(screenshotUrl, coords.w, coords.h, coords.x, coords.y, function(data){
+				callback();
+			});
+		}
 		/* chrome.tabs.create({url: screenshotUrl}, function(){
 			console.log(screenshotUrl);
 		}); */
@@ -20,7 +26,7 @@ var DEFAULT_COORDS = {
 	y: 0
 };
 
-function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.x, y=DEFAULT_COORDS.y) {
+function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.x, y=DEFAULT_COORDS.y, callback=function(){}) {
 	var img = new Image();
 	var canvas;
 	
@@ -33,7 +39,7 @@ function cropData(str, w=DEFAULT_COORDS.w, h=DEFAULT_COORDS.h, x=DEFAULT_COORDS.
 	
 		ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
 		datauri = canvas.toDataURL('image/jpeg', 1); // set 0.5 for low
-		
+		callback(datauri);
 		//dataURItoBlob(canvas);
 	};
 	
@@ -218,6 +224,33 @@ document.addEventListener('DOMContentLoaded', function() {
 				return true;
 			}
 			
+			// If request to screenshot for specific note in that page //
+			if(request.action.toLowerCase() == "screenshot_note"){
+				if(typeof chrome.app.isInstalled!=='undefined'){
+					chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+						chrome.tabs.sendMessage(tabs[0].id,{
+							action: "open_screenshot",
+						}, function (response) {
+							sendResponse({response: true});
+						});
+					});
+				}
+				sendResponse({response: true});
+			}
+			
+			// If request to screenshot Now with coords and active tab - after Capture button click on that screenshot container //
+			if(request.action.toLowerCase() == "screenshot_now"){
+				//console.log(request);
+				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+					takeScreenShot(tabs[0], 50, request.coords, function(){
+						sendResponse({response: datauri});
+						datauri = null;
+					});
+					//console.log(tabs[0])
+				});
+				return true;
+			}
+			
 			// If request to chat_disabled_check //
 			if(request.action.toLowerCase() == "note_disabled_check"){
 				u = new User();
@@ -237,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			// focus or not this page //
 			if(request.action.toLowerCase() == "focus_check"){
 				u = new User();
+				//console.log(sender.tab.id);
 				if(u.check_focus(getHostName(sender.url))){
 					sendResponse({
 						response: true,

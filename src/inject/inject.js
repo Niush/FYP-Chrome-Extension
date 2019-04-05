@@ -9,6 +9,8 @@ jqu.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery-ui.min.js";
 document.querySelector('head').appendChild(jqu);
  */
 // Wait Inject for some seconds - Except few Things //
+var isTop = true;
+var showScreenshotModeCaller;
 function upgradeOrReconnectChanges(){
 	var port;
 
@@ -399,17 +401,26 @@ let noFocusUsage = 0;
 function checkUsageToFocus(){
 	let noFocusUsageCheck = setInterval(function(){
 		if (!document.hidden) {
-			noFocusUsage += 10;
+			noFocusUsage += 60;
 			if(noFocusUsage >= 3600){
-				alert('You have been using this website for quite some time, why not focus and limit this website.\nYou can do this from the Extension Menu in the top right. - MPA');
+				let message = document.createElement('NS-tiny-message');
+				message.innerHTML = 'You have been using this website for quite some time, why not focus and limit this website.\nYou can do this from the Extension Menu in the top right. - <a style="color: orange;" target="_blank" href="'+chrome.extension.getURL("src/options_custom/index.html#settings")+'">Lets Do It</a>';
+				message.style.left = '10px';
+				message.style.textAlign = 'center';
+				document.getElementsByTagName('body')[0].appendChild(message);
+				setTimeout(function(){
+					message.addEventListener('click', function(){
+						message.remove();
+					});
+				}, 5000);
 				clearInterval(noFocusUsageCheck);
 				noFocusUsage = 0;
 				return false;
 			}
 		}else{
-			noFocusUsage += 5;
+			noFocusUsage += 20;
 		}
-	}, 10000);
+	}, 60000);//60000
 }
 
 /***********************************/
@@ -449,6 +460,9 @@ setTimeout(function(){
 			setTimeout(function(){
 				limitNotCrossed();
 			}, 2000);
+			sendResponse({response: true});
+		}else if(request.action == "open_screenshot"){
+			showScreenshotModeCaller();
 			sendResponse({response: true});
 		}
 	  }
@@ -547,14 +561,20 @@ setTimeout(function(){
 			
 			//***** NOTE FLOATING Function *******//
 			// Applying all clicks and moves and logic to Floating icons and events //
+			let NSNotesIconTop;
+			let isNoteOpen;
+			let noteContentLoaded;
+			let NSNotesFloatingIcon;
+			let NSNotesIframeContainer;
+			let NSNotesIframe;
 			function floatersScripts(){
 				setTimeout(function(){
-					let NSNotesIconTop = $(window).height() - 50;
-					let isNoteOpen = false;
-					let noteContentLoaded = false;
-					let NSNotesFloatingIcon = $('NS-notes-floating-icon');
-					let NSNotesIframeContainer = $('NS-notes-iframe-container');
-					let NSNotesIframe = $('.NS-notes-iframe');
+					NSNotesIconTop = $(window).height() - 50;
+					isNoteOpen = false;
+					noteContentLoaded = false;
+					NSNotesFloatingIcon = $('NS-notes-floating-icon');
+					NSNotesIframeContainer = $('NS-notes-iframe-container');
+					NSNotesIframe = $('.NS-notes-iframe');
 					
 					// If localstorage has top status saved put the icon to top px //
 					if(localStorage.hasOwnProperty('ns-note-top')){
@@ -620,11 +640,15 @@ setTimeout(function(){
 							NSNotesFloatingIcon.draggable( 'enable' )
 						} else {
 							if(noteContentLoaded == false){
-								NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
-								NSNotesIframe.on('load', function(){
-									$('NS-loading-iframe').addClass('NS-hide');
-								});
-								noteContentLoaded = true;
+								if(typeof chrome.app.isInstalled!=='undefined'){
+									NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
+									NSNotesIframe.on('load', function(){
+										$('NS-loading-iframe').addClass('NS-hide');
+									});
+									noteContentLoaded = true;
+								}else{
+									NSNotesFloatingIcon.hide();
+								}
 							}
 							NSNotesIframeContainer.addClass("show");
 							NSNotesIconTop = NSNotesFloatingIcon.position().top;
@@ -638,6 +662,89 @@ setTimeout(function(){
 						NSNotesFloatingIcon.click();
 					});
 				}, 200);
+			}
+			
+			/*****************/
+			//  Screenshot  //
+			/***************/
+			showScreenshotModeCaller = function(){
+				if(isNoteOpen){
+					$('NS-closer-iframe').click();
+				}
+				NSNotesFloatingIcon.css('visibility','hidden');
+				NSNotesIframeContainer.css('visibility','hidden');
+				
+				let screenshotContainerHtml = `
+					<style>
+						NS-screenshot-button{z-index:99999999;position:absolute;top:10px;right:10px;background:#323232;color:#fff;padding:5px 8px;cursor:pointer;border-radius: 5px;opacity: 0.6;transition: all 0.3s ease;}NS-screenshot-button:hover{opacity: 1;}NS-screenshot-container{position:fixed;top:0;bottom:0;left:0;right:0;z-index:99999999}NS-screenshot-screen-selector{border:2px dashed #ff4500;min-height:50px;min-width:50px;width:250px;height:250px;position:absolute;outline:5000px solid #32323255;top:10%;left:10%;resize:both;overflow:hidden}
+						ns-screenshot-screen-selector .ui-resizable-e, ns-screenshot-screen-selector .ui-resizable-s, ns-screenshot-screen-selector .ui-resizable-n, ns-screenshot-screen-selector .ui-resizable-w, ns-screenshot-screen-selector .ui-resizable-ne, ns-screenshot-screen-selector .ui-resizable-se, ns-screenshot-screen-selector .ui-resizable-sw, ns-screenshot-screen-selector .ui-resizable-nw{position: absolute; background: #323232; opacity: 0.2;}
+						
+						ns-screenshot-screen-selector .ui-resizable-e{top: 0; right: 0; width: 5px; height: 100%;}
+						ns-screenshot-screen-selector .ui-resizable-s{bottom: 0; left: 0; width: 100%; height: 5px;}
+						ns-screenshot-screen-selector .ui-resizable-n{top: 0; right: 0; width: 100%; height: 5px;}
+						ns-screenshot-screen-selector .ui-resizable-w{bottom: 0; left: 0; width: 5px; height: 100%;}
+						ns-screenshot-screen-selector .ui-resizable-ne{top: 0; right: 0; width: 10px; height: 10px;}
+						ns-screenshot-screen-selector .ui-resizable-se{bottom: 0; right: 0; width: 10px; height: 10px;}
+						ns-screenshot-screen-selector .ui-resizable-sw{bottom: 0; left: 0; width: 10px; height: 10px;}
+						ns-screenshot-screen-selector .ui-resizable-nw{top: 0; left: 0; width: 10px; height: 10px;}
+					</style>
+				
+					<NS-screenshot-container>
+						<NS-screenshot-screen-selector><NS-screenshot-button id="NS-screenshot-button">Capture</NS-screenshot-button></NS-screenshot-screen-selector>
+					</NS-screenshot-container>
+				`;
+				let screenshotContainer = document.createElement('NS-screenshot-container-holder');
+				screenshotContainer.innerHTML = screenshotContainerHtml;	
+				document.getElementsByTagName("body")[0].appendChild(screenshotContainer);	
+				
+				$(function() {
+					//ne, se, sw, nw, n, e, s, w
+					$("NS-screenshot-screen-selector").draggable({containment: "body"}).resizable({animate: false, containment: "body", helper: "ui-resizable-helper", handles: 'e, w, s ,n, ne, se, sw, nw', 
+					start: function(){
+							$('ns-screenshot-screen-selector').css('pointer-events','none');
+							$('ns-screenshot-screen-selector').draggable( "disable" );
+						}, 
+					stop: function(){
+							$('ns-screenshot-screen-selector').css('pointer-events','initial');
+							$('ns-screenshot-screen-selector').draggable( "enable" );
+						}
+					});
+					
+					$('NS-screenshot-button').click(function(){
+						screenshotContainer.style.opacity = '0';
+						let nsScreenshotScreenSelector = document.getElementsByTagName('ns-screenshot-screen-selector')[0];
+						let x = window.scrollX + nsScreenshotScreenSelector.getBoundingClientRect().left; // X
+						let y = window.scrollY + nsScreenshotScreenSelector.getBoundingClientRect().top; // Y
+						let w = nsScreenshotScreenSelector.offsetWidth;
+						let h = nsScreenshotScreenSelector.offsetHeight;
+						//console.log(x + " " + y + " - - - " + w + " " + h);
+						
+						screenshotContainer.outerHTML = '';
+						
+						setTimeout(function(){
+							if(typeof chrome.app.isInstalled!=='undefined'){
+								chrome.runtime.sendMessage({
+									action: "screenshot_now",
+									coords: {'w':w,'h':h,'x':x,'y':y},
+								}, function (response) {
+									//console.log(response.response);
+									//console.log(NSNotesIframe.contents().find('#quillNote'));
+									//console.log($('.NS-notes-iframe').contents());
+									
+									var iframe = document.getElementsByClassName("NS-notes-iframe")[0];
+									var elmnt = iframe.contentWindow.document.getElementById("quillNote");
+									elmnt.style.display = "none";
+									
+									if(!isNoteOpen){
+										$('NS-closer-iframe').click();
+									}
+									NSNotesFloatingIcon.css('visibility','visible');
+									NSNotesIframeContainer.css('visibility','visible');
+								});
+							}
+						}, 500);
+					});
+				});
 			}
 		}
 	});

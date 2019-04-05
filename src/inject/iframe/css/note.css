@@ -292,3 +292,11 @@ p.NS-edit-mode .NS-note-inline-control-edit{
 	letter-spacing: 2px;
 	font-style: unset;
 }
+
+.ql-screenshot:after {
+    content: "photo_size_select_large";
+    font-family: "Material Icons";
+    font-size: 1.3em;
+    line-height: 19px;
+    margin-left: -2px;
+}

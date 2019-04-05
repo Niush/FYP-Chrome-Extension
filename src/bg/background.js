@@ -230,6 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 						chrome.tabs.sendMessage(tabs[0].id,{
 							action: "open_screenshot",
+							note_id: request.note_id
 						}, function (response) {
 							sendResponse({response: true});
 						});
@@ -242,11 +243,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			if(request.action.toLowerCase() == "screenshot_now"){
 				//console.log(request);
 				chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-					takeScreenShot(tabs[0], 50, request.coords, function(){
-						sendResponse({response: datauri});
-						datauri = null;
+					u = new User(function(){
+						takeScreenShot(tabs[0], 70, request.coords, function(){
+							let note_id = request.note_id;
+							let curNote = u.get_note(note_id);
+							curNote.note = curNote.note + '<p><img src="'+ datauri +'"/></p>';
+							u.edit_note(note_id, curNote.note, function(){
+								sendResponse({response: true, "note_id": note_id});
+								datauri = null;
+							});
+						});
 					});
-					//console.log(tabs[0])
 				});
 				return true;
 			}

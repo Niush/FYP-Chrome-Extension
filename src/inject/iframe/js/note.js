@@ -174,6 +174,7 @@ $(document).ready(function() {
 			
 			note_modified_at = u.get_note(note_id).modified_at;
 			checkNotesChanges = setInterval(function(){
+				//if (document.hidden || !quill.hasFocus()) {
 				if (document.hidden) {
 					u = new User(function(){
 						if(u.get_note(note_id).modified_at != note_modified_at){
@@ -182,7 +183,7 @@ $(document).ready(function() {
 						}
 					});
 				}
-			}, 3000);		
+			}, 3000);
 		});
 		// Notes Enlarge to Back < - list//
 		$('#back-to-notes-home-button').click(function(){
@@ -269,12 +270,24 @@ $(document).ready(function() {
 	function takeScreenshot(){
 		if(typeof chrome.app.isInstalled!=='undefined'){
 			chrome.runtime.sendMessage({
-				action: "screenshot_note"
+				action: "screenshot_note",
+				note_id: $('#quillNote').attr('note_id')
 			}, function (response) {
 				console.log(response.response);
 			});
 		}else{
 			alert('Opps. Application might be Disabled.');
 		}
-	}	
+	}
+	
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		if(request.action.toLowerCase() == "update_this_note" && request.note_id == $('#quillNote').attr('note_id')){
+			u = new User(function(){
+				firstQuill = true;
+				quill.clipboard.dangerouslyPasteHTML(u.get_note(request.note_id).note, 'api');
+				$('#note-title-here').html(u.get_note(request.note_id).title);	
+				note_modified_at = u.get_note(request.note_id).modified_at;
+			});
+		}
+	});
 });

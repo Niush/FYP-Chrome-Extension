@@ -462,7 +462,7 @@ setTimeout(function(){
 			}, 2000);
 			sendResponse({response: true});
 		}else if(request.action == "open_screenshot"){
-			showScreenshotModeCaller();
+			showScreenshotModeCaller(request.note_id);
 			sendResponse({response: true});
 		}
 	  }
@@ -667,7 +667,7 @@ setTimeout(function(){
 			/*****************/
 			//  Screenshot  //
 			/***************/
-			showScreenshotModeCaller = function(){
+			showScreenshotModeCaller = function(note_id){
 				if(isNoteOpen){
 					$('NS-closer-iframe').click();
 				}
@@ -726,14 +726,19 @@ setTimeout(function(){
 								chrome.runtime.sendMessage({
 									action: "screenshot_now",
 									coords: {'w':w,'h':h,'x':x,'y':y},
+									"note_id": note_id
 								}, function (response) {
-									//console.log(response.response);
-									//console.log(NSNotesIframe.contents().find('#quillNote'));
-									//console.log($('.NS-notes-iframe').contents());
+									if(response.response){
+										chrome.runtime.sendMessage({
+											action: "update_this_note",
+											"note_id": note_id
+										});
+									}
 									
-									var iframe = document.getElementsByClassName("NS-notes-iframe")[0];
+									// *** Not allowed - cannot access IFrame *** //
+									/* var iframe = document.getElementsByClassName("NS-notes-iframe")[0];
 									var elmnt = iframe.contentWindow.document.getElementById("quillNote");
-									elmnt.style.display = "none";
+									elmnt.style.display = "none"; */
 									
 									if(!isNoteOpen){
 										$('NS-closer-iframe').click();

@@ -307,43 +307,50 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			// Increment the focus time every call which is made probably every 5 seconds //
 			if(request.action.toLowerCase() == "increment_focus"){
-				u = new User();
-				if(u.increment_focus(getHostName(sender.url))){
+				u = new User(function(){
+					if(u.increment_focus(getHostName(sender.url))){
+						sendResponseHelper();
+						//u = new User();
+					}else{
+						sendResponse({
+							response: false,
+						});
+					}
+					return false;
+				});
+				
+				function sendResponseHelper(){
 					sendResponse({
 						response: true,
 					});
-					u = new User();
-				}else{
-					sendResponse({
-						response: false,
-					});
 				}
-				return false;
 			}
 			
 			// Increment Wb Access Tries of Focus Limit exceeded pages //
 			if(request.action.toLowerCase() == "increment_total_tries"){
-				u = new User();
-				u.increment_total_tries(getHostName(sender.url));
-				return true;
+				u = new User(function(){
+					u.increment_total_tries(getHostName(sender.url));
+					return true;
+				});
 			}
 			
 			// If request to A block or Lock Webpage (lockpage) //
 			if(request.action.toLowerCase() == "sync"){
-				u = new User();
-				u.syncNow('app', function(status){
-					if(status == true){
-						sendResponse({
-							response: true,
-						});
-					}else{
-						sendResponse({
-							response: status,
-						});
-					}
+				u = new User(function(){
+					u.syncNow('app', function(status){
+						if(status == true){
+							sendResponse({
+								response: true,
+							});
+						}else{
+							sendResponse({
+								response: status,
+							});
+						}
+					});
+					
+					return true;
 				});
-				
-				return true;
 			}
 			
 			if(request.action.toLowerCase() == "dim_time"){

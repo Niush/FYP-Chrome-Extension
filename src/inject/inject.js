@@ -166,6 +166,7 @@ function limitNotCrossed(){
 						}
 					} else {
 						setTimeout(limitNotCrossed, 1000);
+						clearInterval(todayTotalIncrement);
 					}
 				});
 			}

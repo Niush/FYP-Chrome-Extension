@@ -676,8 +676,8 @@ setTimeout(function(){
 				
 				let screenshotContainerHtml = `
 					<style>
-						NS-screenshot-button{z-index:99999999;position:absolute;top:10px;right:10px;background:#323232;color:#fff;padding:5px 8px;cursor:pointer;border-radius: 5px;opacity: 0.6;transition: all 0.3s ease;}NS-screenshot-button:hover{opacity: 1;}NS-screenshot-container{position:fixed;top:0;bottom:0;left:0;right:0;z-index:99999999}NS-screenshot-screen-selector{border:2px dashed #ff4500;min-height:50px;min-width:50px;width:250px;height:250px;position:absolute;outline:5000px solid #32323255;top:10%;left:10%;resize:both;overflow:hidden}
-						ns-screenshot-screen-selector .ui-resizable-e, ns-screenshot-screen-selector .ui-resizable-s, ns-screenshot-screen-selector .ui-resizable-n, ns-screenshot-screen-selector .ui-resizable-w, ns-screenshot-screen-selector .ui-resizable-ne, ns-screenshot-screen-selector .ui-resizable-se, ns-screenshot-screen-selector .ui-resizable-sw, ns-screenshot-screen-selector .ui-resizable-nw{position: absolute; background: #323232; opacity: 0.2;}
+						NS-screenshot-button{font-weight: 700;z-index:99999999;position:absolute;top:10px;right:10px;background:#323232;color:#fff;padding:5px 8px;cursor:pointer;border-radius: 5px;opacity: 0.6;transition: all 0.3s ease;}NS-screenshot-button:hover{opacity: 1;}NS-screenshot-container{position:fixed;top:0;bottom:0;left:0;right:0;z-index:99999999}NS-screenshot-screen-selector{border:2px dashed #b91313;min-height:50px;min-width:50px;width:250px;height:250px;position:absolute;outline:5000px solid #323232b5;top:10%;left:10%;resize:both;overflow:hidden}
+						ns-screenshot-screen-selector .ui-resizable-e, ns-screenshot-screen-selector .ui-resizable-s, ns-screenshot-screen-selector .ui-resizable-n, ns-screenshot-screen-selector .ui-resizable-w, ns-screenshot-screen-selector .ui-resizable-ne, ns-screenshot-screen-selector .ui-resizable-se, ns-screenshot-screen-selector .ui-resizable-sw, ns-screenshot-screen-selector .ui-resizable-nw{position: absolute; background: #DEDEDE; opacity: 0.1;}
 						
 						ns-screenshot-screen-selector .ui-resizable-e{top: 0; right: 0; width: 5px; height: 100%;}
 						ns-screenshot-screen-selector .ui-resizable-s{bottom: 0; left: 0; width: 100%; height: 5px;}
@@ -687,10 +687,15 @@ setTimeout(function(){
 						ns-screenshot-screen-selector .ui-resizable-se{bottom: 0; right: 0; width: 10px; height: 10px;}
 						ns-screenshot-screen-selector .ui-resizable-sw{bottom: 0; left: 0; width: 10px; height: 10px;}
 						ns-screenshot-screen-selector .ui-resizable-nw{top: 0; left: 0; width: 10px; height: 10px;}
+						
+						NS-screenshot-cancel{font-weight: 700;z-index:99999999;position:absolute;top:10px;left:10px;background:#d81010;color:#fff;padding:5px 11px;cursor:pointer;border-radius: 50%;opacity: 0.3;transition: all 0.4s ease;}NS-screenshot-cancel:hover{opacity: 1;}
 					</style>
 				
 					<NS-screenshot-container>
-						<NS-screenshot-screen-selector><NS-screenshot-button id="NS-screenshot-button">Capture</NS-screenshot-button></NS-screenshot-screen-selector>
+						<NS-screenshot-screen-selector>
+							<NS-screenshot-button id="NS-screenshot-button">Capture</NS-screenshot-button>
+							<NS-screenshot-cancel id="NS-screenshot-cancel">X</NS-screenshot-cancel>
+						</NS-screenshot-screen-selector>
 					</NS-screenshot-container>
 				`;
 				let screenshotContainer = document.createElement('NS-screenshot-container-holder');
@@ -699,7 +704,16 @@ setTimeout(function(){
 				
 				$(function() {
 					//ne, se, sw, nw, n, e, s, w
-					$("NS-screenshot-screen-selector").draggable({containment: "body"}).resizable({animate: false, containment: "body", helper: "ui-resizable-helper", handles: 'e, w, s ,n, ne, se, sw, nw', 
+					$("NS-screenshot-screen-selector").draggable({containment: "window", scroll: false,
+					stop: function(){
+						if($(this).position().top < 0){
+							$(this).css('top','0');
+						}
+					}
+					}).resizable({animate: false, containment: "body", helper: "ui-resizable-helper", handles: 'e, w, s ,n, ne, se, sw, nw',
+					maxWidth: $("body").width(),
+					minWidth: 50,
+					minHeight: 50,
 					start: function(){
 							$('ns-screenshot-screen-selector').css('pointer-events','none');
 							$('ns-screenshot-screen-selector').draggable( "disable" );
@@ -710,11 +724,23 @@ setTimeout(function(){
 						}
 					});
 					
+					$('NS-screenshot-cancel').click(function(){
+						screenshotContainer.style.opacity = '0';
+						screenshotContainer.outerHTML = '';
+						if(!isNoteOpen){
+							$('NS-closer-iframe').click();
+						}
+						NSNotesFloatingIcon.css('visibility','visible');
+						NSNotesIframeContainer.css('visibility','visible');
+					});
+					
 					$('NS-screenshot-button').click(function(){
 						screenshotContainer.style.opacity = '0';
 						let nsScreenshotScreenSelector = document.getElementsByTagName('ns-screenshot-screen-selector')[0];
-						let x = window.scrollX + nsScreenshotScreenSelector.getBoundingClientRect().left; // X
-						let y = window.scrollY + nsScreenshotScreenSelector.getBoundingClientRect().top; // Y
+						//let x = window.scrollX + nsScreenshotScreenSelector.getBoundingClientRect().left; // X window window height
+						let x = nsScreenshotScreenSelector.getBoundingClientRect().left; // X
+						//let y = window.scrollY + nsScreenshotScreenSelector.getBoundingClientRect().top; // Y window window width
+						let y = nsScreenshotScreenSelector.getBoundingClientRect().top; // Y
 						let w = nsScreenshotScreenSelector.offsetWidth;
 						let h = nsScreenshotScreenSelector.offsetHeight;
 						//console.log(x + " " + y + " - - - " + w + " " + h);

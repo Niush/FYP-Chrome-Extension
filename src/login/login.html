@@ -17,6 +17,7 @@
     </head>
     <body>
 		<main id="main" class="hidden">
+		
 		<center>
 			<h4 style="font-weight: 700;">Minimal Productivity App</h4>
 			<br/>
@@ -25,7 +26,7 @@
 				<h5 class="indigo-text">Login into your account</h5>
 				<div class="section"></div>
 				<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-					<form class="col s12" method="post" action="#">
+					<div class="col s12">
 						<div class='row'>
 							<div class='input-field col s12'>
 								<input class='validate' type='email' name='email' id='email' required />
@@ -39,17 +40,17 @@
 								<label for='password'>Enter your password</label>
 							</div>
 							<label style='float: right;'>
-								<a class='pink-text' href='#!'><b>Forgot Password?</b></a>
+								<a id="forgot-password" class='pink-text' href='#!'><b>Forgot Password?</b></a>
 							</label>
 						</div>
 
 						<br />
 						<center>
 							<div class='row'>
-								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light indigo'>Login</button>
+								<button id='btn-login' name='btn_login' class='col s12 btn btn-large waves-effect waves-light indigo'>Login</button>
 							</div>
 						</center>
-					</form>
+					</div>
 				</div>
 				<a id="register-btn" href="#!"><h6>Create account</h6></a>
 			</div>
@@ -58,7 +59,7 @@
 				<h5 class="indigo-text">Register Account</h5>
 				<div class="section"></div>
 				<div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-					<form class="col s12" method="post" action="#">
+					<div class="col s12">
 						<div class='row'>
 							<div class='input-field col s6'>
 								<input class='validate' type='text' name='name' id='name' required />
@@ -66,7 +67,8 @@
 							</div>
 							
 							<div class='input-field col s6'>
-								<input class='validate' value="1999-01-01" type='date' name='dob' id='dob' required />
+								<!-- value="1999-01-01" -->
+								<input type="text" class="validate datepicker" name='dob' id='dob' required>
 								<label for='dob'>DOB</label>
 							</div>
 						</div>
@@ -85,10 +87,10 @@
 						<br />
 						<center>
 							<div class='row'>
-								<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect waves-light orange accent-4'>Register</button>
+								<button id='btn-reg' name='btn_login' class='col s12 btn btn-large waves-effect waves-light orange accent-4'>Register</button>
 							</div>
 						</center>
-					</form>
+					</div>
 				</div>
 				<a id="login-btn" href="#!"><h6>Login</h6></a>
 			</div>
@@ -103,6 +105,16 @@
 		<center style="position: fixed; bottom: 5px; left: 10px; font-size: 1.1em; letter-spacing: 2px;">
 			<a href="../options_custom/index.html"><img src="../../icons/icon128.png" alt="MPA" style="height: 80px;"/></a>
 		</center>
+		
+		<div id="messageModal" class="modal modal-fixed-footer" style="height: 150px;">
+			<div class="modal-content">
+				<h4 id="messageModalTitle"></h4>
+				<p id="messageModalContent" style="font-size: 1.5em;"></p>
+			</div>
+			<div class="modal-footer">
+			  <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok</a>
+			</div>
+		</div>
 		
     </body>
 </html>

@@ -67,12 +67,40 @@ function logout(){
 	if(confirm('Do you really want to Logout ?\nAll unsynced data will be lost.')){
 		this.innerHTML = 'Logout :(';
 		showMessage('Logging Out......','error');
-		CLEAR_ALL_LOCAL();
-		showMessage('Successfully Logged Out','warning');
-		setTimeout(function(){
-			chrome.runtime.reload();
-			location.reload();
-		}, 1000);
+		if(navigator.onLine){
+			let u = new User();
+			var request = new XMLHttpRequest();
+			request.open('GET', HOST+'/api/logout?token='+u.passphrase);
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send();
+			
+			request.onloadend = function() {
+				var result = JSON.parse(request.response);
+				console.log(result);	
+				if(result.success){
+					CLEAR_ALL_LOCAL();
+					showMessage('Successfully Logged Out','warning');
+					setTimeout(function(){
+						chrome.runtime.reload();
+						location.reload();
+					}, 1000);
+				}else{
+					CLEAR_ALL_LOCAL();
+					showMessage('Locally Logged Out','warning');
+					setTimeout(function(){
+						chrome.runtime.reload();
+						location.reload();
+					}, 1000);
+				}
+			};
+		}else{
+			CLEAR_ALL_LOCAL();
+			showMessage('Locally Logged Out','warning');
+			setTimeout(function(){
+				chrome.runtime.reload();
+				location.reload();
+			}, 1000);
+		}
 	}else{
 		this.innerHTML = 'Logout :)';
 	}
@@ -122,7 +150,7 @@ const INIT_USER_DATA = {
 	copy_datauri: false,
 }
 
-const HOST = "localhost";
+const HOST = "http://127.0.0.1:8000";
 const VERSION_KEYS = ['!AbAS3oG8pxBgfZ@@Z^WwYJ&$?OzL9','1gACBTGrmxdb_R73E8|DTgfI8OTAov','2$VqjYims+2D_^T8Y?QcNSof^UG@0L']
 const INTERNAL = 'Internal Chrome Page';
 

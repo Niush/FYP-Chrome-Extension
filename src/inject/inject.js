@@ -26,7 +26,7 @@ function upgradeOrReconnectChanges(){
 	var connectToExtension = function () {
 
 		// Make the connection
-		port = chrome.runtime.connect({name: "my-port"});
+		port = chrome.runtime.connect({name: "my-channel"});
 		
 		// When extension is upgraded or disabled and renabled, the content scripts
 		// will still be injected, so we have to reconnect them.
@@ -138,6 +138,7 @@ function limitCrossed(when='before'){
 	}
 }
 
+var port = chrome.runtime.connect({name: "my-channel"});
 function limitNotCrossed(){
 	let todayTotalIncrement = setInterval(function(){
 		if(stopFocus == true){
@@ -145,7 +146,7 @@ function limitNotCrossed(){
 			return true;
 		}else if(!document.hidden) {
 			if(typeof chrome.app.isInstalled!=='undefined'){
-				chrome.runtime.sendMessage(null, {action: "increment_focus"}, function(response) {
+				/* chrome.runtime.sendMessage(null, {action: "increment_focus"}, function(response) {
 					if(response) {
 						if(response.response == true){
 							if(stopFocus == true){
@@ -168,10 +169,45 @@ function limitNotCrossed(){
 						setTimeout(limitNotCrossed, 1000);
 						clearInterval(todayTotalIncrement);
 					}
+				}); */
+				id = Math.floor(Math.random(1,100) * 100);
+				port.postMessage({action: "increment_focus", sender: location.href, 'id': id});
+				let resStatus = false;
+				
+				port.onMessage.addListener(function(response) {
+					if(response.id == id){
+						resStatus = true;
+						if(response.response_increment_focus == true){
+							if(stopFocus == true){
+								clearInterval(todayTotalIncrement);
+								return true;
+							}
+							console.log('> Focus Increment by 5');
+							// If active tab just crossed the limit //
+							checkLimitCross(function(res){
+								//console.log('Check Limit Cross while running');
+								if(res){
+									limitCrossed('now');
+									clearInterval(todayTotalIncrement);
+									return true;
+								}
+							});
+						}else{
+							console.log('FAILED - Focus Increment');
+						}
+					}
 				});
+				
+				setTimeout(function(){
+					if(resStatus == false){
+						setTimeout(limitNotCrossed, 1000);
+						clearInterval(todayTotalIncrement);
+						console.log('Focus Response Delayed - Retrying');
+					}
+				}, 4000);
 			}
 		}
-	}, 4900);//Every 5 seconds with strict 100ms deduct
+	}, 5000);//Every 5 seconds
 }
 
 function blockPage(mode){

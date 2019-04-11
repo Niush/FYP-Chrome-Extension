@@ -107,7 +107,18 @@ function logout(){
 }
 
 function syncRequest(callback=function(){}){
-	chrome.extension.sendMessage({action: 'sync'}, function(response){
+	/* chrome.extension.sendMessage({action: 'sync'}, function(response){
+		if(response.response != true){
+			showMessage(response.response,'error');
+		}else{
+			showMessage('Sync Successful.');
+		}
+		callback();
+	}); */
+	
+	var port = chrome.runtime.connect({name: "my-channel"});
+	port.postMessage({action: "sync"});
+	port.onMessage.addListener(function(response) {
 		if(response.response != true){
 			showMessage(response.response,'error');
 		}else{

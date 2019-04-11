@@ -307,23 +307,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 			// Increment the focus time every call which is made probably every 5 seconds //
 			if(request.action.toLowerCase() == "increment_focus"){
-				u = new User(function(){
-					if(u.increment_focus(getHostName(sender.url))){
-						sendResponseHelper();
-						//u = new User();
-					}else{
-						sendResponse({
-							response: false,
-						});
-					}
-					return false;
-				});
-				
-				function sendResponseHelper(){
+				u = new User();
+				if(u.increment_focus(getHostName(sender.url))){
 					sendResponse({
 						response: true,
 					});
+				}else{
+					sendResponse({
+						response: false,
+					});
 				}
+				return true;
 			}
 			
 			// Increment Wb Access Tries of Focus Limit exceeded pages //
@@ -339,18 +333,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				u = new User(function(){
 					u.syncNow('app', function(status){
 						if(status == true){
-							sendResponse({
-								response: true,
-							});
+							responseNow(true);
 						}else{
-							sendResponse({
-								response: status,
-							});
+							responseNow(status);
 						}
 					});
-					
-					return true;
 				});
+				
+				function responseNow(val){
+					sendResponse({
+						response: val,
+					});
+					alert('x');
+					return true;
+				}
 			}
 			
 			if(request.action.toLowerCase() == "dim_time"){
@@ -380,6 +376,40 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		  }
 		);
+		
+		chrome.runtime.onConnect.addListener(function(port) {
+			if(port.name == "my-channel"){
+				port.onMessage.addListener(function(msg) {
+					if(msg.action == 'sync'){
+						u = new User(function(){
+							u.syncNow('app', function(status){
+								if(status == true){
+									responseNow(true);
+								}else{
+									responseNow(status);
+								}
+							});
+						});
+						
+						function responseNow(val){
+							port.postMessage({'response': val});
+							return true;
+						}
+					}else if(msg.action == 'increment_focus'){
+						u = new User(function(){
+							if(u.increment_focus(getHostName(msg.sender))){
+								port.postMessage({'response_increment_focus': true, 'id': msg.id});
+								return true;
+							}else{
+								port.postMessage({'response_increment_focus': false});
+								return true;
+							}
+							return true;
+						});
+					}
+				});
+			}
+		});
 		
 		injectToAll(); // Called to Inject to all opened pages //
 			

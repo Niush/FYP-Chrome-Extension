@@ -268,15 +268,24 @@ $(document).ready(function() {
 	}
 	
 	function takeScreenshot(){
-		if(typeof chrome.app.isInstalled!=='undefined'){
-			chrome.runtime.sendMessage({
-				action: "screenshot_note",
-				note_id: $('#quillNote').attr('note_id')
-			}, function (response) {
-				console.log(response.response);
-			});
+		if(getRequest('settings') == 'true'){
+			alert('Cannot Screenshot This Page. Works only from Public Websites.');
 		}else{
-			alert('Opps. Application might be Disabled.');
+			if(typeof chrome.app.isInstalled!=='undefined'){
+				chrome.runtime.sendMessage({
+					action: "screenshot_note",
+					note_id: $('#quillNote').attr('note_id')
+				}, function (response) {
+					console.log(response.response);
+				});
+			}else{
+				alert('Opps. Application might be Disabled.');
+			}
+		}
+
+		function getRequest(name){
+		   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+			  return decodeURIComponent(name[1]);
 		}
 	}
 	

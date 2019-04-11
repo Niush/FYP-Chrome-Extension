@@ -254,8 +254,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 		
 		
-		
-		
 		// AFTER ALL LOADED - REMOVE LOADING SCREEN//
 		setTimeout(function(){
 			document.getElementById('loading').className += ' slideoff';

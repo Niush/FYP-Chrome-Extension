@@ -33,6 +33,7 @@ function isSecured(url){
 }
 
 var data;
+var syncing = false;
 
 class User{
 	constructor(callback=function(){}){
@@ -63,88 +64,211 @@ class User{
 	}
 	
 	// TODO: Verifiy User Id and Passphrase from server 
-	checkUserAuth(){
+	checkUserAuth(callback = function(){}){
 		if(internetStatus()){
-			// Check if user id good
-			return true;
-			//return 'You are not Valid User Dude.';
-			//else{return 'User is Invalid. Please Logout and Login again.\nWeird stuff.';}
+			var request = new XMLHttpRequest();
+			request.open('POST', HOST+'/api/checkauth');
+			request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			request.send(JSON.stringify({ "token": this.passphrase }));
+			
+			request.onloadend = function() {
+				var result = JSON.parse(request.response);                
+				if(result.success == true){
+					callback(true);
+					return true;
+				}else{
+					console.log('Check Auth Error - '+result.error);
+					callback(result.error);
+					return result.error;
+				}
+			};
 		}else{
 			return 'Internet Connection Not Found';
 		}
 	}
 	
+	async checknote(id, modified_at, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/checknote');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'note_id': id, 'local_modified_at': modified_at }));
+		
+		request.onloadend = function() {
+			var result = JSON.parse(request.response);                
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message, result.data);
+			}else{
+				console.log('Check Auth Error - '+result.error);
+				return result.error;
+			}
+		};
+	}
+	
+	async newnote(id, title, note, synced, isPublic, status, modified_at, url, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/newnote');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'id': id, 'title': title, 'note': note, 'synced': synced, 'public': isPublic, 'status': status, 'modified_at': modified_at, 'url': url}));
+		
+		request.onloadend = function() {
+			var result = JSON.parse(request.response);                
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message);
+			}else{
+				console.log('New Note Add to Server Error - '+result.error);
+				return result.error;
+			}
+		};		
+	}
+	
+	async updatenow(id, title, note, synced, isPublic, status, modified_at, url, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/updatenote');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'id': id, 'title': title, 'note': note, 'synced': synced, 'public': isPublic, 'status': status, 'modified_at': modified_at, 'url': url}));
+		
+		request.onloadend = function() {
+			var result = JSON.parse(request.response);            
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message);
+			}else{
+				console.log('Note Update to Server Error - '+result.error);
+				return result.error;
+			}
+		};		
+	}
+	
+	/***************/
+	// Method to SYNC all data to server - very very bad code - SEE IN YOUR OWN RISK - (I have messed up promises and things) //
+	/***************/
 	syncNow(sender='app', callback=function(){}){
-		let x;
-		if((x = this.checkUserAuth()) == true){
-			//TODO: ALL SYNCING TO SERVER
-        	//Start Syncing Data Here...
-			let delay = (ms) => new Promise(
-			  (resolve) => setTimeout(resolve, ms)
-			);
+		syncing = true;
+		var _self = this;
+		_self.checkUserAuth(function(res){
+			if(res == true){
+				//TODO: ALL SYNCING TO SERVER
+				//Start Syncing Data Here...
+				let delay = (ms) => new Promise(
+				  (resolve) => setTimeout(resolve, ms)
+				);
 
-			delay(200)
-			  .then(() => {
-				// 1. SYNC NOTE
-				// NOTE - TODO: ALSO NEED TO SYNC NOTES OR DATA FROM SERVER TO DEVICE - SO YAA - COMPLEXITY
-				for(let i = 0 ; i < data.notes.length ; i++){
-					if(data.notes[i].synced == 0){
-						// AJAX SYNC THIS data.notes[i] object
-						//data.notes[i].synced = 1;
+				delay(200)
+				  .then(async () => {
+					// 1. SYNC NOTE
+					// NOTE - TODO: ALSO NEED TO SYNC NOTES OR DATA FROM SERVER TO DEVICE - SO YAA - COMPLEXITY
+					let noteCount = data.notes.length;
+					// Example using Promise.all() - Promise resolve before completion//
+					let promises = [];
+					for(let i = 0 ; i < data.notes.length ; i++){
+						promises.push(
+							_self.checknote(data.notes[i].id, data.notes[i].modified_at, function(msg, resultData){
+								if(msg == 'new_note'){
+									_self.newnote(data.notes[i].id, data.notes[i].title, data.notes[i].note, data.notes[i].synced, data.notes[i].public, data.notes[i].status, data.notes[i].modified_at, data.notes[i].url, function(){
+										data.notes[i].synced = 1;
+										_self.updateLocal('force');
+									});
+								}else if(msg == 'perfect'){
+									data.notes[i].synced = 1;
+									_self.updateLocal('force');
+								}else if(msg == 'update_now'){
+									_self.updatenow(data.notes[i].id, data.notes[i].title, data.notes[i].note, data.notes[i].synced, data.notes[i].public, data.notes[i].status, data.notes[i].modified_at, data.notes[i].url, function(){
+										data.notes[i].synced = 1;
+										_self.updateLocal('force');
+									});
+								}else if(msg == 'replace_this'){
+									//id, title, note, synced, isPublic, status, modified_at, url									
+									data.notes[i].title = resultData.title;
+									data.notes[i].note = resultData.note;
+									data.notes[i].synced = 1;
+									data.notes[i]['public'] = resultData['public'];
+									data.notes[i].status =  resultData.status;
+									data.notes[i].modified_at = new Date(resultData.local_modified_at + ' UTC').getTime();
+									data.notes[i].url = resultData.url;
+									_self.updateLocal('force');
+								}
+							})
+						);
 					}
 					
-					//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
-					if(data.notes[i].status == 0 && data.notes[i].synced == 1){
-						// Deleted this record or object//
-						data.notes.splice(i, 1);
+					await Promise.all(promises)
+						.then(() => {
+							console.log('Started Note Sync');
+						});
+								
+					/****** for(let i = 0 ; i < data.notes.length ; i++){
+						if(data.notes[i].synced == 0){
+							// AJAX SYNC THIS data.notes[i] object
+							//data.notes[i].synced = 1;
+							delay(10)
+								.then(() => {
+							
+								});
+						}
+						
+						//Check is Status = 0 delted and already synced = 1 then delete BECAUSE STORGE Duh..
+						if(data.notes[i].status == 0 && data.notes[i].synced == 1){
+							// Deleted this record or object//
+							data.notes.splice(i, 1);
+						}
+					} ******/
+					return delay(1000);
+				  }).catch(() => {
+					callback('Note Not Synced Properly');
+				  }).then(() => {
+					console.log('Next Then');
+					// 2. SYNC FOCUS
+					// AJAX SYNC FOCUS
+					// if(data.focus_synced == 0){
+					//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
+					//}
+					return delay(1000);
+				  }).catch(() => {
+					callback('Focus Sync went wrong');
+				  }).then(() => {
+					// 3. SYNC DISABLE APP
+					// AJAX SYNC Disable App
+					// if(data.disable_synced == 0){
+					//	//Sync as// JSON.stringify(data.disable_app)
+					//}
+				  }).catch(() => {
+					callback('Disable Features Sync Failed');
+				  }).then(() => {
+					data.last_sync = _self.getUTC();
+					_self.updateLocal();
+					callback(true);
+					if(sender == 'user'){
+						//showMessage('Synced Successful');
+						setTimeout(function(){
+							syncing = false;
+						}, 2000)
 					}
-				}
-				return delay(1000);
-			  }).catch(() => {
-				callback('Note Not Synced Properly');
-			  }).then(() => {
-				// 2. SYNC FOCUS
-				// AJAX SYNC FOCUS
-				// if(data.focus_synced == 0){
-				//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
-				//}
-				return delay(1000);
-			  }).catch(() => {
-				callback('Focus Sync went wrong');
-			  }).then(() => {
-				// 3. SYNC DISABLE APP
-				// AJAX SYNC Disable App
-				// if(data.disable_synced == 0){
-				//	//Sync as// JSON.stringify(data.disable_app)
-				//}
-			  }).catch(() => {
-				callback('Disable Features Sync Failed');
-			  }).then(() => {
-				data.last_sync = this.getUTC();
-				this.updateLocal();
-				callback(true);
-				if(sender == 'user'){
-					showMessage('Synced Successful');
-				}
-			  });
-        }else{
-			//Show the CheckUserAuth Error Message//
-			if(sender == 'user'){
-				showMessage(x, 'error');
+				  });
+				callback(res);
 			}else{
-				callback(x);
+				callback(res);
+				return false;
 			}
-        }
+		});
 	}
 	
 	// Updates the chrome.storage.local to data json
-	updateLocal(){
-		chrome.storage.local.set(
-			{
-				user_data: data,
-				app_id: chrome.runtime.id,
-			}
-		);
+	updateLocal(force = ''){
+		let _self = this;
+		if(syncing == false || force == 'force'){
+			chrome.storage.local.set(
+				{
+					user_data: data,
+					app_id: chrome.runtime.id,
+				}
+			);
+		}else{
+			setTimeout(function(){
+				_self.updateLocal();
+			}, 1000);
+		}
 	}
 	
 	// Used to reset the local json to initial empty json
@@ -300,9 +424,9 @@ class User{
 	}
 	edit_note(id, editedNote, callback){
 		let noteSize = Math.round(Math.round((new Blob([editedNote]).size))/1000000);
-		if(noteSize > 15){
-			alert('Note Size Limit Exceeded. One Note can use ~15 MB storage.\nYour Note reached: ' + noteSize + ' MB');
-			showMessage('Note Size Limit Exceeded. One Note can use ~15 MB storage.\nYour Note reached: ' + noteSize + ' MB', 'error');
+		if(noteSize > 5){
+			alert('Note Size Limit Exceeded. One Note can use ~5 MB storage.\nYour Note reached: ' + noteSize + ' MB');
+			showMessage('Note Size Limit Exceeded. One Note can use ~5 MB storage.\nYour Note reached: ' + noteSize + ' MB', 'error');
 			callback('undo');
 			return false;
 		}else{

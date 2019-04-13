@@ -196,7 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		}
 		
+		let retrySync;
 		let syncingTimer = setInterval(function(){
+			clearInterval(retrySync);
 			chrome.storage.local.get(['latest_interaction'], function(result) {
 			  if(result.latest_interaction == undefined || result.latest_interaction == ''){
 				chrome.storage.local.set(
@@ -204,29 +206,43 @@ document.addEventListener('DOMContentLoaded', function() {
 						latest_interaction: new Date().getTime()
 					}
 				);
+				syncingFunction();
 			  }else{
-				if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
-					chrome.idle.queryState(
-					  1 * 60, // seconds
-					  function(state) {
-						if (state === "active") {
-							u = new User(function(){
-								u.syncNow('app', function(){
-									console.log('Auto Syncronization Done...');
-								});
-							});
-						} else {
-							console.log('Device Off / or not responding - Auto Syncronization Dismissed...');
-						}
-					  }
-					);
-				}else{
-					console.log('User Activity High - Auto Syncronization Dismissed...');
-				}
+				syncingFunction();
 			  }
 			});
 			//clearInterval(syncingTimer);
 		}, 0.5*60*60*1000); // 30 min sync time by default //
+		
+		function syncingFunction(){
+			if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
+				chrome.idle.queryState(
+				  1 * 60, // seconds
+				  function(state) {
+					if (state === "active") {
+						u = new User(function(){
+							u.syncNow('app', function(){
+								console.log('Auto Syncronization Done...');
+							});
+						});
+					} else {
+						console.log('Device Off / or not responding - Auto Syncronization Dismissed...');
+						retrySync = setInterval(function(){
+							syncingFunction();
+							clearInterval(retrySync);
+						}, 600000); // retry in 10 minutes
+					}
+				  }
+				);
+			}else{
+				console.log('User Activity High - Auto Syncronization Dismissed...');
+				retrySync = setInterval(function(){
+					syncingFunction();
+					clearInterval(retrySync);
+				}, 300000); // retry in 5 minutes
+			}
+		}
+		
 		/******************/
 
 		//SEND AND RECEVIE MESSAGES FROM OTHER JS//

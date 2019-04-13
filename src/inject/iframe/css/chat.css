@@ -1,0 +1,49 @@
+/* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../../../../icons/material-icon.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+i.material-icons:before{display:none;}
+
+body {
+	font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+	font-size: 100%;
+	font-size: 1.5em;
+}
+
+.main-chat{
+	min-height: 95vh;
+	position: relative;
+}
+
+#no-padding {
+	padding: 0px;
+	margin: 0px;
+}
+
+.chat-input-container{
+	position: fixed;
+	bottom: 30px;
+	width: calc(100% - 35%);
+	background: #ffe;
+	padding-right: 20px !important;
+}

@@ -23,6 +23,7 @@ chrome.runtime.onInstalled.addListener(function (object) {
 				{
 					user_data: INIT_USER_DATA,
 					app_id: chrome.runtime.id,
+					latest_interaction: new Date().getTime()
 				}
 			);
 		});
@@ -68,6 +69,7 @@ function checkFirstRun(){
 			{
 				user_data: INIT_USER_DATA,
 				app_id: chrome.runtime.id,
+				latest_interaction: new Date().getTime()
 			}
 		);
 	  }

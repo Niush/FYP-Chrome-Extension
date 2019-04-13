@@ -193,7 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						sessionScreenshot++;
 						screenshotButton.style.cursor = 'wait';
 						getScreenshot(function(data){
-							screenshotButton.innerHTML = '<i class="material-icons">file_download</i>';
+						screenshotButton.innerHTML = `<button class="btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Capturing.." title="Capturing..">
+							<i class="material-icons">file_download</i>
+						</button>`;
 							screenshotButton.style.cursor = 'inherit';
 							/* chrome.tabs.create({url: data});*/		
 							
@@ -214,7 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							a.click();
 							
 							setTimeout(function(){
-								screenshotButton.innerHTML = '<i class="material-icons">add_a_photo</i>';
+								screenshotButton.innerHTML = `<button class="waves-effect waves-orange btn btn-small btn-flat white-text col tooltipped" data-position="bottom" data-tooltip="Take Screenshot">
+									<i class="material-icons">add_a_photo</i>
+								</button>`;
 							}, 3000);
 						});
 					}else{

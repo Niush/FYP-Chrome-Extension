@@ -99,7 +99,7 @@ class User{
 				console.log(result.message);
 				callback(result.message, result.data);
 			}else{
-				console.log('Check Auth Error - '+result.error);
+				console.log('Check Note Error - '+result.error);
 				return result.error;
 			}
 		};
@@ -141,6 +141,42 @@ class User{
 		};		
 	}
 	
+	async checkfocus(focus_modified_at, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/checkfocus');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at }));
+		
+		request.onloadend = function() {
+			var result = JSON.parse(request.response);                
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message, result.data, result.focus_modified_at);
+			}else{
+				console.log('Check Focus Error - '+result.error);
+				return result.error;
+			}
+		};
+	}
+	
+	async focus_updatenow(focus_modified_at, focusData, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/updatefocus');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at, 'focus': focusData}));
+		
+		request.onloadend = function() {
+			var result = JSON.parse(request.response);            
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message);
+			}else{
+				console.log('Focus Update to Server Error - '+result.error);
+				return result.error;
+			}
+		};		
+	}
+	
 	/***************/
 	// Method to SYNC all data to server - very very bad code - SEE IN YOUR OWN RISK - (I have messed up promises and things) //
 	/***************/
@@ -158,7 +194,6 @@ class User{
 				delay(200)
 				  .then(async () => {
 					// 1. SYNC NOTE
-					// NOTE - TODO: ALSO NEED TO SYNC NOTES OR DATA FROM SERVER TO DEVICE - SO YAA - COMPLEXITY
 					let noteCount = data.notes.length;
 					// Example using Promise.all() - Promise resolve before completion//
 					let promises = [];
@@ -168,15 +203,15 @@ class User{
 								if(msg == 'new_note'){
 									_self.newnote(data.notes[i].id, data.notes[i].title, data.notes[i].note, data.notes[i].synced, data.notes[i].public, data.notes[i].status, data.notes[i].modified_at, data.notes[i].url, function(){
 										data.notes[i].synced = 1;
-										_self.updateLocal('force');
+										//_self.updateLocal('force');
 									});
 								}else if(msg == 'perfect'){
 									data.notes[i].synced = 1;
-									_self.updateLocal('force');
+									//_self.updateLocal('force');
 								}else if(msg == 'update_now'){
 									_self.updatenow(data.notes[i].id, data.notes[i].title, data.notes[i].note, data.notes[i].synced, data.notes[i].public, data.notes[i].status, data.notes[i].modified_at, data.notes[i].url, function(){
 										data.notes[i].synced = 1;
-										_self.updateLocal('force');
+										//_self.updateLocal('force');
 									});
 								}else if(msg == 'replace_this'){
 									//id, title, note, synced, isPublic, status, modified_at, url									
@@ -187,7 +222,7 @@ class User{
 									data.notes[i].status =  resultData.status;
 									data.notes[i].modified_at = new Date(resultData.local_modified_at + ' UTC').getTime();
 									data.notes[i].url = resultData.url;
-									_self.updateLocal('force');
+									//_self.updateLocal('force');
 								}
 							})
 						);
@@ -217,13 +252,26 @@ class User{
 					return delay(1000);
 				  }).catch(() => {
 					callback('Note Not Synced Properly');
-				  }).then(() => {
-					console.log('Next Then');
+				  }).then(async () => {
+					console.log('Started Focus Sync - Async Mode');
 					// 2. SYNC FOCUS
 					// AJAX SYNC FOCUS
-					// if(data.focus_synced == 0){
-					//	//Sync and set data.focus_synced = 1// JSON.stringify(data.focus)
-					//}
+					_self.checkfocus(data.focus_modified_at, function(msg, resultData, focus_modified_at){
+						if(msg == 'perfect'){
+							data.focus_synced = 1;
+							//_self.updateLocal('force');
+						}else if(msg == 'update_now'){
+							_self.focus_updatenow(data.focus_modified_at, JSON.stringify(data.focus), function(){
+								data.focus_synced = 1;
+								//_self.updateLocal('force');
+							});
+						}else if(msg == 'replace_now'){
+							let parsed = resultData.replace(/&quot;/g, '"');
+							data.focus = JSON.parse(parsed);
+							data.focus_modified_at = new Date(focus_modified_at + ' UTC').getTime();
+							data.focus_synced = 1;
+						}
+					});
 					return delay(1000);
 				  }).catch(() => {
 					callback('Focus Sync went wrong');
@@ -237,17 +285,17 @@ class User{
 					callback('Disable Features Sync Failed');
 				  }).then(() => {
 					data.last_sync = _self.getUTC();
-					_self.updateLocal();
-					callback(true);
+					_self.updateLocal('force');
 					if(sender == 'user'){
 						//showMessage('Synced Successful');
-						setTimeout(function(){
-							syncing = false;
-						}, 2000)
 					}
+					setTimeout(function(){
+						syncing = false;
+					}, 2000);
+					callback(true);
 				  });
-				callback(res);
 			}else{
+				syncing = false;
 				callback(res);
 				return false;
 			}
@@ -262,11 +310,13 @@ class User{
 				{
 					user_data: data,
 					app_id: chrome.runtime.id,
+					latest_interaction: new Date().getTime()
 				}
 			);
 		}else{
 			setTimeout(function(){
 				_self.updateLocal();
+				console.log('Syncing in process - Waiting for sync to complete.');
 			}, 1000);
 		}
 	}

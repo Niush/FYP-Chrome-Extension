@@ -13,7 +13,7 @@
 
 	   <div class="card-panel main-chat">
 		 <h5>Chat MPA - Live</h5>
-		 <h6>https://example.com/</h6>
+		 <h6 id="url"></h6>
 		  <form id="submit-message" method="post">
 			<div class="row" style="margin-bottom: 0px;">
 			   <div class="input-field col s4">
@@ -31,7 +31,7 @@
 					<input class="validate" id="message" name="message" placeholder="Enter Message Here..." required>
 				</div>
 
-				<button type="submit" class="btn teal col s2">Send <i class="material-icons right">send</i></button>
+				<button type="submit" id="send-btn" class="btn teal col s2">Send <i class="material-icons right">send</i></button>
 				
 				<span class="error" id="error"></span>
 			</div>

@@ -4,6 +4,13 @@ let u = new User();
 var APP_KEY = "1b78202b78dfba90f0ef"; 
 var CLUSTER = 'ap2';
 var CHANNEL = 'channel';
+var URL = 'https://example.com'.toLowerCase();
+var ENCODED_URL = encodeURIComponent('https://example.com').toLowerCase();
+$('#url').html(URL);
+
+if(URL.length < 0 || URL == '' || URL.match(/(chrome|file|chrome-extension|opera|vivaldi|brave):\/\//gi)){
+	window.close();
+}
 
 var pusher = new Pusher(APP_KEY, {
   //encrypted: true,
@@ -14,7 +21,7 @@ var pusher = new Pusher(APP_KEY, {
 var channel = pusher.subscribe( CHANNEL );
 
 //listen for connection...
-channel.bind('my-event', function(data) {
+channel.bind('my-event-'+ENCODED_URL, function(data) {
   echo_message(data.message, data.user_id);
 });
 
@@ -60,6 +67,9 @@ function echo_message(msg, user_id){
 
 $("#submit-message").submit( function(e) {
     e.preventDefault();
+	
+	$("#message").attr("disabled", true);
+	$("#send-btn").attr("disabled", true);
 
 	if($("#name").val().length < 3){
 		$('#error').html('Min 5 Letter in Username Required');
@@ -77,25 +87,33 @@ $("#submit-message").submit( function(e) {
 	}
 	
 	//$.post(HOST+'/api/message', {username: username, message: message, token: u.passphrase, user_id: u.user_id }, function(data){
-	$.post(HOST+'/api/message', {username: username, message: message, token: u.passphrase, user_id: $("#name").val() }, function(data){
+	$.post(HOST+'/api/message', {url: ENCODED_URL, username: username, message: message, token: u.passphrase, user_id: $("#name").val() }, function(data){
 		$("#message").val('');
 		$("#message").attr("disabled", true);
+		$("#send-btn").attr("disabled", true);
 		$("#name").attr("disabled", true);
 		$('#error').html('');
+		
+		let wait = 3;
+		let msgWaiter = setInterval(function(){
+			$('#error').css('color','orange');
+			$("#message").attr("disabled", true);
+			$('#error').html('Wait ' + wait +' sec....');
+			wait--;
+			if(wait < 0){
+				$("#message").attr("disabled", false);
+				$("#send-btn").attr("disabled", false);
+				$('#error').css('color','initial');
+				$('#error').html('');
+				clearInterval(msgWaiter);
+			}
+		}, 1000);
 	}).fail(function() { 
-	   $('#error').html('Message Sending Failed. Check your Connection.');
+		$('#error').html('Message Sending Failed. Check your Connection.');
+		$("#message").attr("disabled", false);
+		$("#send-btn").attr("disabled", false);
+		setTimeout(function(){
+			$('#error').html('Message Sending Failed. Check your Connection.');
+		}, 3500);
 	});
-	
-	let wait = 3;
-	let msgWaiter = setInterval(function(){
-		$('#error').css('color','orange');
-		$("#message").attr("disabled", true);
-		$('#error').html('Wait ' + wait +' sec....');
-		wait--;
-		if(wait < 0){
-			$("#message").attr("disabled", false);
-			$('#error').css('color','initial');
-			$('#error').html('');
-		}
-	}, 1000);
 });

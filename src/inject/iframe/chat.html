@@ -15,15 +15,14 @@
 		 <h5>Chat MPA - Live</h5>
 		 <h6>https://example.com/</h6>
 		  <form id="submit-message" method="post">
-			<div class="row">
+			<div class="row" style="margin-bottom: 0px;">
 			   <div class="input-field col s4">
 				 <input class="validate" id="name" placeholder="Username" required>
 			   </div>
 			</div>
-			<br />
 
 			<div id="chat-message">
-
+				
 			</div>
 
 			<div class="row chat-input-container" id="no-padding" style="display: flex; justify-content: center; align-items: center;">
@@ -33,8 +32,10 @@
 				</div>
 
 				<button type="submit" class="btn teal col s2">Send <i class="material-icons right">send</i></button>
-
+				
+				<span class="error" id="error"></span>
 			</div>
+			
 		   </form>
 	   </div>
 	</div>

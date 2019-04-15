@@ -23,6 +23,17 @@ $(document).ready(function() {
 	
 	let quillTimer;
 	quill.on('text-change', function(delta, source) {
+		let allNoteImages = document.querySelectorAll('.ql-editor p img');
+		for(let i = 0 ; i < allNoteImages.length ; i++){
+			allNoteImages[i].removeEventListener('click', function(){});
+			allNoteImages[i].style.cursor = 'pointer';
+			allNoteImages[i].setAttribute('title', 'Open Image');
+			allNoteImages[i].addEventListener('click', function(){
+				showMessage('Opening Image....');
+				chrome.tabs.create({url: allNoteImages[i].getAttribute('src')});
+			});
+		}
+		
 		//console.log(delta);
 		clearTimeout(quillTimer);
 		

@@ -349,8 +349,42 @@ document.addEventListener('DOMContentLoaded', function() {
 			openNotes();
 		});
 		
+		// Notes Button Click //
+		let chatBtn = document.getElementById('chat-button');
+		chatBtn.addEventListener('click', function(){
+			/* if( currentTab.url.match(/(chrome|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
+				alert('Chat Cannot be Opened fot this Page, Only allowed for Public web pages.');
+			} */
+			chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+				chrome.tabs.executeScript(tabs[0].id, {
+				  code: '',
+				}, _=>{
+				  let e = chrome.runtime.lastError;
+				  if(e == undefined && !tabs[0].url.match(/(file|chrome|chrome-extension|opera|vivaldi|brave):\/\//gi)){ //If error not occurred chat can be done for this webpage
+					if(u.check_disable_chat(getHostName(tabs[0].url)) == 1){
+						showMessage('Chat Disabled by User','warning');
+					}else{
+						let url = tabs[0].url.split('?')[0];
+						if(url.substring(url.length-1) == "/"){
+							url = url.slice(0, url.length-1);
+						}
+						openChat(url, tabs[0].id);
+					}
+				  }else{
+					alert('Chat Only allowed for Public web pages.');
+					showMessage('Chat Not Allowed Here','error');
+				  }
+				});
+			});
+		});
+		
 		if(tabInfo.url.search(chrome.extension.getURL('src/page_action/page_action.html')) >= 0){
 			window.close();
+		}
+		
+		function getRequest(name){
+		   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+			  return decodeURIComponent(name[1]);
 		}
 	}
 });

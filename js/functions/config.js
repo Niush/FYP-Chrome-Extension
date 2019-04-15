@@ -47,6 +47,10 @@ function openNotes(){
 	openPages('/src/options_custom/index.html','src/options_custom/index.html#notes', true);
 }
 
+function openChat(url, id){
+	openPages('/src/inject/iframe/chat.html?url='+url,'src/inject/iframe/chat.html?url='+url);
+}
+
 function openPages(check,open, pinned=false){
 	chrome.tabs.query({lastFocusedWindow: true}, function(tabs) { 
 		for(let i = 0 ; i < tabs.length ; i++){

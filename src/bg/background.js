@@ -215,31 +215,35 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, 0.5*60*60*1000); // 30 min sync time by default //
 		
 		function syncingFunction(){
-			if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
-				chrome.idle.queryState(
-				  1 * 60, // seconds
-				  function(state) {
-					if (state === "active") {
-						u = new User(function(){
-							u.syncNow('app', function(){
-								console.log('Auto Syncronization Done...');
+			if(navigator.onLine){
+				if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
+					chrome.idle.queryState(
+					  1 * 60, // seconds
+					  function(state) {
+						if (state === "active") {
+							u = new User(function(){
+								u.syncNow('app', function(){
+									console.log('Auto Syncronization Done...');
+								});
 							});
-						});
-					} else {
-						console.log('Device Off / or not responding - Auto Syncronization Dismissed...');
-						retrySync = setInterval(function(){
-							syncingFunction();
-							clearInterval(retrySync);
-						}, 600000); // retry in 10 minutes
-					}
-				  }
-				);
+						} else {
+							console.log('Device Off / or not responding - Auto Syncronization Dismissed...');
+							retrySync = setInterval(function(){
+								syncingFunction();
+								clearInterval(retrySync);
+							}, 600000); // retry in 10 minutes
+						}
+					  }
+					);
+				}else{
+					console.log('User Activity High - Auto Syncronization Dismissed...');
+					retrySync = setInterval(function(){
+						syncingFunction();
+						clearInterval(retrySync);
+					}, 300000); // retry in 5 minutes
+				}
 			}else{
-				console.log('User Activity High - Auto Syncronization Dismissed...');
-				retrySync = setInterval(function(){
-					syncingFunction();
-					clearInterval(retrySync);
-				}, 300000); // retry in 5 minutes
+				console.log('Internet Not Connected in the Browser - Auto Syncronization Dismissed...');
 			}
 		}
 		

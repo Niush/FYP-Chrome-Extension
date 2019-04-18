@@ -167,7 +167,11 @@ class User{
 		let request = new XMLHttpRequest();
 		request.open('POST', HOST+'/api/updatefocus');
 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-		request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at, 'focus': focusData}));
+		if(focus_modified_at == ""){
+			request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': "0000000000000", 'focus': focusData}));
+		}else{
+			request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at, 'focus': focusData}));
+		}
 		
 		request.onloadend = function() {
 			var result = JSON.parse(request.response);            

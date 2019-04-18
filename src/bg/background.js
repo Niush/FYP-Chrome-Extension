@@ -116,14 +116,14 @@ function injectToAll(){
 	});
 }
 
-function showNotification(titleInput, messageInput, tabId){
+function showNotification(titleInput, messageInput, tabId, interaction=true){
 	chrome.notifications.create({
 		type: 'progress',
 		message: messageInput,
 		iconUrl: '../../icons/icon128.png',
 		title: titleInput,
 		priority: 2,
-		requireInteraction: true,
+		requireInteraction: interaction,
 		progress: 0,
 	}, function(noti_id){
 		if(localStorage.hasOwnProperty('play_notification_sound') && localStorage.getItem('play_notification_sound') == "false"){
@@ -146,6 +146,12 @@ function showNotification(titleInput, messageInput, tabId){
 				}
 			}, 50);
 		});
+		
+		if(interaction == false){
+			setTimeout(function(){
+				chrome.notifications.clear(noti_id);
+			}, 2000);
+		}
 	});
 }
 
@@ -162,7 +168,106 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		checkFirstRun();
 
-		u = new User(); // Define User - Although no parameters LOL// //Also could callback
+		u = new User(function(){
+			chrome.contextMenus.removeAll();
+			chrome.contextMenus.create({
+				title: "Sync Data",
+				contexts: ["browser_action","page"],
+				onclick: function() {
+					u.syncNow('app', function(){
+						alert('Sync Success');
+					});
+				}
+			});
+			chrome.contextMenus.create({
+				title: "Open All Notes",
+				contexts: ["browser_action","page"],
+				onclick: function() {
+					openNotes();
+				}
+			});
+			
+			chrome.contextMenus.create({
+				title: "Capture Visible Screen",
+				contexts: ["browser_action","page"],
+				onclick: function() {
+					chrome.tabs.getSelected(null, function(tab) {
+						takeScreenShot(tab, 100, {w: tab.width, h: tab.height}, function(){
+							chrome.tabs.create({url: datauri});
+						});
+					});
+				}
+			});
+			
+			chrome.contextMenus.create({
+				title: "Open Chat for this Page",
+				contexts: ["browser_action","page"],
+				onclick: function() {
+					chrome.tabs.getSelected(null, function(tab) {
+						openChat(tab.url, tab.id);
+					});
+				}
+			});
+			
+			chrome.contextMenus.create({
+				type: "separator"
+			});
+			
+			if(u.passphrase == '' || u.user_id == '' || u.username == ''){
+				chrome.contextMenus.create({
+				title: "Login/Register",
+				contexts: ["browser_action","page"],
+					onclick: function() {
+						openLogin();
+					}
+				});
+			}else{
+				chrome.contextMenus.create({
+				title: "View Account Info",
+				contexts: ["browser_action","page"],
+					onclick: function() {
+						openAccount();
+					}
+				});
+			}
+			
+			chrome.contextMenus.create({
+				title: "App Settings",
+				contexts: ["browser_action","page"],
+				onclick: function() {
+					openSettings();
+				}
+			});
+			
+			chrome.contextMenus.create({
+				type: "separator"
+			});
+			
+			chrome.contextMenus.create({
+				title: "Lock Webpage",
+				contexts: ["browser_action"],
+				onclick: function() {
+					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+						if( ! tabs[0].url.match(/(chrome|file|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
+							chrome.tabs.sendMessage(tabs[0].id, {action: "lockpage"}, function(response) {
+								try{
+									if(response.response.toLowerCase().search('reverted') == -1){
+										chrome.tabs.update(tabs[0].id, { autoDiscardable: false });
+									}else{
+										chrome.tabs.update(tabs[0].id, { autoDiscardable: true });
+									}
+								}catch{
+									chrome.tabs.executeScript(null,{code: "if(confirm('Extension was Restarted. Do You want to Reload this Page to refresh extension ?')){location.reload();}"});
+								}
+							});	
+						}else{
+							alert('Cannot access Internal Pages');
+						}				
+					});
+				}
+			});
+			
+		}); // Define User - Although no parameters LOL// //Also could callback
 		
 		chrome.tabs.onActivated.addListener(function(activeInfo) {
 			checkTabFeature(activeInfo);

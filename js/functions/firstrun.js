@@ -26,6 +26,8 @@ chrome.runtime.onInstalled.addListener(function (object) {
 					latest_interaction: new Date().getTime()
 				}
 			);
+			
+			showNotification('Minimal Productivity App', 'Successfully Installed', 0, false);
 		});
 	}else if(object.reason == "update"){
 		console.log("Minimal Productivity Update Success to version "+ chrome.runtime.getManifest().version);

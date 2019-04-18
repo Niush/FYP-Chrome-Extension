@@ -145,7 +145,11 @@ class User{
 		let request = new XMLHttpRequest();
 		request.open('POST', HOST+'/api/checkfocus');
 		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-		request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at }));
+		if(focus_modified_at == ""){
+			request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': "0000000000000" }));
+		}else{
+			request.send(JSON.stringify({ "token": this.passphrase, 'focus_modified_at': focus_modified_at }));
+		}
 		
 		request.onloadend = function() {
 			var result = JSON.parse(request.response);                
@@ -183,6 +187,19 @@ class User{
 	syncNow(sender='app', callback=function(){}){
 		syncing = true;
 		var _self = this;
+		
+		for(let i = 0 ; i < data.notes.length ; i++){
+			if(data.notes[i].status == 0 && data.notes[i].synced == 1){
+				data.notes.splice(i, 1);
+				console.log("Deleted Note Cleaned...");
+				
+				if(i == data.notes.length - 1){
+					_self.updateLocal('force');
+				}
+			}
+		}
+		
+		//setTimeout(function(){
 		_self.checkUserAuth(function(res){
 			if(res == true){
 				//TODO: ALL SYNCING TO SERVER
@@ -266,7 +283,7 @@ class User{
 								//_self.updateLocal('force');
 							});
 						}else if(msg == 'replace_now'){
-							let parsed = resultData.replace(/&quot;/g, '"');
+							let parsed = resultData.replace(/\\&quot;/g, '"');
 							data.focus = JSON.parse(parsed);
 							data.focus_modified_at = new Date(focus_modified_at + ' UTC').getTime();
 							data.focus_synced = 1;
@@ -300,6 +317,7 @@ class User{
 				return false;
 			}
 		});
+		//}, 2000);
 	}
 	
 	// Updates the chrome.storage.local to data json

@@ -175,6 +175,7 @@ const DEV_WEBSITE = "https://www.niush.tk";
 const BITCOIN_ADDR = "339CXZz6bHAvS8mAmgPp25vqhZsLRiEHz6";
 const LITECOIN_ADDR = "MTgxjaRYjWCaBbyivGnZLmzdA95b3tuHQc";
 const ETHER_ADDR = "0x76D980cB269C7AD5D915a5b48773b318ac811eC2";
+const KOFI = "https://ko-fi.com/K3K5KIK5";
 
 const CLEAR_ALL_LOCAL = function(){
 	chrome.storage.local.clear(function() {

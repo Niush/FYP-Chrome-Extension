@@ -8,17 +8,24 @@
 	<script type="text/javascript" src="../../../js/functions/config.js"></script>
 	<script type="text/javascript" src="../../../js/functions/userdata.js"></script>
 </head>
-<body>
+<body style="opacity: 0; visibility: hidden; transition: opacity 0.3s ease;">
 	<div class="container main">
 
 	   <div class="card-panel main-chat">
 		 <h5>Chat MPA - Live</h5>
-		 <h6 id="url"></h6>
+		 <h6 id="url" style="text-overflow: ellipsis;
+							white-space: nowrap;
+							overflow: hidden;
+							font-size: 0.7em;"></h6>
 		  <form id="submit-message" method="post">
 			<div class="row" style="margin-bottom: 0px;">
-			   <div class="input-field col s4">
-				 <input class="validate" id="name" placeholder="Username" required>
-			   </div>
+				<input class="validate" id="name" placeholder="Username" style="margin: 0 !important;
+																				font-size: 0.6em;
+																				padding: 3px 0;
+																				height: auto;
+																				display: inline;
+																				font-family: Tahoma;
+																				width: auto;" required>
 			</div>
 
 			<div id="chat-message">

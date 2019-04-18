@@ -80,11 +80,11 @@ scrollbar-track-color: #ddd;
 	right: 0;
 	bottom: 0;
 	width: 100%;
-	background: #ababab;
+	background: #dcdcdc;
 	z-index: 999999;
-	border: 1px dashed black;
+	border: 1px dashed #ababab;
 	transition: all 0.5s ease;
-	display: none; /* TODO - show */
+	display: show; /* TODO - show */
 }
 
 .loading img{
@@ -99,8 +99,9 @@ scrollbar-track-color: #ddd;
 .loading p{
 	font-size: 1.5em;
 	font-weight: bold;
-	letter-spacing: 2px;
-	padding-left: 8px;
+	letter-spacing: 4px;
+	font-family: "Courier";
+	padding-left: 35px;
 }
 
 .loading.slideoff{
@@ -172,15 +173,36 @@ scrollbar-track-color: #ddd;
 	width: auto;
 }
 
+.social-list{
+	display: flex;
+}
 
+#about a{
+	padding: 2px 0;
+	border-bottom: dotted 1px transparent;
+}
 
+.social-list a{
+	margin: 0 10px 0 0;
+	letter-spacing: 2px;
+}
 
+#about a:hover{
+	border-bottom: dotted 1px black;
+}
 
+.social-list{
+	margin: 5px 0 !important;
+	padding: 0;
+}
 
+.donations-list{
+	margin: 5px 0 0 0;
+}
 
-
-
-
+#already-donated{
+	cursor: pointer;
+}
 
 /* EASTER */
 .easter:after{

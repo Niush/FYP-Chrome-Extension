@@ -253,6 +253,29 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 		
+		//About Page
+		let donationAt = document.getElementById('donation-at');
+		
+		document.getElementById('already-donated').addEventListener('click', function(){
+			alert('Thank You Very Much :)');
+		});
+		
+		document.getElementById('bitcoin').addEventListener('click', function(){
+			donationAt.innerHTML = "Bitcoin: <code>" + BITCOIN_ADDR + "</code>";
+		});
+		
+		document.getElementById('litecoin').addEventListener('click', function(){
+			donationAt.innerHTML = "Litecoin: <code>" + LITECOIN_ADDR + "</code>";
+		});
+		
+		document.getElementById('ether').addEventListener('click', function(){
+			donationAt.innerHTML = "Ethereum: <code>" + ETHER_ADDR + "</code>";
+		});
+		
+		document.getElementById('kofi').addEventListener('click', function(){
+			donationAt.innerHTML = "Ko-Fi: <code>" + KOFI + "</code>";
+			chrome.tabs.create({url: KOFI});
+		});
 		
 		// AFTER ALL LOADED - REMOVE LOADING SCREEN//
 		setTimeout(function(){

@@ -6,6 +6,10 @@ if(url_from == null){
 }
 
 let u = new User(function(){
+	if(u.disable_chat_every_where == 1){
+		window.close();
+	}
+	
 	if(u.passphrase == '' || u.user_id == '' || u.username == ''){
 		alert('Login First to Enable Chat');
 		openLogin();
@@ -96,7 +100,7 @@ let u = new User(function(){
 			if(USERNAME.length < 3){
 				$('#error').html('Min 5 Letter in Username Required');
 				return;
-			}else if($("#message").val() == '' || $("#message").val() == null){
+			}else if($("#message").val().trim() == '' || $("#message").val().trim() == null){
 				$('#error').html('Fill Message Properly');
 				return;
 			}
@@ -104,7 +108,7 @@ let u = new User(function(){
 			var username = '<small class="sender-name">'+USERNAME+'</small><br />';
 			var message  = username + ($("#message").val()).slice(0,255);
 
-			if($("#message").val().length > 255){
+			if($("#message").val().trim().length > 255){
 				$('#error').html('255 Character limit in 1 Message\nTrimming the Message and Sending...');
 			}
 			

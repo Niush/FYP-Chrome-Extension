@@ -351,6 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		// Notes Button Click //
 		let chatBtn = document.getElementById('chat-button');
+		if(u.disable_chat_every_where == 1){
+			chatBtn.style.display = 'none';
+		}
+		
 		chatBtn.addEventListener('click', function(){
 			/* if( currentTab.url.match(/(chrome|chrome-extension|opera|vivaldi|brave):\/\//gi) ) {
 				alert('Chat Cannot be Opened fot this Page, Only allowed for Public web pages.');

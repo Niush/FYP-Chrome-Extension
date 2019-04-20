@@ -116,7 +116,7 @@ function injectToAll(){
 	});
 }
 
-function showNotification(titleInput, messageInput, tabId, interaction=true){
+function showNotification(titleInput, messageInput, tabId=null, interaction=true){
 	chrome.notifications.create({
 		type: 'progress',
 		message: messageInput,
@@ -133,13 +133,13 @@ function showNotification(titleInput, messageInput, tabId, interaction=true){
 			notificationSound.play();
 		}
 		
-		chrome.notifications.onClicked.addListener(function(){
+		chrome.notifications.onClicked.addListener(function(id){
 			let x = 0;
 			let fillProgress = setInterval(function(){
-				chrome.notifications.update(noti_id, {progress: x+=10});
+				chrome.notifications.update(id, {progress: x+=10});
 				if(x >= 100){
 					clearInterval(fillProgress);
-					chrome.notifications.clear(noti_id, function(){
+					chrome.notifications.clear(id, function(){
 						var updateProperties = { 'active': true };
 						//chrome.tabs.update(tabId, updateProperties, (tab) => { });
 					});
@@ -353,6 +353,32 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 		/******************/
+		
+		// Start To-do Alarm //
+		function startTodoAlarms(){
+			chrome.alarms.clearAll(function(){
+				if(localStorage.hasOwnProperty('todo')){
+					let data = JSON.parse(localStorage.getItem('todo'));
+					for(let i = 0 ; i < data.length ; i++){
+						let when = new Date(data[i].date+" "+data[i].time).getTime();
+						
+						if(when >= new Date().getTime()){
+							chrome.alarms.create('todo-'+data[i].created, {
+								when: when
+							});
+							
+							chrome.alarms.onAlarm.addListener(function(alarm) {
+								if(alarm.name === 'todo-'+data[i].created){
+									showNotification('To-do has Ended', data[i].title, null, true);
+								}
+							});
+						}
+					}
+				}
+			});
+		}
+		
+		/******************/
 
 		//SEND AND RECEVIE MESSAGES FROM OTHER JS//
 		chrome.runtime.onMessage.addListener(
@@ -523,6 +549,40 @@ document.addEventListener('DOMContentLoaded', function() {
 				chrome.tabs.query({ active: true }, function(tabs) {
 					chrome.tabs.remove(tabs[0].id);
 				});
+			}
+			
+			if(request.action.toLowerCase() == "restart_todo"){
+				startTodoAlarms();
+			}
+			
+			if(request.action.toLowerCase() == "add_todo"){
+				if(localStorage.hasOwnProperty('todo')){
+					let oldDatas = JSON.parse(localStorage.getItem('todo'));
+					let latest = oldDatas[oldDatas.length - 1];
+					
+					let when = new Date(latest.date+" "+latest.time).getTime();
+				
+					if(when >= new Date().getTime()){
+						chrome.alarms.create('todo-'+latest.created, {
+							when: when
+						});
+						
+						chrome.alarms.onAlarm.addListener(function(alarm) {
+							if(alarm.name === 'todo-'+latest.created){
+								showNotification('To-do Ended', latest.title, null, true);
+							}
+						});
+					}
+					
+					sendResponse({
+						response: true,
+					});
+				}
+				
+				sendResponse({
+					response: false,
+				});
+				return true;
 			}
 		  }
 		);

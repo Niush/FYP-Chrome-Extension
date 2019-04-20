@@ -35,7 +35,8 @@
     "tabs",
 	"activeTab",
     "geolocation",
-    "<all_urls>"
+    "<all_urls>",
+	"alarms"
   ],
   "content_scripts": [
     {

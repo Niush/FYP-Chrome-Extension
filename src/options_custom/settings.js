@@ -1,7 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
 	// TIME PICKER //
     var timepicker = document.querySelectorAll('.timepicker');
-    var instances = M.Timepicker.init(timepicker, {autoClose: true, twelveHour: false, container: 'body', onCloseEnd: function(){}});
+    var instances = M.Timepicker.init(timepicker, {twelveHour: false, container: 'body', onCloseStart: function(){timepicker[0].disabled = true;}, onCloseEnd: function(){timepicker[0].disabled = false;}});
+	timepicker[0].addEventListener('focus', function(){
+		M.Timepicker.getInstance(timepicker[0]).open();
+	});
+	
+	var datepicker = document.querySelectorAll('.datepicker');
+	var instances = M.Datepicker.init(datepicker, {format: 'yyyy-mm-dd', container: 'body'});
+	datepicker[0].addEventListener('focus', function(){
+		M.Datepicker.getInstance(datepicker[0]).open();
+	});
 	
 	var u = new User();
 	setTimeout(function(){
@@ -56,6 +65,84 @@ document.addEventListener('DOMContentLoaded', function() {
 			noLogin.style.setProperty("display", "block", "important");
 			noLogin.style.visibility = 'visible';
 		}
+		
+		// TODO  --- CARD //
+		let todoAddBtn = document.getElementById('todo-add-btn');
+		let todoEndTime = document.getElementById('todo-endtime');
+		let todoEndDate = document.getElementById('todo-enddate');
+		let todoTitle = document.getElementById('todo-title');
+		
+		todoAddBtn.addEventListener('click', function(){
+			let date = todoEndDate.value.trim();
+			let time = todoEndTime.value.trim();
+			let title = todoTitle.value.trim();
+			let created = new Date().getTime();
+			if(date == "" || time == "" || title == "" || date == null || time == null || title == null){
+				showMessage('Fill inputs Properly');
+				return;
+			}else{
+				let when = new Date(date+" "+time).getTime();
+				if(when < new Date().getTime()){
+					showMessage('To-do for the Past, Huh??<br/>Try future dates.','error');
+					return;
+				}
+				let data = {'title': title, 'date': date, 'time': time, 'created': created};
+				
+				if(!localStorage.hasOwnProperty('todo')){
+					localStorage.setItem('todo', JSON.stringify([data]));
+				}else{
+					let oldDatas = JSON.parse(localStorage.getItem('todo'));
+					oldDatas.push(data);
+					localStorage.setItem('todo', JSON.stringify(oldDatas));
+				}
+				todoEndTime.value = '';
+				todoEndDate.value = '';
+				todoTitle.value = '';
+				M.updateTextFields();
+				fillTodo();
+				
+				chrome.runtime.sendMessage(null, {action: "add_todo"}, function(response) {
+					if(response.response == true){
+						showMessage('To-do Created..');
+					}
+				});
+			}
+		});
+		
+		let todoList = document.getElementById('todo-list');
+		function fillTodo(){
+			if(localStorage.hasOwnProperty('todo')){
+				todoList.innerHTML = "<h6><b>Your To-dos</b></h6>";
+				let data = JSON.parse(localStorage.getItem('todo'));
+				for(let i = 0 ; i < data.length ; i++){
+					let when = new Date(data[i].date+" "+data[i].time).getTime();
+					if(when >= new Date().getTime()){
+						todoList.innerHTML += "<li style='list-style-type: decimal;list-style-position: inside;padding: 8px 0;'>"+ data[i].title + " | " + data[i].date + " | " + data[i].time + " <button class='left btn btn-small red todo-remover' style='height: 23px !important;line-height: 23px !important;margin-right: 10px;' index='"+ i +"'>Remove</button></li>";
+					}else{
+						todoList.innerHTML += "<li title='Expired' style='opacity: 0.8;text-decoration: line-through;list-style-type: decimal;list-style-position: inside;padding: 8px 0;'>"+ data[i].title + " | " + data[i].date + " | " + data[i].time + " | <i>Expired</i> <button title='Delete Expired To-do' class='left btn btn-small red todo-remover' style='height: 23px !important;line-height: 23px !important;margin-right: 10px;' index='"+ i +"'>Remove</button></li>";
+					}
+				}
+				todoDeleteEventAdder();
+			}
+		}
+		
+		function todoDeleteEventAdder(){
+			let btnDelete = document.getElementsByClassName('todo-remover');
+			for(let i = 0 ; i < btnDelete.length ; i++){
+				btnDelete[i].addEventListener('click', function(){
+					if(confirm('Delete This Todo ?')){
+						let oldDatas = JSON.parse(localStorage.getItem('todo'));
+						oldDatas.splice(btnDelete[i].getAttribute('index'), 1);
+						localStorage.setItem('todo', JSON.stringify(oldDatas));
+						fillTodo();
+						chrome.runtime.sendMessage(null, {action: "restart_todo"});
+						showMessage('To-do Removed');
+					}
+				});
+			}
+		}
+		
+		fillTodo();
 		
 		/*****************/
 		/* SETTINGS TAB */
@@ -194,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if(disableChatEveryWhere.checked){
 				if(confirm('Chat will be completely Disabled.\nAre you sure ?')){
 					u.disable_chat_every_where = 1;
-					showMessage('Universal Chats are now Disabled');
+					showMessage('Chats are now Disabled Completly');
 					return true;
 				}else{
 					disableChatEveryWhere.checked = false;
@@ -212,6 +299,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			if(confirm('This will reset Notes and Chats Disabled from websites to Default.\nAre you sure ?')){
 				u.reset_disable_all(function(){
 					showMessage('All Disabled Notes and Chat will now Appear.');
+					if(u.disable_chat_every_where == 1){
+						disableChatEveryWhere.click();
+					}
 				});
 			}
 		});

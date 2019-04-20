@@ -127,9 +127,9 @@
 				
 				<div class="card hidden" id="yes-login">
 					<div class="card-content">
-						<h5 class="card-title">Logged in as, <span id="username">Bob</span></h5>
-						<p>Notes Count : <span id="total_notes">5</span></p>
-						<p>Data Storage Usage : <span id="total_storage">5.1kb</span></p>
+						<h5 class="card-title">Logged in as, <span id="username"></span></h5>
+						<p>Notes Count : <span id="total_notes"></span></p>
+						<p>Data Storage Usage : <span id="total_storage"></span></p>
 						<small>More Images and Notes means more usage</small>
 						<br/>
 						<br/>
@@ -141,6 +141,38 @@
 						<a href="#!" class="right blue-text">Privacy</a>
 					</div>
 				</div>
+				
+				<div class="card yellow lighten-4" id="todo-container">
+					<div class="card-content">
+						<h5 class="card-title">Create To-do Notifier</h5>
+						<div class="row">
+							<div class="input-field col s6 validate">
+								<input id="todo-title" type="text" class="validate">
+								<label for="todo-title">To-do Title</label>
+							</div>
+							<div class="input-field col s2 validate">
+								<input type='text' class="validate timepicker" id="todo-endtime"/>
+								<label for="todo-endtime">Todo Notify Time</label>
+							</div>
+							<div class="input-field col s2 validate">
+								<input type='text' class="validate datepicker" id="todo-enddate"/>
+								<label for="todo-enddate">Todo Notify Date</label>
+							</div>
+							<div class="input-field col s2">
+								<button id="todo-add-btn" class="waves-effect btn btn-large green darken-2">Add To-do</button>
+							</div>
+						</div>
+						<div>
+							<ul id="todo-list">
+								
+							</ul>
+						</div>
+					</div>
+					<div class="card-action">
+						<small>A Notification will be sent on to-do end time if Browser is open.</small>
+					</div>
+				</div>
+				
 			</div>
 			
 			<!-- NOTES TAB -->

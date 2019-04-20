@@ -222,7 +222,7 @@ $(document).ready(function() {
 	
 	// New Note Adding Button //
 	$('#NS-notes-input-new-button').click(function(e){
-		let note_title = $('#NS-notes-input-new').val();
+		let note_title = $('#NS-notes-input-new').val().trim();
 		if(note_title != '' && note_title != null){
 			// INSERT INTO u User and Refresh all the Notes + also add events as needed //
 			if(u.add_note(note_title)){

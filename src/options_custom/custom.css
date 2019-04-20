@@ -131,7 +131,7 @@ scrollbar-track-color: #ddd;
 .dev-footer{
 	position: fixed;
 	bottom: 5px;
-	right: 5px;
+	right: 15px;
 	background: teal;
 	padding: 5px 10px;
 	color: white;

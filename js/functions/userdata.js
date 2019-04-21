@@ -3,6 +3,7 @@ var currentHost;
 var currentPageId;
 var windowId;
 var tabInfo;
+let syncing_message_shown = false;
 
 chrome.tabs.getSelected(null, function(tab) {
 	tabInfo = tab;
@@ -325,7 +326,7 @@ class User{
 	}
 	
 	// Updates the chrome.storage.local to data json
-	updateLocal(force = ''){
+	updateLocal(force = '', callback=function(){}){
 		let _self = this;
 		if(syncing == false || force == 'force'){
 			chrome.storage.local.set(
@@ -333,12 +334,19 @@ class User{
 					user_data: data,
 					app_id: chrome.runtime.id,
 					latest_interaction: new Date().getTime()
+				}, function(){
+					callback();
+					syncing_message_shown = false;
 				}
 			);
 		}else{
 			setTimeout(function(){
-				_self.updateLocal();
+				_self.updateLocal('',callback);
 				console.log('Syncing in process - Waiting for sync to complete.');
+				if(syncing_message_shown == false){
+					showMessage('Syncing In Process Try Again Later');
+					syncing_message_shown = true;
+				}
 			}, 1000);
 		}
 	}
@@ -697,20 +705,24 @@ class User{
 		this.disable_modified_at = this.getUTC();
 		this.updateLocal();
 	}
-	edit_disable_app(new_data){
+	edit_disable_app(new_data, callback=function(){}){
 		try{
 			let index = data.disable_app.findIndex(e => e.url == new_data.url);
 			if(index >= 0){ //If found//
 				data.disable_app[index] = new_data;
 				this.disable_synced = 0;
 				this.disable_modified_at = this.getUTC();
-				this.updateLocal();
+				this.updateLocal('', function(){
+					callback();
+				});
 				return true;
 			}else{ //If Not Found then just add //
 				this.add_disable_app(new_data);
 				this.disable_synced = 0;
 				this.disable_modified_at = this.getUTC();
-				this.updateLocal();
+				this.updateLocal('', function(){
+					callback();
+				});
 				return true;
 			}
 		}catch(e){
@@ -759,44 +771,44 @@ class User{
 				url: url,
 				disable_note: 1,
 				disable_chat: this.check_disable_chat(url)
+			}, function(){
+				callback();
 			});
-			
-		callback();
 	}
 	remove_disable_note(url, callback){
 		this.edit_disable_app({
 				url: url,
 				disable_note: 0,
 				disable_chat: this.check_disable_chat(url)
+			}, function(){
+				callback();
 			});
 			
 		if(this.check_disable_chat(url) == 0){
 			this.delete_disable_app(url);
-		}
-		
-		callback();
+		}		
 	}
 	add_disable_chat(url, callback){
 		this.edit_disable_app({
 				url: url,
 				disable_note: this.check_disable_note(url),
 				disable_chat: 1
+			}, function(){
+				callback();
 			});
-			
-		callback();
 	}
 	remove_disable_chat(url, callback){
 		this.edit_disable_app({
 				url: url,
 				disable_note: this.check_disable_note(url),
 				disable_chat: 0
+			}, function(){
+				callback();
 			});
 			
 		if(this.check_disable_note(url) == 0){
 			this.delete_disable_app(url);
-		}
-		
-		callback();
+		}		
 	}
 	reset_disable_all(callback=function(){}){
 		data.disable_app = INIT_USER_DATA.disable_app;

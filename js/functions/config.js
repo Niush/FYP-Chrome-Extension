@@ -119,7 +119,7 @@ function syncRequest(callback=function(){}){
 		}
 		callback();
 	}); */
-	
+	syncing = true;
 	var port = chrome.runtime.connect({name: "my-channel"});
 	port.postMessage({action: "sync"});
 	port.onMessage.addListener(function(response) {
@@ -128,6 +128,7 @@ function syncRequest(callback=function(){}){
 		}else{
 			showMessage('Sync Successful.');
 		}
+		syncing = false;
 		callback();
 	});
 }

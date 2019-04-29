@@ -33,7 +33,7 @@ let u = new User(function(){
 			window.close();
 		}
 
-		history.pushState(null, null, 'chat.html');
+		//history.pushState(null, null, 'chat.html');
 		$('body').css({'opacity': '1', 'visibility': 'visible'});
 		
 		var pusher = new Pusher(APP_KEY, {
@@ -46,24 +46,40 @@ let u = new User(function(){
 
 		//listen for connection...
 		channel.bind('my-event-'+ENCODED_URL, function(data) {
-		  echo_message(data.message, data.user_id);
+		  echo_message(data.message, data.username);
 		});
 
-		function echo_message(msg, user_id){
-			//if(user_id == u.user_id){
-			if(user_id == $("#name").val()){
-				$("#chat-message").append(
-					'<div class="message-container message-container-me">'+
-						'<div class="message">'+msg+'</div>'
-					+'</div>'
-				);
-			}else{
-				$("#chat-message").append(
-					'<div class="message-container">'+
-						'<div class="message">'+msg+'</div>'
-					+'</div>'
-				);
+		let mentionBlink;
+		function echo_message(msg, username){			
+			let senderName = document.createElement('small');
+			senderName.className = "sender-name";
+			senderName.textContent = username;
+			
+			let messageContent = document.createElement('span');
+			messageContent.textContent = msg;
+			if(msg == "👍"){
+				messageContent.className = 'like';
 			}
+			
+			let messageContainer = document.createElement('div');
+			if(username == USERNAME){
+				messageContainer.className = "message-container message-container-me";
+			}else{
+				messageContainer.className = "message-container";
+			}
+			
+			let messageChild = document.createElement('div');
+			messageChild.className = "message";
+			if(msg == "👍"){
+				messageChild.className = "message likeContainer";
+			}
+			
+			messageChild.append(senderName);
+			messageChild.append(document.createElement('br'));
+			messageChild.append(messageContent);
+			
+			messageContainer.append(messageChild);
+			$("#chat-message").append(messageContainer);
 			
 			$("#chat-message").animate({ scrollTop: $("#chat-message").height() }, 'fast');
 			
@@ -73,9 +89,10 @@ let u = new User(function(){
 				$("#message").focus();
 			});
 
-			if(msg.search('@'+USERNAME) >= 0){
+			if(username != USERNAME && msg.search('@'+USERNAME) >= 0){
 				let oldtitle = document.title;
-				let mentionBlink = setInterval(function(){
+				clearInterval(mentionBlink);
+				mentionBlink = setInterval(function(){
 					if(document.title == oldtitle){
 						document.title = 'New Mention - ' + oldtitle;
 					}else{
@@ -96,6 +113,13 @@ let u = new User(function(){
 				}
 			}
 		}
+		
+		$("#like-btn").click(function() {
+			let oldVal = $("#message").val();
+			$("#message").val('👍');
+			$("#submit-message").submit();
+			$("#message").val(oldVal);
+		});
 
 		$("#submit-message").submit( function(e) {
 			e.preventDefault();
@@ -104,6 +128,7 @@ let u = new User(function(){
 			
 			$("#message").attr("disabled", true);
 			$("#send-btn").attr("disabled", true);
+			$("#like-btn").attr("disabled", true);
 
 			if(USERNAME.length < 3){
 				$('#error').html('Min 5 Letter in Username Required');
@@ -113,9 +138,14 @@ let u = new User(function(){
 				return;
 			}
 			
-			var username = '<small class="sender-name">'+USERNAME+'</small><br />';
-			var message  = username + ($("#message").val()).slice(0,255);
-
+			//var span = document.createElement("span");
+			//span.innerHTML = ($("#message").val()).slice(0,255);
+			
+			//var username = '<small class="sender-name">'+USERNAME+'</small><br />';
+			//var message  = username + span.textContent;
+			
+			var message  = ($("#message").val().trim()).slice(0,255);
+			
 			if($("#message").val().trim().length > 255){
 				$('#error').html('255 Character limit in 1 Message\nTrimming the Message and Sending...');
 			}
@@ -125,11 +155,12 @@ let u = new User(function(){
 			}, 3000);
 			
 			//$.post(HOST+'/api/message', {username: username, message: message, token: u.passphrase, user_id: u.user_id }, function(data){
-			$.post(HOST+'/api/message', {url: ENCODED_URL, username: username, message: message, token: u.passphrase, user_id: $("#name").val() }, function(data){
+			$.post(HOST+'/api/message', {url: ENCODED_URL, username: USERNAME, message: message, token: u.passphrase }, function(data){
 				clearTimeout(takingLongerThenUsual);
 				$("#message").val('');
 				$("#message").attr("disabled", true);
 				$("#send-btn").attr("disabled", true);
+				$("#like-btn").attr("disabled", true);
 				$('#error').html('');
 				
 				let wait = 3;
@@ -141,6 +172,7 @@ let u = new User(function(){
 					if(wait < 0){
 						$("#message").attr("disabled", false);
 						$("#send-btn").attr("disabled", false);
+						$("#like-btn").attr("disabled", false);
 						$('#error').css('color','initial');
 						$('#error').html('');
 						clearInterval(msgWaiter);
@@ -151,6 +183,7 @@ let u = new User(function(){
 				$('#error').html('Message Sending Failed. Check your Connection.');
 				$("#message").attr("disabled", false);
 				$("#send-btn").attr("disabled", false);
+				$("#like-btn").attr("disabled", false);
 				setTimeout(function(){
 					$('#error').html('Message Sending Failed. Check your Connection.');
 				}, 3500);

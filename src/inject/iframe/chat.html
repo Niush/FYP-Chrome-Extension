@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-	<meta charset="UTF-8">
+	<meta charset="utf-8">
 	<title>Chat - MPA</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel='stylesheet' href='../../../css/materialize.min.css'>
@@ -12,6 +12,15 @@
 	<div class="container main">
 
 	   <div class="card-panel main-chat">
+		 <beta style="position: absolute;
+					right: 5px;
+					top: 8px;
+					font-size: 0.6em;
+					transform: rotate(45deg);
+					color: orange;
+					user-select: none;
+					pointer-events: none;">Beta</beta>
+		 
 		 <h5>Chat MPA - Live</h5>
 		 <h6 id="url" style="text-overflow: ellipsis;
 							white-space: nowrap;
@@ -38,8 +47,8 @@
 				<div class="input-field col s10">
 					<input class="validate" id="message" name="message" placeholder="Enter Message Here..." required>
 				</div>
-
-				<button type="submit" id="send-btn" class="btn teal col s2">Send <i class="material-icons right">send</i></button>
+				<a id="like-btn" class="waves-effect waves-light btn blue col" style="margin-right: 5px;"><i class="material-icons">thumb_up</i></a>
+				<button type="submit" id="send-btn" class="waves-effect waves-light btn teal col s2">Send <i class="material-icons right">send</i></button>
 				
 				<span class="error" id="error"></span>
 			</div>
@@ -47,7 +56,9 @@
 		   </form>
 	   </div>
 	</div>
-
+	
+	<small style="font-size: 0.4em; position: absolute; width: 100%; bottom: 3px; text-align: center; font-weight: bold; letter-spacing: 1px;">Never Share Your Credentials or Click Unknown Links.</small>
+	
 	<script src='../../../js/materialize/materialize.min.js'></script>
 	<script src='../../../js/jquery/jquery.min.js'></script>
 	<script src='../../../js/jquery/jquery-ui.min.js'></script>

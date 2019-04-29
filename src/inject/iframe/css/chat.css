@@ -6,6 +6,10 @@
   src: url(../../../../icons/material-icon.woff2) format('woff2');
 }
 
+body{
+	overflow: hidden;
+}
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -167,4 +171,20 @@ body {
     padding: 0 0 0 10px;
     color: red;
     font-weight: bold;
+}
+
+.like{
+	margin: 0;
+	padding: 3px 0 5px 0;
+	display: inline-block;
+	font-size: 1.5em;
+}
+
+.likeContainer, .likeContainer:before{
+	background: white !important;
+	background: transparent !important;
+}
+
+.likeContainer .sender-name{
+	background: #8edae6a8 !important;
 }

@@ -145,6 +145,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		fillTodo();
 		
 		/*****************/
+		/* NOTES TAB */
+		/***************/
+		let notesReloadBtn = document.getElementById('notes_reload_btn');
+		notesReloadBtn.addEventListener('click', function(){
+			document.getElementById('notes_iframe').src = document.getElementById('notes_iframe').src;
+		});
+		
+		/*****************/
 		/* SETTINGS TAB */
 		/***************/
 		/****FOCUS SETTINGS SUB TAB****/
@@ -164,7 +172,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		let focusAddEditConfirmButton = document.getElementById('focus-add-edit-confirm-button');
 		focusAddEditConfirmButton.addEventListener('click', function(){
 			// Verify basic input //
-			if((newFocusUrlInput.value).indexOf('.') >= 0 && newFocusLimitInput.value != '' && newFocusUrlInput.value != '' && newFocusLimitInput.value <= 1440 && newFocusLimitInput.value >= 1){
+			if((newFocusUrlInput.value).indexOf('.') >= 0 && newFocusLimitInput.value != '' && newFocusUrlInput.value != '' && newFocusLimitInput.value <= 1440 && newFocusLimitInput.value >= 0){
+				if(newFocusLimitInput.value == 0){
+					if(!confirm('0 Minutes = No Access\nAre you sure ?')){
+						return false;
+					}
+				}
+				
 				u = new User();
 				let hostname;
 				// Check if contains http or https and append to find hostname for website not chrime id instead like internal pages //

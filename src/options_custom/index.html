@@ -96,9 +96,10 @@
 				</div>
 				<div class='row'>
 					<div class='input-field col s12'>
-						<input class='validate' max='1440' min='1' type='number' name='new-focus-limit' id='new-focus-limit'/>
+						<input class='validate' max='1440' min='0' type='number' name='new-focus-limit' id='new-focus-limit'/>
 						<label for='new-focus-limit'>Focus Limit per day (in Minutes)</label>
-						<small>1 day = 1440 Minutes</small>
+						<small>1 day = 1440 Minutes</small><br/>
+						<small>0 min = No Access</small>
 					</div>
 				</div>
 				<div class='row'>
@@ -142,9 +143,9 @@
 					</div>
 				</div>
 				
-				<div class="card yellow lighten-4" id="todo-container">
+				<div class="card grey lighten-2" id="todo-container">
 					<div class="card-content">
-						<h5 class="card-title">Create To-do Notifier</h5>
+						<h5 class="card-title"><b>Create To-do Notifier</b></h5>
 						<div class="row">
 							<div class="input-field col s6 validate">
 								<input id="todo-title" type="text" class="validate">
@@ -177,7 +178,8 @@
 			
 			<!-- NOTES TAB -->
 			<div id="notes" class="col s12">
-				<iframe src="../inject/iframe/note.html?settings=true" style="border: 0; width: 100%; height: calc(100vh - 170px); background: white;"></iframe>
+				<button id="notes_reload_btn" class="waves-effect waves-light btn btn-small blue lighten-2" style="position: absolute; left: 20px; top: 5px;"><i class="left material-icons">sync</i>Reload</button>
+				<iframe id="notes_iframe" src="../inject/iframe/note.html?settings=true" style="border: 0; width: 100%; height: calc(100vh - 170px); background: white;"></iframe>
 			</div>
 			
 			<!-- SETTINGS -->

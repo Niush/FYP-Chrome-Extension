@@ -70,9 +70,10 @@ let u = new User(function(){
 			$('.sender-name').off('click');
 			$('.sender-name').click(function(){
 				$("#message").val($("#message").val() + "@"+$(this).html()+" ");
+				$("#message").focus();
 			});
-			
-			if(msg.search('@'+$("#name").val()) >= 0){
+
+			if(msg.search('@'+USERNAME) >= 0){
 				let oldtitle = document.title;
 				let mentionBlink = setInterval(function(){
 					if(document.title == oldtitle){
@@ -86,6 +87,13 @@ let u = new User(function(){
 					window.onmousemove = null;
 					clearInterval(mentionBlink);
 				};
+				
+				if(localStorage.hasOwnProperty('play_notification_sound') && localStorage.getItem('play_notification_sound') == "false"){
+					console.log('Silent New Mention Message');
+				}else{
+					let notificationSound = new Audio('../../../../sound/notification.ogg');
+					notificationSound.play();
+				}
 			}
 		}
 
@@ -112,8 +120,13 @@ let u = new User(function(){
 				$('#error').html('255 Character limit in 1 Message\nTrimming the Message and Sending...');
 			}
 			
+			let takingLongerThenUsual = setTimeout(function(){
+				$('#error').html('Sending.....Is taking Longer then usual..');
+			}, 3000);
+			
 			//$.post(HOST+'/api/message', {username: username, message: message, token: u.passphrase, user_id: u.user_id }, function(data){
 			$.post(HOST+'/api/message', {url: ENCODED_URL, username: username, message: message, token: u.passphrase, user_id: $("#name").val() }, function(data){
+				clearTimeout(takingLongerThenUsual);
 				$("#message").val('');
 				$("#message").attr("disabled", true);
 				$("#send-btn").attr("disabled", true);
@@ -134,6 +147,7 @@ let u = new User(function(){
 					}
 				}, 1000);
 			}).fail(function() { 
+				clearTimeout(takingLongerThenUsual);
 				$('#error').html('Message Sending Failed. Check your Connection.');
 				$("#message").attr("disabled", false);
 				$("#send-btn").attr("disabled", false);

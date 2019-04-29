@@ -378,6 +378,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		}
 		
+		startTodoAlarms();
+		
 		/******************/
 
 		//SEND AND RECEVIE MESSAGES FROM OTHER JS//

@@ -713,7 +713,7 @@ setTimeout(function(){
 								document.getElementsByClassName('NS-notes-iframe')[0].src = chrome.extension.getURL('src/inject/iframe/chat.html?url='+location.href);
 							}
 							NS_note_iframe_switch.css('display','none');
-							NS_chat_iframe_switch.css('display','initial');
+							NS_chat_iframe_switch.css('display','flex');
 							noteContentLoaded = true;
 							$('NS-loading-iframe').addClass('NS-hide');
 						}
@@ -727,7 +727,7 @@ setTimeout(function(){
 								NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
 							}
 							NS_chat_iframe_switch.css('display','none');
-							NS_note_iframe_switch.css('display','initial');
+							NS_note_iframe_switch.css('display','flex');
 							noteContentLoaded = true;
 							$('NS-loading-iframe').addClass('NS-hide');
 						}

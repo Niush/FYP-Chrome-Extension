@@ -240,8 +240,8 @@ class User{
 									data.notes[i].title = resultData.title;
 									data.notes[i].note = resultData.note;
 									data.notes[i].synced = 1;
-									data.notes[i]['public'] = resultData['public'];
-									data.notes[i].status =  resultData.status;
+									data.notes[i]['public'] = resultData['public']==true?1:0;
+									data.notes[i].status =  resultData.status==true?1:0;
 									data.notes[i].modified_at = new Date(resultData.local_modified_at + ' UTC').getTime();
 									data.notes[i].url = resultData.url;
 									//_self.updateLocal('force');

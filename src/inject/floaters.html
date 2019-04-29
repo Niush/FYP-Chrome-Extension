@@ -8,7 +8,7 @@
 		transition: all 0.3s ease;
 		user-select: none !important;
 		color: #fff;
-		overflow: hidden !important;
+		/*overflow: hidden !important;*/
 		width: 40px;
 		height: 40px;
 		line-height: 40px;
@@ -142,7 +142,7 @@
 		cursor: n-resize !important;
 	}
 	
-	NS-closer-iframe{
+	NS-closer-iframe, NS-chat-iframe, NS-note-iframe{
 		position: absolute;
 		top: 10px;
 		right: 10px;
@@ -153,6 +153,25 @@
 		padding: 3px 8px;
 		border-radius: 15px;
 		line-height: 19px;
+	}
+	
+	NS-chat-iframe{
+		display: none;
+	}
+	
+	NS-chat-iframe, NS-note-iframe{
+	    width: 35px;
+		left: -55px;
+		transition: all 0.3s ease;
+		visibility: hidden;
+		opacity: 0;
+		/*display: none;*/
+	}
+	
+	NS-notes-floating-icon:hover NS-chat-iframe, NS-notes-floating-icon:hover NS-note-iframe{
+		visibility: visible;
+		opacity: 1;
+		left: -55px;
 	}
 	
 	NS-closer-iframe:hover{
@@ -194,6 +213,9 @@
 	<!-- <i class="material-icons">note_add</i> -->
 	<!-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAABWUlEQVR4Ae3VNVZAQRBE0SbBJcXdne6doRGSEhNhK8AhxyVBt0GCu8a49ECdgXqzgbpfhTHGGPtM9QXWpot2aA++o32A8XXpOq733ukwQnmSbTkG4wk64BiLJ1iO3dpDxATrcQ3FE3Qj1FwQQffDAERABDsPBXAS8AAnAQ9wEvAAJwEPABHsIhTAScADnAQ8wEnAA5wEPMBJwANABL0MBXAS8AAnAQ9wEvAAJwEPABH0KhTge4SoAC8J0QFeEiIDvCSgAX64N7smgAACCIACbv4pQJ5FAAHRAm4JIICAqAF6RwABPwoQZwT8fcA9AQQQEDXAHiL/kRFAAAEEEEAAAUBAwt8CAA4BBIABYsdQwLF4010kQPf8gH4ooF+8NVXqHWz+nRWKPx2FAYYkRJaqe5jnvzxJwmRZOqf3vzr+Xifr0iVkzcUtXbpsRz8+/tAWrP1zzz5jjDH2CAawLCVcUtfAAAAAAElFTkSuQmCC"/ style="pointer-events: none; width: 60%;"> -->
 	<svg xmlns="http://www.w3.org/2000/svg" width="26" height="35" style="transform: scale(0.7);"><g fill="none" fill-rule="evenodd"><rect stroke="#FFF" stroke-width="2" x="1" y="3" width="24" height="31" rx="2"/><g fill="#FFF"><path d="M17.6999844 5.5C18.2499628 5.5 18.6999512 4.94064414 18.6999512 4.25697005L18.6999512 1.74310613C18.6999512 1.05935586 18.2499628.5 17.6999844.5 17.1499395.5 16.6999512 1.05935586 16.6999512 1.74310613L16.6999512 4.25697005C16.6999512 4.94064414 17.1499395 5.5 17.6999844 5.5M12.5000333 5.5C13.0500116 5.5 13.5 4.94064414 13.5 4.25697005L13.5 1.74310613C13.5 1.05935586 13.0500116.5 12.5000333.5 11.9500549.5 11.5 1.05935586 11.5 1.74310613L11.5 4.25697005C11.5 4.94064414 11.9500549 5.5 12.5000333 5.5M6.99996674 5.5C7.55001164 5.5 8 4.94064414 8 4.25697005L8 1.74310613C8 1.05935586 7.55001164.5 6.99996674.5 6.44998836.5 6 1.05935586 6 1.74310613L6 4.25697005C6 4.94064414 6.44998836 5.5 6.99996674 5.5M1.69991791 5.5C2.24996281 5.5 2.69995117 4.94064414 2.69995117 4.25697005L2.69995117 1.74310613C2.69995117 1.05935586 2.24996281.5 1.69991791.5 1.14993953.5.699951172 1.05935586.699951172 1.74310613L.699951172 4.25697005C.699951172 4.94064414 1.14993953 5.5 1.69991791 5.5" transform="translate(3.5)"/></g><path d="M20.2656154 28L5.73432169 28C5.32876885 28 5 28.2238493 5 28.5000214 5 28.7761507 5.32876885 29 5.73432169 29L20.2656154 29C20.6712312 29 21 28.7761507 21 28.5000214 21 28.2238493 20.6712312 28 20.2656154 28M20.2656154 24L5.73432169 24C5.32876885 24 5 24.2238493 5 24.4999786 5 24.7761507 5.32876885 25 5.73432169 25L20.2656154 25C20.6712312 25 21 24.7761507 21 24.4999786 21 24.2238493 20.6712312 24 20.2656154 24M20.2656154 20L5.73432169 20C5.32876885 20 5 20.2238589 5 20.5 5 20.7761411 5.32876885 21 5.73432169 21L20.2656154 21C20.6712312 21 21 20.7761411 21 20.5 21 20.2238589 20.6712312 20 20.2656154 20M5 16.5C5 16.7761411 5.32876885 17 5.73432169 17L20.2656154 17C20.6712312 17 21 16.7761411 21 16.5 21 16.2238589 20.6712312 16 20.2656154 16L5.73432169 16C5.32876885 16 5 16.2238589 5 16.5" fill="#FFF"/><path d="M1.5,11 L24.5217289,11" stroke="#FFF" stroke-width="2" stroke-linecap="square"/></g></svg>
+	
+	<NS-chat-iframe title="Click to Switch to Note">Chat</NS-chat-iframe>
+	<NS-note-iframe title="Click to Switch to Chat">Note</NS-note-iframe>
 </NS-notes-floating-icon>
 
 <NS-notes-iframe-container>

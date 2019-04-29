@@ -604,6 +604,9 @@ setTimeout(function(){
 			let NSNotesFloatingIcon;
 			let NSNotesIframeContainer;
 			let NSNotesIframe;
+			
+			let NS_chat_iframe_switch;
+			let NS_note_iframe_switch;
 			function floatersScripts(){
 				setTimeout(function(){
 					NSNotesIconTop = $(window).height() - 50;
@@ -612,6 +615,9 @@ setTimeout(function(){
 					NSNotesFloatingIcon = $('NS-notes-floating-icon');
 					NSNotesIframeContainer = $('NS-notes-iframe-container');
 					NSNotesIframe = $('.NS-notes-iframe');
+					
+					NS_chat_iframe_switch = $('NS-chat-iframe');
+					NS_note_iframe_switch = $('NS-note-iframe');
 					
 					// If localstorage has top status saved put the icon to top px //
 					if(localStorage.hasOwnProperty('ns-note-top')){
@@ -698,6 +704,35 @@ setTimeout(function(){
 					$('NS-closer-iframe').click(function(){
 						NSNotesFloatingIcon.click();
 					});
+					
+					NS_note_iframe_switch.click(function(e){
+						e.preventDefault();
+						e.stopPropagation();
+						if(confirm('Switch to Chat ?')){
+							if(typeof chrome.app.isInstalled!=='undefined'){
+								document.getElementsByClassName('NS-notes-iframe')[0].src = chrome.extension.getURL('src/inject/iframe/chat.html?url='+location.href);
+							}
+							NS_note_iframe_switch.css('display','none');
+							NS_chat_iframe_switch.css('display','initial');
+							noteContentLoaded = true;
+							$('NS-loading-iframe').addClass('NS-hide');
+						}
+					});
+					
+					NS_chat_iframe_switch.click(function(e){
+						e.preventDefault();
+						e.stopPropagation();
+						if(confirm('Switch to Note ?')){
+							if(typeof chrome.app.isInstalled!=='undefined'){
+								NSNotesIframe.attr('src',chrome.extension.getURL('src/inject/iframe/note.html'));
+							}
+							NS_chat_iframe_switch.css('display','none');
+							NS_note_iframe_switch.css('display','initial');
+							noteContentLoaded = true;
+							$('NS-loading-iframe').addClass('NS-hide');
+						}
+					});
+					
 				}, 200);
 			}
 			

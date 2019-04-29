@@ -46,8 +46,16 @@ let u = new User(function(){
 
 		//listen for connection...
 		channel.bind('my-event-'+ENCODED_URL, function(data) {
-		  echo_message(data.message, data.username);
+			if(data.joined == true){
+				echo_joined(data.username);
+			}else{
+				echo_message(data.message, data.username);
+			}
 		});
+
+		function echo_joined(username){
+			$("#chat-message").append("<p style='width: 100%; font-size: 0.5em; opacity: 0.7;margin-left: -10px;font-style: italic;'>"+ username +" Joined</p>");
+		}
 
 		let mentionBlink;
 		function echo_message(msg, username){			
@@ -119,6 +127,10 @@ let u = new User(function(){
 			$("#message").val('👍');
 			$("#submit-message").submit();
 			$("#message").val(oldVal);
+		});
+		
+		$.post(HOST+'/api/message', {url: ENCODED_URL, username: USERNAME, joined: true, token: u.passphrase }, function(data){
+			console.log("Joined to Chat");
 		});
 
 		$("#submit-message").submit( function(e) {

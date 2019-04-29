@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				//**** IF USER IS LOGGED IN ****//
 				document.getElementById('modal-login-btn').innerHTML = 'Keep Being Productive';
 				document.getElementById('username').innerHTML = u.user_name;
-				document.getElementById('total_notes').innerHTML = u.all_note.length;
+				document.getElementById('total_notes').innerHTML = u.all_note_titles().length;
 				chrome.storage.local.get(null, function(settings){
 					var keys = Object.keys(settings);
 					chrome.storage.local.getBytesInUse(keys, function(bytes){

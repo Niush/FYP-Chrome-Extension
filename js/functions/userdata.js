@@ -106,6 +106,25 @@ class User{
 		};
 	}
 	
+	async checkNewNotesInServer(note_id_list, callback = function(){}){
+		let request = new XMLHttpRequest();
+		request.open('POST', HOST+'/api/checknewnotesinserver');
+		request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		request.send(JSON.stringify({ "token": this.passphrase, 'note_id_list': note_id_list}));
+		
+		request.onloadend = function() {
+			//console.log(request.response);
+			var result = JSON.parse(request.response); 
+			if(result.success == true){
+				console.log(result.message);
+				callback(result.message, result.data);
+			}else{
+				console.log('checkNewNotesInServer Error - '+result.error);
+				return result.error;
+			}
+		};
+	}
+	
 	async newnote(id, title, note, synced, isPublic, status, modified_at, url, callback = function(){}){
 		let request = new XMLHttpRequest();
 		request.open('POST', HOST+'/api/newnote');
@@ -192,8 +211,10 @@ class User{
 	syncNow(sender='app', callback=function(){}){
 		syncing = true;
 		var _self = this;
+		let note_id_list = [];
 		
 		for(let i = 0 ; i < data.notes.length ; i++){
+			note_id_list.push(data.notes[i].id);
 			if(data.notes[i].status == 0 && data.notes[i].synced == 1){
 				data.notes.splice(i, 1);
 				console.log("Deleted Note Cleaned...");
@@ -203,6 +224,7 @@ class User{
 				}
 			}
 		}
+		//console.log(note_id_list);
 		
 		//setTimeout(function(){
 		_self.checkUserAuth(function(res){
@@ -298,11 +320,21 @@ class User{
 				  }).catch(() => {
 					callback('Focus Sync went wrong');
 				  }).then(() => {
-					// 3. SYNC DISABLE APP
-					// AJAX SYNC Disable App
-					// if(data.disable_synced == 0){
-					//	//Sync as// JSON.stringify(data.disable_app)
-					//}
+					// 3. SYNC BACK DATA FROM SERVER - THAT IS NOT IN LOCAL
+					_self.checkNewNotesInServer(note_id_list, function(msg, resultData){
+						if(msg == 'download_now'){
+							if(resultData.length > 0){
+								setTimeout(function(){
+									for(let i = 0 ; i < resultData.length ; i++){
+										_self.add_note(null, true, resultData[i]);
+									}
+									_self.updateLocal('force');
+								}, 5000);
+							}else{
+								console.log('Server checknew note is - perfect');
+							}
+						}
+					});
 				  }).catch(() => {
 					callback('Disable Features Sync Failed');
 				  }).then(() => {
@@ -487,20 +519,34 @@ class User{
 		alert('Note Not Found');
 		return false;
 	}
-	add_note(noteTitle){
-		let unique_id = (this.getUTC()).toString()+(Math.floor(Math.random() * 500) + 1).toString();
-		data.notes.push({
-                    "id": unique_id,
-                    "title": noteTitle,
-                    "note": "",
-                    "synced": 0,
-                    "public": 0,
-                    "status": 1,
-                    "modified_at": this.getUTC(),
-					"url": currentHost,
-		});
-		this.updateLocal();
-		return true;
+	add_note(noteTitle, fromOld=false, resultData={}){
+		if(fromOld == true){
+			data.notes.push({
+						"id": resultData.note_id,
+						"title": resultData.title,
+						"note": resultData.note,
+						"synced": 1,
+						"public": resultData['public'],
+						"status": resultData.status,
+						"modified_at": new Date(resultData.local_modified_at + ' UTC').getTime(),
+						"url": resultData.url,
+			});
+			console.log('OLD NOTE FROM SERVER PULLER - ID: ' + resultData.id);
+		}else{
+			let unique_id = (this.getUTC()).toString()+(Math.floor(Math.random() * 500) + 1).toString();
+			data.notes.push({
+						"id": unique_id,
+						"title": noteTitle,
+						"note": "<p></p>",
+						"synced": 0,
+						"public": 0,
+						"status": 1,
+						"modified_at": this.getUTC(),
+						"url": currentHost,
+			});
+			this.updateLocal();
+			return true;
+		}
 	}
 	edit_note(id, editedNote, callback){
 		let noteSize = Math.round(Math.round((new Blob([editedNote]).size))/1000000);

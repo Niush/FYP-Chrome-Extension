@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 	var elems = document.querySelectorAll('.datepicker');
-	var instances = M.Datepicker.init(elems, {format: 'yyyy-mm-dd', container: 'body'});
+	var instances = M.Datepicker.init(elems, {format: 'yyyy-mm-dd', container: 'body', defaultDate: new Date('01/01/1999'), maxDate: new Date()});
 	elems[0].addEventListener('focus', function(){
 		M.Datepicker.getInstance(elems[0]).open();
 	});
@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		registerSubmitBtn.addEventListener('click', function(){
 			if(navigator.onLine){
 				if(registerName.value != '' && registerDob.value != '' && registerEmail.value != '' && registerPassword.value != ''){
+					if(registerPassword.value.length < 8){
+						showMessage("Password Must have at least 8 character", 'error');
+						return false;
+					}else if(registerName.value.length < 3){
+						showMessage("Longer Full Name Might be Better ;)", 'error');
+						return false;
+					}
+					
 					registerSubmitBtn.className += ' disabled';
 					registerSubmitBtn.innerHTML = 'Verifying....';
 					var request = new XMLHttpRequest();
@@ -61,9 +69,13 @@ document.addEventListener('DOMContentLoaded', function() {
 					request.onloadend = function() {
 						registerSubmitBtn.className = registerSubmitBtn.className.replace('disabled','');
 						registerSubmitBtn.innerHTML = 'Register';
-						var result = JSON.parse(request.response);                
-						//console.log(result);
-						showResponseMessage(result, 'register');
+						try{
+							var result = JSON.parse(request.response);                
+							//console.log(result);
+							showResponseMessage(result, 'register');
+						}catch(e){
+							showMessage('Something Went Wrong.','error');
+						}
 					};
 				}else{
 					showMessage('Fill the Form Properly.', 'warning');
@@ -89,9 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
 					request.onloadend = function() {
 						loginSubmitBtn.className = loginSubmitBtn.className.replace('disabled','');
 						loginSubmitBtn.innerHTML = 'Login';
-						var result = JSON.parse(request.response);                
-						//console.log(result);
-						showResponseMessage(result, 'login');
+						
+						try{
+							var result = JSON.parse(request.response);                
+							//console.log(result);
+							showResponseMessage(result, 'login');
+						}catch(e){
+							showMessage('Something Went Wrong.','error');
+						}
 					};
 				}else{
 					showMessage('Fill the Login Form Properly.', 'warning');
@@ -103,10 +120,24 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		var modal = M.Modal.init(document.getElementById('messageModal'), {});
 		function showResponseMessage(response, sender){
+			window.onbeforeunload = function (e) {
+				e = e || window.event;
+
+				// For IE and Firefox prior to version 4
+				if (e) {
+					e.returnValue = 'Sure?';
+				}
+
+				// For Safari
+				return 'Sure?';
+			};
+			
 			u = new User();
 			if(response.success){ //true
 				if(sender == 'register'){
-					showMessage(response.message);
+					//showMessage(response.message);
+					loginEmail.value = registerEmail.value;
+					
 					registerName.value=registerDob.value=registerEmail.value=registerPassword.value = '';
 					M.updateTextFields();
 					loginBtn.click();
@@ -115,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.getElementById('messageModalContent').innerHTML = response.message;
 					modal.open();
 				}else if(sender == 'login'){
-					showMessage('Login Success');
+					//showMessage('Login Success');
 					showMessage('Logged In As: ' + response.data.user_name);
 					loginEmail.value=loginPassword.value = '';
 					M.updateTextFields();
@@ -123,9 +154,28 @@ document.addEventListener('DOMContentLoaded', function() {
 					u.user_name = response.data.user_name;
 					u.user_id = response.data.user_id;
 					u.passphrase = response.data.token;
-					setTimeout(function(){
-						location.href = chrome.extension.getURL("src/options_custom/index.html");
-					}, 2000);
+					
+					showMessage('Syncing data...Please Wait...');
+					
+					syncRequest(function(){
+						if(typeof chrome.app.isInstalled!=='undefined'){
+							chrome.runtime.sendMessage(null, {action: "dim_time"}, function(response) {
+								//check if response arrived//
+								if(response) {
+									showMessage('Please Wait...5 sec.','warning');
+									setTimeout(function(){										
+										showMessage('Almost Done...');
+										window.onbeforeunload = undefined;
+									}, 3000);
+									
+									setTimeout(function(){										
+										chrome.tabs.create({url : chrome.extension.getURL("src/options_custom/index.html")});
+										window.close();
+									}, 6000);
+								}
+							});
+						}
+					});
 				}
 			}else if(response.success === false){ //false
 				if(typeof response.error === 'object'){ //If error msg is object - sent especially by input validation failed

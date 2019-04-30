@@ -311,15 +311,15 @@ document.addEventListener('DOMContentLoaded', function() {
 						latest_interaction: new Date().getTime()
 					}
 				);
-				syncingFunction();
+				syncingFunction(new Date().getTime());
 			  }else{
-				syncingFunction();
+				syncingFunction(result);
 			  }
 			});
 			//clearInterval(syncingTimer);
 		}, 0.5*60*60*1000); // 30 min sync time by default //
 		
-		function syncingFunction(){
+		function syncingFunction(result){
 			if(navigator.onLine){
 				if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
 					chrome.idle.queryState(

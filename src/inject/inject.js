@@ -708,15 +708,25 @@ setTimeout(function(){
 					NS_note_iframe_switch.click(function(e){
 						e.preventDefault();
 						e.stopPropagation();
-						if(confirm('Switch to Chat ?')){
-							if(typeof chrome.app.isInstalled!=='undefined'){
-								document.getElementsByClassName('NS-notes-iframe')[0].src = chrome.extension.getURL('src/inject/iframe/chat.html?url='+location.href);
+						chrome.runtime.sendMessage(null, {action: "is_logged_in"}, function(response) {
+							if(response) {
+								if(response.response == true){
+									if(confirm('Switch to Chat ?')){
+										if(typeof chrome.app.isInstalled!=='undefined'){
+											document.getElementsByClassName('NS-notes-iframe')[0].src = chrome.extension.getURL('src/inject/iframe/chat.html?url='+location.href);
+										}
+										NS_note_iframe_switch.css('display','none');
+										NS_chat_iframe_switch.css('display','flex');
+										noteContentLoaded = true;
+										$('NS-loading-iframe').addClass('NS-hide');
+									}
+								}else{
+									alert('Login to Enable Chat');
+								}
+							} else {
+								alert('Switch Failed');
 							}
-							NS_note_iframe_switch.css('display','none');
-							NS_chat_iframe_switch.css('display','flex');
-							noteContentLoaded = true;
-							$('NS-loading-iframe').addClass('NS-hide');
-						}
+						});			
 					});
 					
 					NS_chat_iframe_switch.click(function(e){

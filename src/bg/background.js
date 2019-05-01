@@ -436,6 +436,21 @@ document.addEventListener('DOMContentLoaded', function() {
 				return true;
 			}
 			
+			// Increment the focus time every call which is made probably every 5 seconds //
+			if(request.action.toLowerCase() == "is_logged_in"){
+				u = new User();
+				if(u.user_id == '' || u.user_id == 'undefined' || u.passphrase == '' || u.passphrase == null){
+					sendResponse({
+						response: false,
+					});
+				}else{
+					sendResponse({
+						response: true,
+					});
+				}
+				return false;
+			}
+			
 			// If request to chat_disabled_check //
 			if(request.action.toLowerCase() == "note_disabled_check"){
 				u = new User();

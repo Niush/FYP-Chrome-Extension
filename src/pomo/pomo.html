@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pomodoro Timer - Word and Rest Timer - MPA</title>
+	<link rel="stylesheet" href="../../css/materialize.min.css">
+	<script src="../../js/materialize/materialize.min.js"></script>
+</head>
+
+<style>
+	/* fallback */
+	@font-face {
+	  font-family: 'Material Icons';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url(../../icons/material-icon.woff2) format('woff2');
+	}
+
+	.material-icons {
+	  font-family: 'Material Icons';
+	  font-weight: normal;
+	  font-style: normal;
+	  font-size: 24px;
+	  line-height: 1;
+	  letter-spacing: normal;
+	  text-transform: none;
+	  display: inline-block;
+	  white-space: nowrap;
+	  word-wrap: normal;
+	  direction: ltr;
+	  -webkit-font-feature-settings: 'liga';
+	  -webkit-font-smoothing: antialiased;
+	}
+	
+	i.material-icons:before{display:none;}
+	
+	body{
+		margin: 0;
+		padding: 0;
+		margin: 0 auto;
+		font-size: 1em;
+		background-image: url('https://g1.img-dpreview.com/D4D0A9D2220941B09EE153AF875C62CD.jpg');
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: left;
+		color: #a3b0ce;
+		font-weight: 700;
+		letter-spacing: 2px;
+	}
+	
+	.hidden{
+		display: none !important;
+		visibility: hidden;
+	}
+	
+	/* Scroll Bar */
+	::-webkit-scrollbar {
+	  width:  5px;
+	  height: 5px;
+	}
+
+	::-webkit-scrollbar-thumb {
+	  background: #666;
+	  border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb:hover{
+		background: #333;
+	}
+
+	::-webkit-scrollbar-track {
+	  background: #ddd;
+	  border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-button {
+	  background: rgba(150,150,150,0);
+	  height: 5px;
+	}
+	/* IE */
+	body {
+	scrollbar-face-color: #666;
+	scrollbar-track-color: #ddd;
+	}
+
+	.hidden{
+		display: none !important;
+		visibility: hidden;
+	}
+	
+	/* POMO CSS */
+	div {
+	  margin: 0 auto;
+	}
+	button {
+	  border-radius: 2px;
+	  border: none;
+	  background-color: #A3A8B3;
+	  color: #01060F;
+	  cursor: pointer;
+	}
+	button:focus {
+	  outline: 0;
+	}
+	button:disabled {
+	  background-color: #434A5B;
+	  opacity: 0.5;
+	}
+	.but {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		font-weight: 700;
+		font-size: 1.5em;
+	}
+	.but:focus {
+	  outline: 0;
+	  box-shadow: 0 0 1px 2px #DADADA;
+	}
+	.work {
+		width: 90px;
+		padding: 5px;
+		border-radius: 0;
+		font-weight: 700;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		text-underline-position: unset;
+	}
+	.work:hover{
+		background-color: #DEADAE;
+	}
+	.main {
+	    text-align: center;
+		background-color: #0000009c;
+		padding: 1% 10% 30px 10%;
+		min-height: 100vh;
+		opacity: 0;
+		animation: show 1s 0.3s ease forwards;
+	}
+	@keyframes show{
+		0%{opacity: 0; transform: translate(-10px, 0);}
+		100%{opacity: 1; transform: translate(0, 0);}
+	}
+	.seLength {
+	  color: #94A6CE;
+	}
+	.brLength {
+	  color: #51c3b3;
+	}
+	.mainBar {
+	  height: 30px;
+	  width: 80%;
+	  background-color: black;
+	  border-radius: 100px;
+	  position: relative;
+	  overflow: hidden;
+	}
+	.seBar {
+	  height: 30px;
+	  background-color: #94A6CE;
+	  position: absolute;
+	  left: 0px;
+	  border-bottom-left-radius: 100px;
+	  border-top-left-radius: 100px;
+	}
+	.brBar {
+	  height: 30px;
+	  background-color: #51c3b3;
+	  position: absolute;
+	  right: 0px;
+	  border-left: 1px solid #32323266;
+	  border-bottom-right-radius: 100px;
+	  border-top-right-radius: 100px;
+	}
+	.progBar {
+	  height: 30px;
+	  background-color: #01060F;
+	  opacity: 0.6;
+	  position: absolute;
+	  left: 0px;
+	  border-bottom-left-radius: 13px;
+	  border-top-left-radius: 13px;
+	  background-image: linear-gradient(to left, rgba(81, 32, 230, 0.84), rgba(245, 15, 221, 0.6));
+	}
+	.banner {
+	  text-align: center;
+	  padding: 8px 0px;
+	}
+	.banText {
+	  left: 0; 
+	  right: 0; 
+	  margin: auto; 
+	}
+	.bText {
+	  display: none;
+	  color: #3F67C4;
+	}
+	.wText {
+	 display: none;
+	 color: #94A6CE;
+	}
+</style>
+
+<body class="grey darken-3">
+	<div class="main">
+	  <h6>M P A</h6>
+	  <h3 style="margin: 5px 0;"><b>Pomodoro Clock</b></h3>
+	  <h6>Manage your time, stay productive.</h6>
+	  <div class="row">
+		<div class="col s6">
+		  <p class="seLength"></p>
+		  <button class="sePlus se but">+</button>
+		  <button class="seMin se but">-</button>
+		</div>
+		<div class="col s6">
+		  <p class="brLength"></p>
+		  <button class="brPlus br but">+</button>
+		  <button class="brMin br but">-</button>
+		</div>
+	  </div>
+	  <div class="row" style="padding-top: 5px;text-align: center;display: flex;justify-content: center;align-items: center;">
+		<div class="col s4">
+		  <button class="start work">Start</button>
+		  <button class="restart work">Reset</button>
+		</div>
+	  </div>
+	  <div class="row" style="text-align: center;display: flex;justify-content: center;align-items: center;">
+		<div class="col s4">
+			<h1 class="test" style="font-weight: 700;"></h1>
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="mainBar">
+		  <div class="seBar">
+		  </div>
+		  <div class="brBar">
+		  </div>  
+		  <div class="progBar">
+		  </div>
+		</div>
+	  </div>
+	  <div class="banner" style="font-weight: 700;">
+		<h2 class="banText wText">
+		  Work! 
+		</h2>
+		<h2 class="banText bText">
+		  Break!
+		</h2>
+	  </div>
+	  
+	  <br/>
+	  
+	  <div class="footer" style="width: 80%; vertical-align: middle;">
+		<small class="left" title="Total work and break of current session">
+			Total Work: <span id="total_se">0 min</span>
+			|
+			Total Break: <span id="total_br">0 min</span>
+		</small>
+		
+		<small class="right">
+			<a class="white-text" href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank">What's a Pomodoro Technique ?</a>
+		</small>
+	  </div>
+	</div>
+	
+	<script src="../../js/jquery/jquery.min.js"></script>
+	<script src="pomo.js"></script>
+</body>
+</html>

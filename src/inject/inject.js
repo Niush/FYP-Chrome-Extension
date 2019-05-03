@@ -625,6 +625,15 @@ setTimeout(function(){
 						NSNotesIconTop = localStorage.getItem('ns-note-top');
 					}
 					
+					chrome.runtime.sendMessage(null, {action: "is_chat_disabled"}, function(response) {
+						if(response) {
+							if(response.response == true){
+								NS_chat_iframe_switch.hide();
+								NS_note_iframe_switch.hide();
+							}
+						}
+					});
+					
 					checkPositionChanges();
 					
 					$(window).resize(function(){

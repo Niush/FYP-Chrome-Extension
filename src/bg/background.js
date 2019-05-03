@@ -451,6 +451,26 @@ document.addEventListener('DOMContentLoaded', function() {
 				return false;
 			}
 			
+			// Check chat compeltly disabled //
+			if(request.action.toLowerCase() == "is_chat_disabled"){
+				u = new User();
+				if(u.disable_chat_every_where == 1){
+					sendResponse({
+						response: true,
+					});
+				}else{
+					if(u.check_disable_chat(getHostName(sender.url)) == 1){
+						sendResponse({
+							response: true,
+						});
+					}else{
+						sendResponse({
+							response: false,
+						});
+					}
+				}
+			}
+			
 			// If request to chat_disabled_check //
 			if(request.action.toLowerCase() == "note_disabled_check"){
 				u = new User();

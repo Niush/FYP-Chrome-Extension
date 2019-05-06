@@ -23,8 +23,9 @@
 	
 		<nav class="nav-extended">
 			<div class="nav-wrapper" style="padding: 0 20px;">
-			  <a href="#" class="brand-logo">Minimal Productivity App</a>
-			  <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+			  <a href="#" class="brand-logo hide-on-med-and-down">Minimal Productivity App</a>
+			  <a href="#" class="brand-logo hide-on-large-only">MPA</a>
+			  <!-- <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a> -->
 			  <ul id="nav-mobile" class="right hide-on-med-and-down">
 				<li><a href="#!">v.0.1 Beta</a></li>
 				<li><a href="#!">Bug Report</a></li>
@@ -41,11 +42,11 @@
 			</div>
 		</nav>
 
-		<ul class="sidenav" id="mobile-demo">
+		<!-- <ul class="sidenav" id="mobile-demo">
 			<li><a href="#!">v.0.1 Beta</a></li>
-			<li><a href="badges.html">Components</a></li>
-			<li><a href="collapsible.html">JavaScript</a></li>
-		</ul>
+			<li><a href="#!">Bug Report</a></li>
+			<li><a href="#!">Help</a></li>
+		</ul> -->
 		
 		<!-- Modal Structure -->
 		<div id="welcomeModal" class="modal modal-fixed-footer">
@@ -147,19 +148,19 @@
 					<div class="card-content">
 						<h5 class="card-title"><b>Create To-do Notifier</b></h5>
 						<div class="row">
-							<div class="input-field col s6 validate">
+							<div class="input-field col s12 l6 validate">
 								<input id="todo-title" type="text" class="validate">
 								<label for="todo-title">To-do Title</label>
 							</div>
-							<div class="input-field col s2 validate">
+							<div class="input-field col s6 l2 validate">
 								<input type='text' class="validate timepicker" id="todo-endtime"/>
 								<label for="todo-endtime">Todo Notify Time</label>
 							</div>
-							<div class="input-field col s2 validate">
+							<div class="input-field col s6 l2 validate">
 								<input type='text' class="validate datepicker" id="todo-enddate"/>
 								<label for="todo-enddate">Todo Notify Date</label>
 							</div>
-							<div class="input-field col s2">
+							<div class="input-field col s6 l2">
 								<button id="todo-add-btn" class="waves-effect btn btn-large green darken-2">Add To-do</button>
 							</div>
 						</div>
@@ -187,10 +188,10 @@
 				<div class="card">
 					<div class="card-tabs">
 					  <ul class="tabs tabs-transparent indigo accent-4 inner-tabs">
-						<li class="tab"><a class="active waves-effect waves-light" href="#focus-settings">Focus Settings</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#disable-settings">Disable Settings</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#configurations">Configurations</a></li>
-						<li class="tab"><a class="waves-effect waves-light" href="#miscellaneous">Miscellaneous</a></li>
+						<li class="tab"><a class="active waves-effect waves-light" href="#focus-settings">Focus <span class="hide-on-small-only">Settings</span></a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#disable-settings">Disable <span class="hide-on-small-only">Settings</span></a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#configurations">Config<span class="hide-on-small-only">urations</span></a></li>
+						<li class="tab"><a class="waves-effect waves-light" href="#miscellaneous">Misc<span class="hide-on-small-only">ellaneous</span></a></li>
 					  </ul>
 					</div>
 					<div class="card-content grey lighten-4 inner-tabs-content">
@@ -242,15 +243,15 @@
 						<div id="configurations">
 							<div class='row'>
 								<p class="col s12"><b>Dim Screen Start & End time:</b></p>
-								<div class='input-field col s2'>
+								<div class='input-field col m2 s4'>
 									<input type='text' class="validate timepicker" id="dim-start-time-picker"/>
 									<label for='dim-start-time-picker'>Start Time: </label>
 								</div>
-								<div class='input-field col s2'>
+								<div class='input-field col m2 s4'>
 									<input type='text' class="validate timepicker" id="dim-end-time-picker"/>
 									<label for='dim-end-time-picker'>End Time: </label>
 								</div>
-								<div class='input-field col s2'>
+								<div class='input-field col m2 s4'>
 									<button class="btn orange darken-4 waves-effect" id="dim-time-reset-button">Disable Dim Time</button>
 								</div>
 							</div>

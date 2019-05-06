@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				);
 				syncingFunction(new Date().getTime());
 			  }else{
-				syncingFunction(result);
+				syncingFunction(result.latest_interaction);
 			  }
 			});
 			//clearInterval(syncingTimer);
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		function syncingFunction(result){
 			if(navigator.onLine){
-				if(parseInt(result.latest_interaction) + 60000 < new Date().getTime()){
+				if(parseInt(result) + 60000 < new Date().getTime()){
 					chrome.idle.queryState(
 					  1 * 60, // seconds
 					  function(state) {

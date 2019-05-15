@@ -301,6 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		}
 		
+		// AUTO - SYNCING STARTS HERE //
 		let retrySync;
 		let syncingTimer = setInterval(function(){
 			clearInterval(retrySync);
@@ -317,13 +318,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			  }
 			});
 			//clearInterval(syncingTimer);
-		}, 0.5*60*60*1000); // 30 min sync time by default //
+		}, 300000); // 5 min sync time by default //
 		
 		function syncingFunction(result){
 			if(navigator.onLine){
 				if(parseInt(result) + 60000 < new Date().getTime()){
 					chrome.idle.queryState(
-					  1 * 60, // seconds
+					  1 * 60, // in seconds
 					  function(state) {
 						if (state === "active") {
 							u = new User(function(){
@@ -336,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							retrySync = setInterval(function(){
 								syncingFunction();
 								clearInterval(retrySync);
-							}, 600000); // retry in 10 minutes
+							}, 120000); // retry in 3 minutes
 						}
 					  }
 					);
@@ -345,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					retrySync = setInterval(function(){
 						syncingFunction();
 						clearInterval(retrySync);
-					}, 300000); // retry in 5 minutes
+					}, 120000); // retry in 3 minutes
 				}
 			}else{
 				console.log('Internet Not Connected in the Browser - Auto Syncronization Dismissed...');

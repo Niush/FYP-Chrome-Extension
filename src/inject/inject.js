@@ -8,6 +8,19 @@ jqu.type = "text/javascript";
 jqu.src = "chrome-extension://"+chrome.runtime.id+"/js/jquery/jquery-ui.min.js";
 document.querySelector('head').appendChild(jqu);
  */
+
+//const HOST = "http://127.0.0.1:8000";
+const HOST = "https://mpa-server.herokuapp.com";
+if(location.href == HOST+"/"){
+	console.log('Yeppie');
+	window.onload = function(){
+		document.getElementById('installed').style.display = "block";
+		document.getElementById('not-installed').style.display = "none";
+		document.getElementById('ns_open_settings_btn').setAttribute('href',chrome.runtime.getURL('src/options_custom/index.html'));
+		document.getElementById('ns_open_settings_btn').setAttribute('target','_blank');
+	}
+}
+
 // Wait Inject for some seconds - Except few Things //
 var isTop = true;
 var showScreenshotModeCaller;
